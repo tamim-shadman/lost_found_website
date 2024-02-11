@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" type="images/logo.png" href="images/logo.png" >
+    <title>Lost and Found Bangladesh</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="User_profile.css">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+   
+
+    <script src="https://kit.fontawesome.com/d39d7cbf13.js" crossorigin="anonymous"></script>
+    <!-- Add Font Awesome CSS for icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-black fixed-top">
+        <div class="container">
+          <a class="navbar-brand  text-light pe-lg-4" href="index.php">
+            <h3 class="fw-light logo" >Lost and found Bangladesh</h3>
+            <h6 class="fw-lighter ps-md-5 sublogo">Lost Moments, Found Stories</h6>
+
+        
+            </a>
+
+          <!-- Toggle button -->
+          <button class="navbar-toggler shadow-none border-0 " type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon" ></span>
+        </button>
+        <!-- sidebar -->
+
+          <div class="sidebar offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+
+
+            <!-- sidebar header -->
+            <div class="offcanvas-header text-dark border-bottom">
+              <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Lost and Found Bangladesh</h5>
+              <button type="button" class="btn-close btn-close-dark" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+
+            <!-- sidebar body -->
+            <div class="offcanvas-body bg-black">
+              <ul class="navbar-nav justify-content-end flex-grow-1 pe-lg-1 mt-1">
+                <li class="nav-item pb-5">
+                    <div class="dropdown d-flex align-items-center justify-content-center pt-1 pe-3">
+                        <a href="#" class="dropdown-toggle text-decoration-none text-light" id="registrationDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Report
+                        </a>
+                        <ul class="dropdown-menu bg-secondary-subtle" aria-labelledby="registrationDropdown">
+                            <li class="pb-2"><a class="dropdown-item fw-bold" href="submit_lostitems.php">Missing items</a></li>
+                          <li><a class="dropdown-item fw-bold" href="missing_person.php">Missing person</a></li>
+                        </ul>
+                    </div>
+                    
+                </li>
+                <li class="nav-item mx-2">
+                    <div class="dropdown d-flex align-items-center justify-content-center ">
+                        <button class="btn btn-outline-secondary btn-md dropdown-toggle text-light" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                          Registration
+                        </button>
+                        <ul class="dropdown-menu bg-secondary-subtle text-white">
+                          <li><a class="dropdown-item fw-bold" href="login.html">Login</a></li>
+                          <li><a class="dropdown-item fw-bold" href="signup.html">Sign Up</a></li>                          
+                         
+                        </ul>
+                      </div>
+                </li>
+                <li class="nav-item mx-2 mx-lg-1 pb-5">
+                    <a class="nav-link text-light recent-post " href="recentposts.php">View recent Posts</a>
+                </li>
+
+                <li class="nav-item mx-2 mx-lg-1 pb-5">
+                  <a class="nav-link text-light recent-post " href="User_profile.html">Profile</a>
+              </li>
+                
+              </ul>
+              <!-- registration -->
+             
+
+
+
+
+              <div class="d-lg-flex flex-column pt-1">
+                <form class="d-flex justify-content-center align-items-center mt-1" role="search">
+                <input class="form-control form-control-sm me-2" type="search" placeholder="Search" aria-label="Search" style="width: 150px; height: 30px;">
+                <button class="btn btn-outline-success btn-sm" type="submit" style="height: 30px;">Search</button>
+                </form>
+            </div>
+            
+            </div>
+          </div>
+        </div>
+      </nav>
+
+    <main>
+        <div class="container">
+            <div class="row profile">
+                <div class="col-md-3">
+                    <div class="profile-sidebar">
+                        <!-- SIDEBAR USERPIC -->
+                        <div class="profile-userpic">
+                            <img src="images/login-img.jpg" class="img-responsive" alt="">
+                        </div>
+                        <!-- END SIDEBAR USERPIC -->
+                        <!-- SIDEBAR USER TITLE -->
+                        <div class="profile-usertitle">
+                            <div class="profile-usertitle-name">
+                                Hi, Tamim Shadman
+                            </div>
+                            
+                        </div>
+                        <!-- END SIDEBAR USER TITLE -->
+                        <!-- SIDEBAR BUTTONS -->
+                        <div class="profile-userbuttons">
+                            <button type="button" class="btn btn-success btn-sm">Post Lost Ad</button>
+                            <button type="button" class="btn btn-danger btn-sm">Report Found Ad</button>
+                        </div>
+                        <!-- END SIDEBAR BUTTONS -->
+                        <!-- SIDEBAR MENU -->
+                        <div class="profile-usermenu">
+                            <ul class="nav">
+                                <li class="Active">
+                                    <a href="User_profile.html">
+                                        <i class="fas fa-home"></i>
+                                        Profile Navigation
+                                    </a>
+                                </li>
+                                <li >
+                                    <a href="User_profile-1.html">
+                                        <i class="fas fa-user"></i>
+                                        Account Details
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="User_profile-2.html" target="_blank">
+                                        <i class="fa-solid fa-user-tie"></i>
+                                        Account Settings
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="User_profile-3.html">
+                                        <i class="fa-solid fa-bell"></i>
+                                        Notification
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="payment.html">
+                                        <i class="fa-solid fa-receipt"></i>
+                                        Payment
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="admin panel/FAQ.html">
+                                        <i class="fa-solid fa-info"></i>
+                                        Help
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <!-- END MENU -->
+                    </div>
+                </div>
+                <div class="col-md-9">
+                    <div class="profile-content">
+                        <h1 class="sub-title">Navigation</h1>
+                        <div class="services-list-1">
+                             <div>
+                                <i class='fas fa-ad'></i>
+                                <h2> My Ads</h2>
+                                <p>Ads Given by you</p>
+                                <a href="#">Learn more</a>
+                             </div>
+                
+                             <div>
+                                <!-- dorkar nai -->
+                                <i class="fa-solid fa-heart"></i>
+                                <h2>Favourite Ads</h2>
+                                <p>Top picked Ads by you</p>
+                                <a href="#">Learn more</a>
+                             </div>
+                
+                             <div>
+                                <i class="fa-brands fa-searchengin"></i>
+                                <h2> Home</h2>
+                                <a href="index.php" class="d-inline-block text-center text-decoration-none text-secondary">Click here to go back</a>
+                                
+                             </div>
+    
+                            </div>
+    
+                             <div class="services-list-2">
+                                <div>
+                                    <i class="fa-solid fa-hourglass-half"></i>
+                                   <h2> Pending Posts</h2>
+                                   <p>Posts that are waiting for approval</p>
+                                   <a href="#">Learn more</a>
+                                </div>
+                   
+                                <div>
+                                    <!-- dorkar nai -->
+                                    <i class="fa-solid fa-folder"></i>
+                                   <h2>Archived Ads</h2>
+                                   <p>Posts that was archived by you</p>
+                                   <a href="#">Learn more</a>
+                                </div>
+                   
+                                <div>
+                                    <i class="fa-solid fa-message"></i>
+                                   <h2>Conversation</h2>
+                                   <p>Recent Conversation</p>
+                                   <a href="#">Learn more</a>
+                                </div>
+    
+                
+                        </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+    
+    </main>
+      
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="row">
+                <div class="footer-col">
+                    <h4>Lost & Found</h4>
+                    <ul>
+                        <li><a href="#">about us</a></li>
+                        <li><a href="#">Contact US</a></li>
+                        <li><a href="#">our services</a></li>
+                        <li><a href="#">affiliate program</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>get help</h4>
+                    <ul>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Anti-scam</a></li>
+                        <li><a href="#">Post Status</a></li>
+                        <li><a href="#">Payment Options</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>My Account</h4>
+                    <ul>
+                        <li><a href="#">Profile</a></li>
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">My Ads</a></li>
+                        <li><a href="#">Favourite Ads</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>follow us</h4>
+                    <div class="social-links">
+                        <a href="https://www.facebook.com/"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://twitter.com/?lang=en"><i class="fa-brands fa-x-twitter"></i></a>
+                        <a href="https://www.instagram.com/"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.linkedin.com/?original_referer="><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <div class="copyright">
+            <div class="bottom_text">
+                <span class="copyright_text">© 2023 Lost & Found. All Rights Reserved. Developed by Group-06. All rights Reserved</span>
+                <span class="policy_terms">
+                <a href="#">Privacy policy</a>
+                <a href="#">Terms & Conditions</a>
+            </span>
+            </div>
+    
+            </div>
+    </footer>
+
+</body>
+</html>
