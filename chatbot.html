@@ -106,26 +106,33 @@
     </div>
 
     <header class="glass-navbar">
-      <div class="container d-flex justify-content-between align-items-center py-2 px-3 mx-auto" style="max-width: 1320px;">
-        <a href="index.html" class="navbar-brand d-flex align-items-center gap-2 text-decoration-none">
+      <div class="container d-flex justify-content-between align-items-center py-2 mx-auto">
+        <a href="index.html" class="navbar-brand d-flex align-items-center gap-2 text-decoration-none flex-shrink-0">
           <img src="images/logo.png" alt="Logo" width="38" height="38" class="rounded-circle border border-subtle">
           <div>
             <div class="brand-title fw-bold text-light lh-1" style="font-size: 1.15rem; letter-spacing: -0.02em;">Lost & Found <span style="color: var(--color-emerald-400);">BD</span></div>
             <small class="text-muted d-none d-sm-block" style="font-size: 0.725rem;">Lost Moments, Found Stories</small>
           </div>
         </a>
-        <nav class="d-none d-lg-flex align-items-center gap-4">
+        <nav class="d-none d-lg-flex align-items-center gap-2 gap-xl-3">
           <a href="recentposts.html" class="nav-link text-secondary fw-medium hover-light">Browse Alerts</a>
           <a href="submit_lostitems.html" class="nav-link text-secondary fw-medium hover-light">Report Item</a>
           <a href="missing_person.html" class="nav-link text-secondary fw-medium hover-light">Missing Persons</a>
+          <a href="recover.html" class="nav-link text-secondary fw-medium hover-light">
+            <i class="bi bi-shield-check me-1 text-emerald"></i>QR Shield
+          </a>
           <a href="chatbot.html" class="nav-link text-emerald fw-bold hover-light" style="color: var(--color-emerald-400);">AI Assistant</a>
-          <a href="payment.html" class="nav-link text-secondary fw-medium hover-light">Support Platform</a>
+          <a href="payment.html" class="nav-link text-secondary fw-medium hover-light">Support</a>
         </nav>
-        <div class="d-flex align-items-center gap-2">
-          <button type="button" class="btn btn-ghost btn-sm d-flex align-items-center gap-2 text-muted px-3 py-1 rounded-pill border border-subtle glass-subtle" onclick="window.commandPalette && window.commandPalette.open()" title="Press Ctrl+K to search">
+        <div class="d-flex align-items-center gap-2 flex-shrink-0 pe-1">
+          <button type="button" class="btn btn-ghost btn-sm d-flex align-items-center gap-2 text-muted px-2 px-xl-3 py-1 rounded-pill border border-subtle glass-subtle" onclick="openCmdPalette()" title="Press Ctrl+K to search">
             <i class="bi bi-search"></i>
-            <span class="d-none d-md-inline" style="font-size: 0.85rem;">Omnibar...</span>
-            <kbd class="d-none d-md-inline-block px-1 py-0 rounded text-muted bg-dark border border-subtle" style="font-size: 0.7rem;">Ctrl K</kbd>
+            <span class="d-none d-xl-inline" style="font-size: 0.85rem;">Omnibar...</span>
+            <kbd class="d-none d-xxl-inline-block px-1 py-0 rounded text-muted bg-dark border border-subtle" style="font-size: 0.7rem;">Ctrl K</kbd>
+          </button>
+
+          <button type="button" class="btn btn-ghost btn-sm text-light p-2" onclick="window.toggleSound && window.toggleSound()" aria-label="Toggle Civic Sound" title="Toggle Sound Feedback">
+            <i class="bi bi-volume-up-fill sound-toggle-icon"></i>
           </button>
 
           <button type="button" class="btn btn-ghost btn-sm text-light p-2" onclick="toggleTheme()" aria-label="Toggle Theme" title="Toggle Dark/Light Mode">
@@ -133,7 +140,7 @@
           </button>
 
           <a href="login.html" class="btn btn-ghost btn-sm">Sign In</a>
-          <a href="signup.html" class="btn btn-primary btn-sm btn-pill">Get Started</a>
+          <a href="signup.html" class="btn btn-primary btn-sm btn-pill flex-shrink-0">Get Started</a>
         </div>
       </div>
     </header>
@@ -145,11 +152,16 @@
             <p class="text-secondary">Instant answers on claim verification, police GD guidance, and recovery workflows.</p>
         </div>
 
-        <div class="d-flex gap-2 overflow-x-auto pb-3 mb-3">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <div class="d-flex gap-2 overflow-x-auto pb-2 flex-grow-1">
             <button type="button" class="suggestion-chip" onclick="askPreset('How do I report a lost item?')">How do I report a lost item?</button>
             <button type="button" class="suggestion-chip" onclick="askPreset('How do I file a police GD?')">How do I file a police GD?</button>
             <button type="button" class="suggestion-chip" onclick="askPreset('How does claim verification work?')">How does claim verification work?</button>
-            <button type="button" class="suggestion-chip" onclick="askPreset('Is this service free to use?')">Is this service free to use?</button>
+            <button type="button" class="suggestion-chip" onclick="askPreset('What should I do if I found a wallet with bank cards?')">Found wallet with bank cards?</button>
+          </div>
+          <button type="button" class="btn btn-ghost btn-sm border border-subtle ms-2 text-nowrap" onclick="exportChatTranscript()" title="Export Transcript for Police GD">
+            <i class="bi bi-file-earmark-text me-1 text-emerald"></i> Export GD Notes
+          </button>
         </div>
 
         <div class="chat-window">
@@ -330,10 +342,19 @@
           botDiv.className = 'd-flex align-items-start gap-2 mb-2 animate-fade-in';
           botDiv.innerHTML = `
             <img src="images/bot.png" alt="Bot" width="32" height="32" class="rounded-circle border border-emerald">
-            <div class="chat-bubble bubble-bot">${replyText}</div>
+            <div class="chat-bubble bubble-bot">
+              ${replyText}
+              <div class="mt-2 pt-1 border-top border-subtle d-flex align-items-center justify-content-between">
+                <small class="text-muted" style="font-size: 0.7rem;"><i class="bi bi-shield-check text-emerald"></i> Verified Civic Guide</small>
+                <button type="button" class="btn btn-ghost btn-sm p-0 text-muted" onclick="speakMessage('${escapeForJs(replyText)}')" title="Listen to response">
+                  <i class="bi bi-volume-up text-emerald fs-6"></i>
+                </button>
+              </div>
+            </div>
           `;
           chatArea.appendChild(botDiv);
           scrollToBottom();
+          if (window.playCivicSound) window.playCivicSound('chime');
         })
         .catch(() => {
           typingInd.style.display = 'none';
@@ -352,6 +373,48 @@
           chatArea.appendChild(errorDiv);
           scrollToBottom();
         });
+      }
+
+      function escapeForJs(str) {
+        return (str || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;').replace(/\n/g, ' ');
+      }
+
+      function speakMessage(text) {
+        if ('speechSynthesis' in window) {
+          window.speechSynthesis.cancel();
+          const clean = text.replace(/<[^>]*>/g, '');
+          const utter = new SpeechSynthesisUtterance(clean);
+          utter.rate = 1.0;
+          window.speechSynthesis.speak(utter);
+          if (window.showToast) window.showToast('Reading guidance aloud...', 'info', 'Speech Audio');
+        } else {
+          alert('Speech synthesis audio is not supported in this browser.');
+        }
+      }
+
+      function exportChatTranscript() {
+        const messages = document.querySelectorAll('.chat-bubble');
+        if (messages.length === 0) {
+          alert('No conversation history to export.');
+          return;
+        }
+        let transcript = `=========================================\nLOST & FOUND BANGLADESH — ADVICE TRANSCRIPT\nDate: ${new Date().toLocaleString()}\n=========================================\n\n`;
+        messages.forEach(m => {
+          const isUser = m.classList.contains('bubble-user');
+          transcript += `${isUser ? 'CITIZEN' : 'ASSISTANT'}: ${m.innerText.trim()}\n\n`;
+        });
+        transcript += `=========================================\nUse this transcript when preparing a General Diary (GD) at your local Thana.\nEmergency Police Hotline: 999\nChild Protection: 1098\n`;
+
+        const blob = new Blob([transcript], { type: 'text/plain;charset=utf-8' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = `LostFound_GD_Advice_${Date.now()}.txt`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+
+        if (window.playCivicSound) window.playCivicSound('success');
+        if (window.showToast) window.showToast('Police GD advice notes saved as text file!', 'success', 'Export Complete');
       }
 
       function toggleTheme() {

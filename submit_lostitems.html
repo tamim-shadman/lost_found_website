@@ -66,32 +66,38 @@
 </head>
 <body>
     <header class="glass-navbar">
-      <div class="container d-flex justify-content-between align-items-center py-2 px-3 mx-auto" style="max-width: 1320px;">
-        <a href="index.html" class="navbar-brand d-flex align-items-center gap-2 text-decoration-none">
+      <div class="container d-flex justify-content-between align-items-center py-2 mx-auto">
+        <a href="index.html" class="navbar-brand d-flex align-items-center gap-2 text-decoration-none flex-shrink-0">
           <img src="images/logo.png" alt="Lost and Found Bangladesh Logo" width="38" height="38" class="rounded-circle border border-subtle">
           <div>
             <div class="brand-title fw-bold text-light lh-1" style="font-size: 1.15rem; letter-spacing: -0.02em;">Lost & Found <span style="color: var(--color-emerald-400);">BD</span></div>
             <small class="text-muted d-none d-sm-block" style="font-size: 0.725rem;">Lost Moments, Found Stories</small>
           </div>
         </a>
-        <nav class="d-none d-lg-flex align-items-center gap-4">
+        <nav class="d-none d-lg-flex align-items-center gap-2 gap-xl-3">
           <a href="recentposts.html" class="nav-link text-secondary fw-medium hover-light">Browse Alerts</a>
           <a href="submit_lostitems.html" class="nav-link text-emerald fw-bold hover-light" style="color: var(--color-emerald-400);">Report Item</a>
           <a href="missing_person.html" class="nav-link text-secondary fw-medium hover-light">Missing Persons</a>
+          <a href="recover.html" class="nav-link text-secondary fw-medium hover-light">
+            <i class="bi bi-shield-check me-1 text-emerald"></i>QR Shield
+          </a>
           <a href="chatbot.html" class="nav-link text-secondary fw-medium hover-light">AI Assistant</a>
-          <a href="payment.html" class="nav-link text-secondary fw-medium hover-light">Support Platform</a>
+          <a href="payment.html" class="nav-link text-secondary fw-medium hover-light">Support</a>
         </nav>
-        <div class="d-flex align-items-center gap-2">
-          <button type="button" class="btn btn-ghost btn-sm text-muted d-flex align-items-center gap-2 px-2 py-1" onclick="window.LostFoundCmdPalette && window.LostFoundCmdPalette.open()" style="background: rgba(255,255,255,0.05); border: 1px solid var(--border-subtle); border-radius: var(--radius-md);">
+        <div class="d-flex align-items-center gap-2 flex-shrink-0 pe-1">
+          <button type="button" class="btn btn-ghost btn-sm d-flex align-items-center gap-2 text-muted px-2 px-xl-3 py-1 rounded-pill border border-subtle glass-subtle" onclick="openCmdPalette()" title="Press Ctrl+K to search">
             <i class="bi bi-search"></i>
-            <span class="d-none d-md-inline" style="font-size: 0.85rem;">Omnibar...</span>
-            <kbd class="d-none d-md-inline-block px-1 py-0 rounded text-muted bg-dark border border-subtle" style="font-size: 0.7rem;">Ctrl K</kbd>
+            <span class="d-none d-xl-inline" style="font-size: 0.85rem;">Omnibar...</span>
+            <kbd class="d-none d-xxl-inline-block px-1 py-0 rounded text-muted bg-dark border border-subtle" style="font-size: 0.7rem;">Ctrl K</kbd>
+          </button>
+          <button type="button" class="btn btn-ghost btn-sm text-light p-2" onclick="window.toggleSound && window.toggleSound()" aria-label="Toggle Civic Sound" title="Toggle Sound Feedback">
+            <i class="bi bi-volume-up-fill sound-toggle-icon"></i>
           </button>
           <button type="button" class="btn btn-ghost btn-sm text-light p-2" onclick="toggleTheme()" aria-label="Toggle Theme" title="Toggle Theme">
             <i class="bi bi-circle-half" id="themeToggleIcon"></i>
           </button>
           <a href="login.html" class="btn btn-ghost btn-sm">Sign In</a>
-          <a href="signup.html" class="btn btn-primary btn-sm btn-pill">Get Started</a>
+          <a href="signup.html" class="btn btn-primary btn-sm btn-pill flex-shrink-0">Get Started</a>
         </div>
       </div>
     </header>
@@ -101,6 +107,16 @@
             <span class="brand-badge mb-2">Publish An Official Alert</span>
             <h1 class="text-light fw-bold mb-2" style="font-size: 2.2rem;">Lost & Found Report Wizard</h1>
             <p class="text-secondary" style="font-size: 1rem;">Complete the form below with precise details to trigger instant community search matching.</p>
+        </div>
+
+        <!-- Interactive 4-Step Stepper Progress Bar (New Feature) -->
+        <div class="wizard-stepper-bar px-3">
+          <div class="wizard-stepper-line"></div>
+          <div class="wizard-stepper-progress" id="wizardProgressBar" style="width: 25%;"></div>
+          <div class="wizard-step-node active" id="stepNode1">1</div>
+          <div class="wizard-step-node" id="stepNode2">2</div>
+          <div class="wizard-step-node" id="stepNode3">3</div>
+          <div class="wizard-step-node" id="stepNode4">4</div>
         </div>
 
         <div class="glass-panel p-4 p-md-5 mb-5 animate-slide-up">
@@ -115,6 +131,20 @@
                     <span>I Found Something</span>
                     <small class="d-block fw-normal text-muted" style="font-size: 0.75rem;">Help return items to owner</small>
                 </div>
+            </div>
+
+            <!-- Quick-Fill Preset Template Chips (New Feature) -->
+            <div class="p-3 rounded glass-subtle mb-4 border border-subtle">
+              <div class="small fw-bold text-muted mb-2 text-uppercase" style="font-size: 0.7rem; letter-spacing: 0.05em;">
+                <i class="bi bi-lightning-charge-fill text-amber me-1"></i> Quick-Fill Presets for Common Incidents:
+              </div>
+              <div class="d-flex flex-wrap gap-2">
+                <button type="button" class="btn btn-ghost btn-sm border border-subtle text-secondary" onclick="applyPreset('phone')">📱 Smartphone / iPhone</button>
+                <button type="button" class="btn btn-ghost btn-sm border border-subtle text-secondary" onclick="applyPreset('laptop')">💻 Laptop / MacBook</button>
+                <button type="button" class="btn btn-ghost btn-sm border border-subtle text-secondary" onclick="applyPreset('wallet')">👛 Wallet & Bank Cards</button>
+                <button type="button" class="btn btn-ghost btn-sm border border-subtle text-secondary" onclick="applyPreset('passport')">🪪 Passport / NID</button>
+                <button type="button" class="btn btn-ghost btn-sm border border-subtle text-secondary" onclick="applyPreset('keys')">🔑 Keys & Access Fob</button>
+              </div>
             </div>
 
             <div id="reportAlertBox" class="alert d-none mb-4" role="alert"></div>
@@ -424,6 +454,55 @@
           submitBtnText.textContent = 'Submit Found Item Notice';
         }
       }
+
+      function applyPreset(preset) {
+        const presets = {
+          phone: { title: 'Apple iPhone 15 Pro Max', category: 'Electronics', desc: 'Space Black with clear protective case. Has a distinct hairline scratch near camera bump. IMEI registered.' },
+          laptop: { title: 'MacBook Pro 14" M3 Space Gray', category: 'Electronics', desc: 'Contains University research files and GitHub sticker on back lid. In black padded sleeve.' },
+          wallet: { title: 'Black Leather Bellroy Wallet', category: 'Wallet/Cards', desc: 'Contains Bangladeshi National ID, student card, and BRAC Bank debit card.' },
+          passport: { title: 'Bangladeshi Passport & Work Endorsement', category: 'Documents', desc: 'Standard green Bangladeshi passport issued from Agargaon Passport Office.' },
+          keys: { title: 'Car Smart Key Fob & Apartment Keys', category: 'Keys', desc: 'Smart push-to-start key with red leather braided keychain and 3 brass door keys.' }
+        };
+        const data = presets[preset];
+        if (!data) return;
+        document.getElementById('itemTitleInput').value = data.title;
+        document.getElementById('itemCategorySelect').value = data.category;
+        document.getElementById('surroundingsInput').value = data.desc;
+        updateWizardProgress();
+        if (window.playCivicSound) window.playCivicSound('chime');
+        if (window.showToast) {
+          window.showToast(`Applied preset for ${data.title}. Customize details before posting.`, 'info', 'Template Loaded');
+        }
+      }
+
+      function updateWizardProgress() {
+        let filled = 1;
+        if (document.getElementById('itemTitleInput').value.trim()) filled++;
+        if (document.getElementById('districtSelect').value.trim() && document.getElementById('specificAddressInput').value.trim()) filled++;
+        if (document.getElementById('contactPhoneInput').value.trim()) filled++;
+
+        const pct = Math.min(100, Math.max(25, (filled / 4) * 100));
+        const bar = document.getElementById('wizardProgressBar');
+        if (bar) bar.style.width = pct + '%';
+
+        [1, 2, 3, 4].forEach(step => {
+          const node = document.getElementById('stepNode' + step);
+          if (!node) return;
+          if (step < filled) {
+            node.className = 'wizard-step-node completed';
+          } else if (step === filled) {
+            node.className = 'wizard-step-node active';
+          } else {
+            node.className = 'wizard-step-node';
+          }
+        });
+      }
+
+      document.addEventListener('input', (e) => {
+        if (e.target && e.target.closest('#itemReportForm')) {
+          updateWizardProgress();
+        }
+      });
 
       function handleItemReportSubmit(e) {
         e.preventDefault();

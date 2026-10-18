@@ -39,32 +39,38 @@
 </head>
 <body>
     <header class="glass-navbar">
-      <div class="container d-flex justify-content-between align-items-center py-2 px-3 mx-auto" style="max-width: 1320px;">
-        <a href="index.html" class="navbar-brand d-flex align-items-center gap-2 text-decoration-none">
+      <div class="container d-flex justify-content-between align-items-center py-2 mx-auto">
+        <a href="index.html" class="navbar-brand d-flex align-items-center gap-2 text-decoration-none flex-shrink-0">
           <img src="images/logo.png" alt="Logo" width="38" height="38" class="rounded-circle border border-subtle">
           <div>
             <div class="brand-title fw-bold text-light lh-1" style="font-size: 1.15rem; letter-spacing: -0.02em;">Lost & Found <span style="color: var(--color-emerald-400);">BD</span></div>
             <small class="text-muted d-none d-sm-block" style="font-size: 0.725rem;">Lost Moments, Found Stories</small>
           </div>
         </a>
-        <nav class="d-none d-lg-flex align-items-center gap-4">
+        <nav class="d-none d-lg-flex align-items-center gap-2 gap-xl-3">
           <a href="recentposts.html" class="nav-link text-secondary fw-medium hover-light">Browse Alerts</a>
           <a href="submit_lostitems.html" class="nav-link text-secondary fw-medium hover-light">Report Item</a>
           <a href="missing_person.html" class="nav-link text-rose fw-bold hover-light" style="color: var(--color-rose-400);">Missing Persons</a>
+          <a href="recover.html" class="nav-link text-secondary fw-medium hover-light">
+            <i class="bi bi-shield-check me-1 text-emerald"></i>QR Shield
+          </a>
           <a href="chatbot.html" class="nav-link text-secondary fw-medium hover-light">AI Assistant</a>
-          <a href="payment.html" class="nav-link text-secondary fw-medium hover-light">Support Platform</a>
+          <a href="payment.html" class="nav-link text-secondary fw-medium hover-light">Support</a>
         </nav>
-        <div class="d-flex align-items-center gap-2">
-          <button type="button" class="btn btn-ghost btn-sm text-muted d-flex align-items-center gap-2 px-2 py-1" onclick="window.LostFoundCmdPalette && window.LostFoundCmdPalette.open()" style="background: rgba(255,255,255,0.05); border: 1px solid var(--border-subtle); border-radius: var(--radius-md);">
+        <div class="d-flex align-items-center gap-2 flex-shrink-0 pe-1">
+          <button type="button" class="btn btn-ghost btn-sm d-flex align-items-center gap-2 text-muted px-2 px-xl-3 py-1 rounded-pill border border-subtle glass-subtle" onclick="openCmdPalette()" title="Press Ctrl+K to search">
             <i class="bi bi-search"></i>
-            <span class="d-none d-md-inline" style="font-size: 0.85rem;">Omnibar...</span>
-            <kbd class="d-none d-md-inline-block px-1 py-0 rounded text-muted bg-dark border border-subtle" style="font-size: 0.7rem;">Ctrl K</kbd>
+            <span class="d-none d-xl-inline" style="font-size: 0.85rem;">Omnibar...</span>
+            <kbd class="d-none d-xxl-inline-block px-1 py-0 rounded text-muted bg-dark border border-subtle" style="font-size: 0.7rem;">Ctrl K</kbd>
+          </button>
+          <button type="button" class="btn btn-ghost btn-sm text-light p-2" onclick="window.toggleSound && window.toggleSound()" aria-label="Toggle Civic Sound" title="Toggle Sound Feedback">
+            <i class="bi bi-volume-up-fill sound-toggle-icon"></i>
           </button>
           <button type="button" class="btn btn-ghost btn-sm text-light p-2" onclick="toggleTheme()" aria-label="Toggle Theme" title="Toggle Theme">
             <i class="bi bi-circle-half" id="themeToggleIcon"></i>
           </button>
           <a href="login.html" class="btn btn-ghost btn-sm">Sign In</a>
-          <a href="signup.html" class="btn btn-primary btn-sm btn-pill">Get Started</a>
+          <a href="signup.html" class="btn btn-primary btn-sm btn-pill flex-shrink-0">Get Started</a>
         </div>
       </div>
     </header>
@@ -73,7 +79,14 @@
         <div class="missing-header">
             <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3">
                 <div>
-                    <span class="badge badge-missing mb-2"><i class="bi bi-shield-fill-check me-1"></i> Coordinated with Bangladesh Police</span>
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                      <span class="badge badge-missing"><i class="bi bi-shield-fill-check me-1"></i> Coordinated with Bangladesh Police</span>
+                      <div class="audio-wave-container">
+                        <div class="audio-wave-bar"></div>
+                        <div class="audio-wave-bar"></div>
+                        <div class="audio-wave-bar"></div>
+                      </div>
+                    </div>
                     <h1 class="text-light fw-bold mb-1" style="font-size: 2.2rem;">National Missing Persons Directory</h1>
                     <p class="text-secondary mb-0">Help reunite missing children, elders, and vulnerable citizens across Bangladesh.</p>
                 </div>
@@ -113,6 +126,11 @@
                 <option value="Rangpur">Rangpur</option>
                 <option value="Mymensingh">Mymensingh</option>
             </select>
+            <div class="d-flex gap-1">
+                <button type="button" class="btn btn-ghost btn-sm border border-subtle text-secondary" id="filterAgeChildren" onclick="filterAgeGroup('children', this)">Children &lt;18</button>
+                <button type="button" class="btn btn-ghost btn-sm border border-subtle text-secondary" id="filterAgeElders" onclick="filterAgeGroup('elders', this)">Elders 60+</button>
+                <button type="button" class="btn btn-ghost btn-sm border border-subtle text-secondary active" id="filterAgeAll" onclick="filterAgeGroup('all', this)">All</button>
+            </div>
         </div>
 
         <div class="row g-4 mb-5" id="missingGridContainer">
@@ -515,7 +533,12 @@
           .then(r => r.json())
           .then(data => {
             if (data.success && data.data.persons) {
-              const persons = data.data.persons;
+              let persons = data.data.persons;
+              if (currentAgeFilter === 'children') {
+                persons = persons.filter(p => p.age < 18);
+              } else if (currentAgeFilter === 'elders') {
+                persons = persons.filter(p => p.age >= 60);
+              }
               currentMissingPersons = persons;
               if (persons.length === 0) {
                 container.innerHTML = `
@@ -575,6 +598,22 @@
               container.innerHTML = html;
             }
           });
+      }
+
+      let currentAgeFilter = 'all';
+
+      function filterAgeGroup(group, btn) {
+        currentAgeFilter = group;
+        ['filterAgeChildren', 'filterAgeElders', 'filterAgeAll'].forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.classList.remove('active');
+        });
+        if (btn) btn.classList.add('active');
+        if (window.playCivicSound) window.playCivicSound('click');
+        if (window.showToast) {
+          window.showToast(`Filtering demographic: ${group === 'all' ? 'All Ages' : (group === 'children' ? 'Children <18' : 'Elders 60+')}`, 'info', 'Age Filter');
+        }
+        loadMissingList();
       }
 
       function filterMissingPersons() {

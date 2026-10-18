@@ -73,6 +73,13 @@
 
     <!-- Emergency Amber Broadcast Ticker -->
     <div class="py-1 px-3 bg-danger bg-opacity-25 border-bottom border-danger text-center small text-light d-flex align-items-center justify-content-center gap-2">
+      <div class="audio-wave-container me-1">
+        <div class="audio-wave-bar"></div>
+        <div class="audio-wave-bar"></div>
+        <div class="audio-wave-bar"></div>
+        <div class="audio-wave-bar"></div>
+        <div class="audio-wave-bar"></div>
+      </div>
       <span class="badge badge-missing" style="font-size: 0.7rem;"><i class="bi bi-broadcast me-1"></i> AMBER ALERT</span>
       <span><strong>Urgent Missing Report:</strong> Mohammad Abdul Rahim (68) last seen Mirpur-10, Dhaka.</span>
       <a href="missing_person.html" class="text-rose text-decoration-none fw-bold ms-2" style="color: var(--color-rose-400);">View Alert / Sighting <i class="bi bi-arrow-right"></i></a>
@@ -80,9 +87,9 @@
 
     <!-- Top Navigation Bar -->
     <header class="glass-navbar">
-      <div class="container d-flex justify-content-between align-items-center py-2 px-3 mx-auto" style="max-width: 1320px;">
+      <div class="container d-flex justify-content-between align-items-center py-2 mx-auto">
         <!-- Logo & Brand -->
-        <a href="index.html" class="navbar-brand d-flex align-items-center gap-2 text-decoration-none">
+        <a href="index.html" class="navbar-brand d-flex align-items-center gap-2 text-decoration-none flex-shrink-0">
           <img src="images/logo.png" alt="Lost and Found Bangladesh Logo" width="38" height="38" class="rounded-circle border border-subtle">
           <div>
             <div class="brand-title fw-bold text-light lh-1" style="font-size: 1.15rem; letter-spacing: -0.02em;">Lost & Found <span style="color: var(--color-emerald-400);">BD</span></div>
@@ -91,22 +98,29 @@
         </a>
 
         <!-- Desktop Navigation Links -->
-        <nav class="d-none d-lg-flex align-items-center gap-4">
+        <nav class="d-none d-lg-flex align-items-center gap-2 gap-xl-3">
           <a href="recentposts.html" class="nav-link text-secondary fw-medium hover-light">Browse Alerts</a>
           <a href="submit_lostitems.html" class="nav-link text-secondary fw-medium hover-light">Report Item</a>
           <a href="missing_person.html" class="nav-link text-secondary fw-medium hover-light">Missing Persons</a>
+          <a href="recover.html" class="nav-link text-secondary fw-medium hover-light">
+            <i class="bi bi-shield-check me-1 text-emerald"></i>QR Shield
+          </a>
           <a href="chatbot.html" class="nav-link text-secondary fw-medium hover-light">
             <i class="bi bi-chat-dots me-1 text-emerald" style="color: var(--color-emerald-400);"></i>AI Assistant
           </a>
-          <a href="payment.html" class="nav-link text-secondary fw-medium hover-light">Support Platform</a>
+          <a href="payment.html" class="nav-link text-secondary fw-medium hover-light">Support</a>
         </nav>
 
         <!-- Quick Search Trigger, Theme Toggle & User Controls -->
-        <div class="d-flex align-items-center gap-2">
-          <button type="button" class="btn btn-ghost btn-sm d-flex align-items-center gap-2 text-muted px-3 py-1 rounded-pill border border-subtle glass-subtle" onclick="openCmdPalette()" title="Press Ctrl+K to search">
+        <div class="d-flex align-items-center gap-2 flex-shrink-0 pe-1">
+          <button type="button" class="btn btn-ghost btn-sm d-flex align-items-center gap-2 text-muted px-2 px-xl-3 py-1 rounded-pill border border-subtle glass-subtle" onclick="openCmdPalette()" title="Press Ctrl+K to search">
             <i class="bi bi-search"></i>
-            <span class="d-none d-md-inline" style="font-size: 0.85rem;">Omnibar...</span>
-            <kbd class="d-none d-md-inline-block px-1 py-0 rounded text-muted bg-dark border border-subtle" style="font-size: 0.7rem;">Ctrl K</kbd>
+            <span class="d-none d-xl-inline" style="font-size: 0.85rem;">Omnibar...</span>
+            <kbd class="d-none d-xxl-inline-block px-1 py-0 rounded text-muted bg-dark border border-subtle" style="font-size: 0.7rem;">Ctrl K</kbd>
+          </button>
+
+          <button type="button" class="btn btn-ghost btn-sm text-light p-2" onclick="window.toggleSound && window.toggleSound()" aria-label="Toggle Civic Sound" title="Toggle Sound Feedback">
+            <i class="bi bi-volume-up-fill sound-toggle-icon"></i>
           </button>
 
           <button type="button" class="btn btn-ghost btn-sm text-light p-2" onclick="toggleTheme()" aria-label="Toggle Theme" title="Toggle Dark/Light Mode">
@@ -114,7 +128,7 @@
           </button>
 
           <a href="login.html" class="btn btn-ghost btn-sm">Sign In</a>
-          <a href="signup.html" class="btn btn-primary btn-sm btn-pill">Get Started</a>
+          <a href="signup.html" class="btn btn-primary btn-sm btn-pill flex-shrink-0">Get Started</a>
 
           <!-- Mobile Hamburger Toggle -->
           <button class="btn btn-ghost btn-sm d-lg-none text-light" type="button" onclick="toggleMobileMenu()" aria-label="Toggle Navigation">
@@ -175,43 +189,132 @@
             </a>
           </div>
 
-          <!-- National Incident Radar by Division -->
-          <div class="glass-panel p-4 mb-5 text-start animate-slide-up">
+          <!-- Instant AI Match Radar & Quick Finder (New Flagship Feature) -->
+          <div class="glass-panel p-4 mb-4 text-start animate-stagger-2 card-interactive-glow" style="border-radius: var(--radius-xl); border: 1px solid var(--border-medium);">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 mb-3">
+              <div>
+                <span class="badge bg-indigo-subtle text-indigo mb-1" style="font-size: 0.72rem; letter-spacing: 0.04em; text-transform: uppercase;">
+                  <i class="bi bi-magic me-1"></i> AI Instant Recovery Radar
+                </span>
+                <h3 class="fw-bold text-light mb-0" style="font-size: 1.25rem;">Check If Your Belonging Was Already Found Today</h3>
+              </div>
+              <div class="d-flex align-items-center gap-2 small text-muted">
+                <span class="radar-beacon"></span>
+                <span>Real-time cross-database algorithm</span>
+              </div>
+            </div>
+
+            <div class="row g-2 align-items-center">
+              <div class="col-12 col-md-5">
+                <div class="input-icon-wrapper">
+                  <i class="bi bi-search icon"></i>
+                  <input type="text" class="form-control" id="homeQuickSearchInput" placeholder="What did you lose? (e.g. MacBook, Wallet, Passport...)" oninput="handleHomeInstantSearch()" autocomplete="off">
+                </div>
+              </div>
+              <div class="col-6 col-md-3">
+                <select class="form-select" id="homeQuickCategory" onchange="handleHomeInstantSearch()">
+                  <option value="">All Categories</option>
+                  <option value="Electronics">Electronics</option>
+                  <option value="Wallet/Cards">Wallet / Cards</option>
+                  <option value="Documents">Documents / ID</option>
+                  <option value="Bags">Bags & Luggage</option>
+                  <option value="Pets">Pets & Animals</option>
+                  <option value="Jewelry">Jewelry & Watches</option>
+                </select>
+              </div>
+              <div class="col-6 col-md-2">
+                <select class="form-select" id="homeQuickDivision" onchange="handleHomeInstantSearch()">
+                  <option value="">All Divisions</option>
+                  <option value="Dhaka">Dhaka</option>
+                  <option value="Chattogram">Chattogram</option>
+                  <option value="Sylhet">Sylhet</option>
+                  <option value="Rajshahi">Rajshahi</option>
+                  <option value="Khulna">Khulna</option>
+                  <option value="Barishal">Barishal</option>
+                  <option value="Rangpur">Rangpur</option>
+                  <option value="Mymensingh">Mymensingh</option>
+                </select>
+              </div>
+              <div class="col-12 col-md-2">
+                <a href="recentposts.html?tab=matches" class="btn btn-primary w-100 py-2 d-flex align-items-center justify-content-center gap-1">
+                  <i class="bi bi-stars"></i> Smart Matches
+                </a>
+              </div>
+            </div>
+
+            <!-- Real-time Live Match Preview Container -->
+            <div id="homeInstantMatchPreview" class="mt-3 p-3 rounded glass-subtle d-none border border-emerald animate-fade-in">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <div class="fw-bold text-emerald small d-flex align-items-center gap-2">
+                  <i class="bi bi-patch-check-fill"></i>
+                  <span id="matchResultHeadline">Matches Found in Live Database</span>
+                </div>
+                <span class="match-score-badge match-score-high" id="matchTopScore">92% Match Score</span>
+              </div>
+              <div id="homeMatchItemsList" class="d-flex flex-column gap-2"></div>
+            </div>
+          </div>
+
+          <!-- Interactive National Incident Radar by Division (New Edition) -->
+          <div class="glass-panel p-4 mb-5 text-start animate-slide-up radar-scanner-wrapper">
             <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 mb-3">
               <div>
                 <h4 class="fw-bold text-light mb-1 d-flex align-items-center gap-2">
                   <span class="radar-beacon"></span> National Incident Radar — 8 Administrative Divisions
                 </h4>
-                <small class="text-muted">Live community search operations and verified recovery status across Bangladesh</small>
+                <small class="text-muted">Click any division to inspect live search operations, recovery rates, and local police hotlines</small>
               </div>
-              <a href="recentposts.html" class="text-emerald small text-decoration-none fw-bold">Explore All Active Incidents <i class="bi bi-arrow-right"></i></a>
+              <a href="recentposts.html" class="text-emerald small text-decoration-none fw-bold">
+                Explore All Active Incidents <i class="bi bi-arrow-right"></i>
+              </a>
             </div>
 
-            <div class="d-flex flex-wrap gap-2">
-              <a href="recentposts.html?division=Dhaka" class="division-chip text-decoration-none active">
+            <div class="d-flex flex-wrap gap-2 mb-3" id="divisionChipsBar">
+              <button type="button" class="division-chip active" onclick="inspectDivision('Dhaka', this)">
                 <strong>Dhaka</strong> • <span class="text-emerald">64 Active</span> (89.2% RTO)
-              </a>
-              <a href="recentposts.html?division=Chattogram" class="division-chip text-decoration-none">
+              </button>
+              <button type="button" class="division-chip" onclick="inspectDivision('Chattogram', this)">
                 <strong>Chattogram</strong> • <span class="text-emerald">28 Active</span> (91.4% RTO)
-              </a>
-              <a href="recentposts.html?division=Sylhet" class="division-chip text-decoration-none">
+              </button>
+              <button type="button" class="division-chip" onclick="inspectDivision('Sylhet', this)">
                 <strong>Sylhet</strong> • <span class="text-emerald">14 Active</span> (85.7% RTO)
-              </a>
-              <a href="recentposts.html?division=Rajshahi" class="division-chip text-decoration-none">
+              </button>
+              <button type="button" class="division-chip" onclick="inspectDivision('Rajshahi', this)">
                 <strong>Rajshahi</strong> • <span class="text-emerald">12 Active</span> (88.0% RTO)
-              </a>
-              <a href="recentposts.html?division=Khulna" class="division-chip text-decoration-none">
+              </button>
+              <button type="button" class="division-chip" onclick="inspectDivision('Khulna', this)">
                 <strong>Khulna</strong> • <span class="text-emerald">9 Active</span> (82.1% RTO)
-              </a>
-              <a href="recentposts.html?division=Barishal" class="division-chip text-decoration-none">
+              </button>
+              <button type="button" class="division-chip" onclick="inspectDivision('Barishal', this)">
                 <strong>Barishal</strong> • <span class="text-emerald">6 Active</span> (90.0% RTO)
-              </a>
-              <a href="recentposts.html?division=Rangpur" class="division-chip text-decoration-none">
+              </button>
+              <button type="button" class="division-chip" onclick="inspectDivision('Rangpur', this)">
                 <strong>Rangpur</strong> • <span class="text-emerald">5 Active</span> (87.5% RTO)
-              </a>
-              <a href="recentposts.html?division=Mymensingh" class="division-chip text-decoration-none">
+              </button>
+              <button type="button" class="division-chip" onclick="inspectDivision('Mymensingh', this)">
                 <strong>Mymensingh</strong> • <span class="text-emerald">4 Active</span> (85.0% RTO)
-              </a>
+              </button>
+            </div>
+
+            <!-- Interactive Division Telemetry Panel -->
+            <div class="p-3 rounded glass-subtle border border-subtle d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3" id="divisionTelemetryBox">
+              <div class="d-flex align-items-center gap-3">
+                <div class="p-2 rounded bg-emerald-subtle text-emerald fs-4">
+                  <i class="bi bi-shield-fill-check"></i>
+                </div>
+                <div>
+                  <div class="fw-bold text-light" id="selectedDivName">Dhaka Metropolitan & Division Command</div>
+                  <div class="small text-secondary" id="selectedDivDetails">64 Active Searches • Avg Recovery Time: 4.2 Hours • Police Coordination Active</div>
+                </div>
+              </div>
+              <div class="d-flex align-items-center gap-2">
+                <a href="recentposts.html?division=Dhaka" class="btn btn-secondary btn-sm" id="btnExploreDiv">
+                  <i class="bi bi-compass me-1"></i> Filter Division Feed
+                </a>
+                <a href="tel:999" class="btn btn-danger btn-sm">
+                  <i class="bi bi-telephone-fill me-1"></i> Emergency: 999
+                </a>
+              </div>
             </div>
           </div>
 
@@ -244,6 +347,56 @@
           </div>
         </div>
       </section>
+
+      <!-- Live Community Activity Stream Bar (New Live Pulse Edition) -->
+      <div class="activity-stream-bar" aria-label="Real-time Community Activity Stream">
+        <div class="container-fluid px-3">
+          <div class="d-flex align-items-center">
+            <div class="d-flex align-items-center gap-2 me-4 pe-3 border-end border-subtle d-none d-md-flex text-emerald fw-bold small text-nowrap">
+              <span class="radar-beacon"></span> LIVE PULSE
+            </div>
+            <div class="activity-ticker-track">
+              <span class="activity-ticker-item">
+                <i class="bi bi-check-circle-fill text-emerald"></i>
+                <span><strong>Airport T2, Dhaka:</strong> MacBook Pro 14 safely verified and returned to citizen</span>
+              </span>
+              <span class="activity-ticker-item">
+                <i class="bi bi-broadcast text-rose"></i>
+                <span><strong>Mirpur-10, Dhaka:</strong> Amber Alert Sighting logged for Mohammad Abdul Rahim (68)</span>
+              </span>
+              <span class="activity-ticker-item">
+                <i class="bi bi-shield-check text-indigo"></i>
+                <span><strong>Bashundhara Gate 1:</strong> Black Leather Bellroy Wallet safeguarded by student finder</span>
+              </span>
+              <span class="activity-ticker-item">
+                <i class="bi bi-heart-fill text-rose"></i>
+                <span><strong>Gulshan-2, Dhaka:</strong> ৳2,500 civic recovery fund contribution logged</span>
+              </span>
+              <span class="activity-ticker-item">
+                <i class="bi bi-geo-alt-fill text-amber"></i>
+                <span><strong>Sylhet Railway Station:</strong> Passport & Work Endorsement credentials verified</span>
+              </span>
+              <span class="activity-ticker-item">
+                <i class="bi bi-patch-check text-emerald"></i>
+                <span><strong>GEC Circle, Chattogram:</strong> iPhone 15 Pro Titanium Blue matched with owner</span>
+              </span>
+              <!-- Seamless Loop Duplicate -->
+              <span class="activity-ticker-item">
+                <i class="bi bi-check-circle-fill text-emerald"></i>
+                <span><strong>Airport T2, Dhaka:</strong> MacBook Pro 14 safely verified and returned to citizen</span>
+              </span>
+              <span class="activity-ticker-item">
+                <i class="bi bi-broadcast text-rose"></i>
+                <span><strong>Mirpur-10, Dhaka:</strong> Amber Alert Sighting logged for Mohammad Abdul Rahim (68)</span>
+              </span>
+              <span class="activity-ticker-item">
+                <i class="bi bi-shield-check text-indigo"></i>
+                <span><strong>Bashundhara Gate 1:</strong> Black Leather Bellroy Wallet safeguarded by student finder</span>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <!-- Urgent Missing Persons Section -->
       <section class="py-5 border-top border-subtle" style="background: rgba(239, 68, 68, 0.02);">
@@ -808,6 +961,96 @@
         document.getElementById('claimModal').classList.remove('active');
       }
 
+      // Division Radar Telemetry Data
+      const divisionTelemetry = {
+        'Dhaka': { name: 'Dhaka Metropolitan & Division Command', active: 64, rto: '4.2 hrs', success: '89.2%', hotlines: 'DMP: 01713373100 | Mirpur: 01713373155' },
+        'Chattogram': { name: 'Chattogram Port & Divisional Hub', active: 28, rto: '5.1 hrs', success: '91.4%', hotlines: 'CMP: 01713373200 | Kotwali: 01713373220' },
+        'Sylhet': { name: 'Sylhet Surma Valley Command', active: 14, rto: '3.8 hrs', success: '85.7%', hotlines: 'SMP: 01713373300 | Kotwali: 01713373315' },
+        'Rajshahi': { name: 'Rajshahi Padma River Command', active: 12, rto: '6.0 hrs', success: '88.0%', hotlines: 'RMP: 01713373400 | Boalia: 01713373415' },
+        'Khulna': { name: 'Khulna Sundarbans Command', active: 9, rto: '5.4 hrs', success: '82.1%', hotlines: 'KMP: 01713373500 | Sadar: 01713373515' },
+        'Barishal': { name: 'Barishal Coastal Division', active: 6, rto: '4.7 hrs', success: '90.0%', hotlines: 'BMP: 01713373600 | Kotwali: 01713373620' },
+        'Rangpur': { name: 'Rangpur Northern Command', active: 5, rto: '6.2 hrs', success: '87.5%', hotlines: 'RPMP: 01713373700 | Kotwali: 01713373715' },
+        'Mymensingh': { name: 'Mymensingh Brahmaputra Command', active: 4, rto: '5.0 hrs', success: '85.0%', hotlines: 'Police Control: 01713373800' }
+      };
+
+      function inspectDivision(div, btn) {
+        document.querySelectorAll('#divisionChipsBar .division-chip').forEach(b => b.classList.remove('active'));
+        if (btn) btn.classList.add('active');
+        if (window.playCivicSound) window.playCivicSound('click');
+
+        const data = divisionTelemetry[div] || divisionTelemetry['Dhaka'];
+        document.getElementById('selectedDivName').textContent = data.name;
+        document.getElementById('selectedDivDetails').textContent = `${data.active} Active Searches • Avg Recovery: ${data.rto} • Success Rate: ${data.success} • Hotline: ${data.hotlines}`;
+        document.getElementById('btnExploreDiv').href = `recentposts.html?division=${encodeURIComponent(div)}`;
+        
+        if (window.showToast) {
+          window.showToast(`Inspecting ${div} Division telemetry & active alerts`, 'info', 'Radar Target');
+        }
+      }
+
+      // Real-time AI Instant Recovery Cross-Matcher
+      let homeSearchTimer = null;
+      function handleHomeInstantSearch() {
+        clearTimeout(homeSearchTimer);
+        const query = (document.getElementById('homeQuickSearchInput').value || '').trim();
+        const category = document.getElementById('homeQuickCategory').value;
+        const division = document.getElementById('homeQuickDivision').value;
+        const previewBox = document.getElementById('homeInstantMatchPreview');
+        const listContainer = document.getElementById('homeMatchItemsList');
+
+        if (!query && !category && !division) {
+          previewBox.classList.add('d-none');
+          return;
+        }
+
+        homeSearchTimer = setTimeout(() => {
+          let url = `api/items.php?action=list&type=found`;
+          if (query) url += `&query=${encodeURIComponent(query)}`;
+          if (category) url += `&category=${encodeURIComponent(category)}`;
+          if (division) url += `&division=${encodeURIComponent(division)}`;
+
+          fetch(url)
+            .then(r => r.json())
+            .then(res => {
+              previewBox.classList.remove('d-none');
+              if (res.success && res.data && res.data.items && res.data.items.length > 0) {
+                if (window.playCivicSound) window.playCivicSound('chime');
+                document.getElementById('matchResultHeadline').textContent = `${res.data.items.length} Potential Match(es) Found in Live Catalog!`;
+                document.getElementById('matchTopScore').textContent = '94% Match Probability';
+                document.getElementById('matchTopScore').className = 'match-score-badge match-score-high';
+
+                listContainer.innerHTML = res.data.items.slice(0, 3).map(item => `
+                  <div class="p-2 rounded glass-panel d-flex justify-content-between align-items-center gap-2 border border-subtle">
+                    <div class="d-flex align-items-center gap-2 text-truncate">
+                      <img src="${item.picture || 'images/default_item.jpg'}" alt="${item.title}" class="rounded" width="40" height="40" style="object-fit: cover;">
+                      <div class="text-truncate">
+                        <div class="fw-bold text-light text-truncate" style="font-size: 0.9rem;">${item.title}</div>
+                        <small class="text-muted"><i class="bi bi-geo-alt me-1 text-emerald"></i>${item.district}, ${item.division} • Found on ${item.date_lost_or_found}</small>
+                      </div>
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
+                      <button type="button" class="btn btn-secondary btn-sm" onclick="openItemModal(${item.id})">Inspect</button>
+                      <button type="button" class="btn btn-primary btn-sm" onclick="claimItem(${item.id}, '${item.title.replace(/'/g, "\\'")}')">Claim</button>
+                    </div>
+                  </div>
+                `).join('');
+              } else {
+                document.getElementById('matchResultHeadline').textContent = 'No exact matches found yet in public registry.';
+                document.getElementById('matchTopScore').textContent = 'Live Broadcast Available';
+                document.getElementById('matchTopScore').className = 'match-score-badge match-score-medium';
+                listContainer.innerHTML = `
+                  <div class="small text-secondary py-1">
+                    No citizen has turned in this item yet. File a report immediately so our AI engine can alert you as soon as someone finds it.
+                    <div class="mt-2">
+                      <a href="submit_lostitems.html?type=lost" class="btn btn-danger btn-sm"><i class="bi bi-broadcast me-1"></i> File Official Lost Report Now</a>
+                    </div>
+                  </div>
+                `;
+              }
+            });
+        }, 220);
+      }
+
       function handleClaimSubmit(e) {
         e.preventDefault();
         const itemId = document.getElementById('claimItemId').value;
@@ -816,7 +1059,7 @@
         const btn = document.getElementById('claimSubmitBtn');
 
         btn.disabled = true;
-        btn.innerHTML = 'Submitting claim...';
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status"></span>Submitting Verification Proof...';
 
         fetch('api/items.php', {
           method: 'POST',
@@ -828,15 +1071,30 @@
             contact_phone: phone
           })
         })
-        .then(r => r.json())
-        .then(data => {
+        .then(r => r.json().then(data => ({ status: r.status, data })))
+        .then(({ status, data }) => {
           btn.disabled = false;
           btn.innerHTML = 'Submit for Moderator Verification';
           if (data.success) {
-            alert('Claim submitted! Our moderation desk will review your details.');
+            if (window.showToast) {
+              window.showToast('Your ownership claim has been submitted to the moderation desk.', 'success', 'Claim Dispatched');
+            } else {
+              alert('Claim submitted! Our moderation desk will review your details.');
+            }
             closeClaimModal(null);
           } else {
-            alert(data.error || 'Claim submission failed.');
+            if (window.showToast) {
+              window.showToast(data.error || 'Claim submission failed.', 'danger', 'Submission Error');
+            } else {
+              alert(data.error || 'Claim submission failed.');
+            }
+          }
+        })
+        .catch(() => {
+          btn.disabled = false;
+          btn.innerHTML = 'Submit for Moderator Verification';
+          if (window.showToast) {
+            window.showToast('Network error while dispatching claim.', 'danger', 'Network Error');
           }
         });
       }

@@ -11,9 +11,9 @@ $auth = new AuthService();
 $currentUser = $auth->getCurrentUser();
 ?>
 <header class="glass-navbar">
-  <div class="container d-flex justify-content-between align-items-center py-2 px-3 mx-auto" style="max-width: 1320px;">
+  <div class="container d-flex justify-content-between align-items-center py-2 mx-auto">
     <!-- Logo & Brand -->
-    <a href="index.php" class="navbar-brand d-flex align-items-center gap-2 text-decoration-none">
+    <a href="index.php" class="navbar-brand d-flex align-items-center gap-2 text-decoration-none flex-shrink-0">
       <img src="images/logo.png" alt="Lost and Found Bangladesh Logo" width="38" height="38" class="rounded-circle border border-subtle">
       <div>
         <div class="brand-title fw-bold text-light lh-1" style="font-size: 1.15rem; letter-spacing: -0.02em;">Lost & Found <span class="text-emerald" style="color: var(--color-emerald-400);">BD</span></div>
@@ -22,14 +22,17 @@ $currentUser = $auth->getCurrentUser();
     </a>
 
     <!-- Desktop Navigation Links -->
-    <nav class="d-none d-lg-flex align-items-center gap-4">
+    <nav class="d-none d-lg-flex align-items-center gap-2 gap-xl-3">
       <a href="recentposts.php" class="nav-link text-secondary fw-medium hover-light">Browse Alerts</a>
       <a href="submit_lostitems.php" class="nav-link text-secondary fw-medium hover-light">Report Item</a>
       <a href="missing_person.php" class="nav-link text-secondary fw-medium hover-light">Missing Persons</a>
+      <a href="recover.html" class="nav-link text-secondary fw-medium hover-light">
+        <i class="bi bi-shield-check me-1 text-emerald"></i>QR Shield
+      </a>
       <a href="chatbot.php" class="nav-link text-secondary fw-medium hover-light">
         <i class="bi bi-chat-dots me-1 text-emerald"></i>AI Assistant
       </a>
-      <a href="payment.php" class="nav-link text-secondary fw-medium hover-light">Support Platform</a>
+      <a href="payment.php" class="nav-link text-secondary fw-medium hover-light">Support</a>
     </nav>
 
     <!-- Quick Search Trigger & User Controls -->
@@ -39,6 +42,16 @@ $currentUser = $auth->getCurrentUser();
         <i class="bi bi-search"></i>
         <span class="d-none d-md-inline" style="font-size: 0.85rem;">Quick Search...</span>
         <kbd class="d-none d-md-inline-block px-1 py-0 rounded text-muted bg-dark border border-subtle" style="font-size: 0.7rem;">Ctrl K</kbd>
+      </button>
+
+      <!-- Civic Sound Feedback Toggle -->
+      <button type="button" class="btn btn-ghost btn-sm text-light p-2" onclick="window.toggleSound && window.toggleSound()" aria-label="Toggle Civic Sound" title="Toggle Sound Feedback">
+        <i class="bi bi-volume-up-fill sound-toggle-icon"></i>
+      </button>
+
+      <!-- Theme Mode Toggle -->
+      <button type="button" class="btn btn-ghost btn-sm text-light p-2" onclick="window.toggleTheme && window.toggleTheme()" aria-label="Toggle Theme" title="Toggle Theme">
+        <i class="bi bi-circle-half" id="themeToggleIcon"></i>
       </button>
 
       <?php if ($currentUser): ?>

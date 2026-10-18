@@ -29,8 +29,8 @@
 <body>
     <!-- Top Navigation Bar -->
     <header class="glass-navbar">
-      <div class="container d-flex justify-content-between align-items-center py-2 px-3 mx-auto" style="max-width: 1320px;">
-        <a href="index.html" class="navbar-brand d-flex align-items-center gap-2 text-decoration-none">
+      <div class="container d-flex justify-content-between align-items-center py-2 mx-auto">
+        <a href="index.html" class="navbar-brand d-flex align-items-center gap-2 text-decoration-none flex-shrink-0">
           <img src="images/logo.png" alt="Lost and Found Bangladesh Logo" width="38" height="38" class="rounded-circle border border-subtle">
           <div>
             <div class="brand-title fw-bold text-light lh-1" style="font-size: 1.15rem; letter-spacing: -0.02em;">Lost & Found <span style="color: var(--color-emerald-400);">BD</span></div>
@@ -38,25 +38,31 @@
           </div>
         </a>
 
-        <nav class="d-none d-lg-flex align-items-center gap-4">
+        <nav class="d-none d-lg-flex align-items-center gap-2 gap-xl-3">
           <a href="recentposts.html" class="nav-link text-emerald fw-bold hover-light" style="color: var(--color-emerald-400);">Browse Alerts</a>
           <a href="submit_lostitems.html" class="nav-link text-secondary fw-medium hover-light">Report Item</a>
           <a href="missing_person.html" class="nav-link text-secondary fw-medium hover-light">Missing Persons</a>
+          <a href="recover.html" class="nav-link text-secondary fw-medium hover-light">
+            <i class="bi bi-shield-check me-1 text-emerald"></i>QR Shield
+          </a>
           <a href="chatbot.html" class="nav-link text-secondary fw-medium hover-light">AI Assistant</a>
-          <a href="payment.html" class="nav-link text-secondary fw-medium hover-light">Support Platform</a>
+          <a href="payment.html" class="nav-link text-secondary fw-medium hover-light">Support</a>
         </nav>
 
-        <div class="d-flex align-items-center gap-2">
-          <button type="button" class="btn btn-ghost btn-sm d-flex align-items-center gap-2 text-muted px-3 py-1 rounded-pill border border-subtle glass-subtle" onclick="openCmdPalette()" title="Press Ctrl+K to search">
+        <div class="d-flex align-items-center gap-2 flex-shrink-0 pe-1">
+          <button type="button" class="btn btn-ghost btn-sm d-flex align-items-center gap-2 text-muted px-2 px-xl-3 py-1 rounded-pill border border-subtle glass-subtle" onclick="openCmdPalette()" title="Press Ctrl+K to search">
             <i class="bi bi-search"></i>
-            <span class="d-none d-md-inline" style="font-size: 0.85rem;">Omnibar...</span>
-            <kbd class="d-none d-md-inline-block px-1 py-0 rounded text-muted bg-dark border border-subtle" style="font-size: 0.7rem;">Ctrl K</kbd>
+            <span class="d-none d-xl-inline" style="font-size: 0.85rem;">Omnibar...</span>
+            <kbd class="d-none d-xxl-inline-block px-1 py-0 rounded text-muted bg-dark border border-subtle" style="font-size: 0.7rem;">Ctrl K</kbd>
+          </button>
+          <button type="button" class="btn btn-ghost btn-sm text-light p-2" onclick="window.toggleSound && window.toggleSound()" aria-label="Toggle Civic Sound" title="Toggle Sound Feedback">
+            <i class="bi bi-volume-up-fill sound-toggle-icon"></i>
           </button>
           <button type="button" class="btn btn-ghost btn-sm text-light p-2" onclick="toggleTheme()" aria-label="Toggle Theme" title="Toggle Theme">
             <i class="bi bi-circle-half" id="themeToggleIcon"></i>
           </button>
           <a href="login.html" class="btn btn-ghost btn-sm">Sign In</a>
-          <a href="signup.html" class="btn btn-primary btn-sm btn-pill">Get Started</a>
+          <a href="signup.html" class="btn btn-primary btn-sm btn-pill flex-shrink-0">Get Started</a>
         </div>
       </div>
     </header>
@@ -78,6 +84,9 @@
                             <i class="bi bi-table me-1"></i> Table
                         </button>
                     </div>
+                    <button type="button" class="btn btn-ghost btn-sm border border-subtle me-1" onclick="exportPrintSummary()" title="Print Summary Report">
+                        <i class="bi bi-printer me-1"></i> Export
+                    </button>
                     <a href="submit_lostitems.html?type=lost" class="btn btn-danger btn-sm btn-pill px-3 py-2">
                         <i class="bi bi-search me-1"></i> Report Lost
                     </a>
@@ -88,8 +97,8 @@
             </div>
         </div>
 
-        <!-- Mode Switch Tabs -->
-        <div class="d-flex gap-2 mb-4 border-bottom border-subtle pb-2">
+        <!-- Mode Switch Tabs with Watchlist Engine (New Feature) -->
+        <div class="d-flex flex-wrap gap-2 mb-4 border-bottom border-subtle pb-2">
             <button class="btn btn-ghost active text-light px-3 py-2 fw-semibold" id="tabBtnAll" onclick="switchCatalogTab('all')">
                 <i class="bi bi-collection-fill me-2 text-emerald"></i> All Community Alerts
             </button>
@@ -97,19 +106,23 @@
                 <i class="bi bi-magic me-2 text-indigo" style="color: var(--color-indigo-400);"></i> Algorithmic Smart Matches 
                 <span class="badge bg-indigo text-light ms-1" id="smartMatchesBadge" style="background: var(--color-indigo-500); font-size: 0.7rem;">0</span>
             </button>
+            <button class="btn btn-ghost text-secondary px-3 py-2 fw-semibold" id="tabBtnWatchlist" onclick="switchCatalogTab('watchlist')">
+                <i class="bi bi-star-fill me-2 text-amber" style="color: var(--color-amber-400);"></i> My Watchlist 
+                <span class="badge bg-dark text-amber ms-1 border border-subtle" id="watchlistCountBadge" style="font-size: 0.7rem;">0</span>
+            </button>
         </div>
 
-        <!-- Filter Bar -->
+        <!-- Filter Bar with Sort Engine -->
         <div class="filter-bar mb-4" id="catalogFilterBar">
-            <form id="catalogFilterForm" onsubmit="applyCatalogFilters(event)" class="row g-3 align-items-center">
-                <div class="col-lg-4 col-md-12">
+            <form id="catalogFilterForm" onsubmit="applyCatalogFilters(event)" class="row g-2 align-items-center">
+                <div class="col-lg-3 col-md-6">
                     <div class="input-icon-wrapper">
                         <i class="bi bi-search icon"></i>
                         <input type="text" class="form-control" id="searchFilterInput" placeholder="Search keyword, brand, location...">
                     </div>
                 </div>
 
-                <div class="col-sm-4 col-lg-2">
+                <div class="col-sm-6 col-lg-2">
                     <select class="form-select" id="typeFilterSelect" onchange="fetchCatalogItems()">
                         <option value="all">All Report Types</option>
                         <option value="lost">Lost Items</option>
@@ -117,7 +130,7 @@
                     </select>
                 </div>
 
-                <div class="col-sm-4 col-lg-3">
+                <div class="col-sm-6 col-lg-2">
                     <select class="form-select" id="categoryFilterSelect" onchange="fetchCatalogItems()">
                         <option value="All">All Categories</option>
                         <option value="Electronics">Electronics & Gadgets</option>
@@ -130,7 +143,7 @@
                     </select>
                 </div>
 
-                <div class="col-sm-4 col-lg-2">
+                <div class="col-sm-6 col-lg-2">
                     <select class="form-select" id="divisionFilterSelect" onchange="fetchCatalogItems()">
                         <option value="All">All Divisions</option>
                         <option value="Dhaka">Dhaka</option>
@@ -144,8 +157,16 @@
                     </select>
                 </div>
 
+                <div class="col-sm-6 col-lg-2">
+                    <select class="form-select" id="sortFilterSelect" onchange="fetchCatalogItems()">
+                        <option value="newest">Sort: Newest First</option>
+                        <option value="oldest">Sort: Oldest First</option>
+                        <option value="reward">Sort: Highest Reward</option>
+                    </select>
+                </div>
+
                 <div class="col-lg-1 col-md-12 text-end">
-                    <button type="submit" class="btn btn-primary w-100 py-2"><i class="bi bi-filter"></i> Filter</button>
+                    <button type="submit" class="btn btn-primary w-100 py-2"><i class="bi bi-filter"></i> Go</button>
                 </div>
             </form>
         </div>
@@ -443,11 +464,200 @@
         return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
       }
 
+      // Citizen Watchlist Engine (Stored locally)
+      function getWatchlist() {
+        try {
+          return JSON.parse(localStorage.getItem('lf_watchlist') || '[]');
+        } catch (e) {
+          return [];
+        }
+      }
+
+      function isWatchlisted(id) {
+        return getWatchlist().includes(Number(id));
+      }
+
+      function toggleWatchlist(id, e) {
+        if (e) e.stopPropagation();
+        id = Number(id);
+        let list = getWatchlist();
+        let added = false;
+        if (list.includes(id)) {
+          list = list.filter(item => item !== id);
+        } else {
+          list.push(id);
+          added = true;
+        }
+        localStorage.setItem('lf_watchlist', JSON.stringify(list));
+        updateWatchlistBadge();
+
+        if (window.playCivicSound) window.playCivicSound(added ? 'success' : 'click');
+        if (window.showToast) {
+          window.showToast(added ? 'Item added to your personal Watchlist' : 'Item removed from Watchlist', added ? 'success' : 'info', 'Watchlist');
+        }
+
+        if (currentTab === 'watchlist') {
+          renderWatchlistView();
+        } else if (currentViewMode === 'grid') {
+          fetchCatalogItems();
+        } else {
+          renderTableView();
+        }
+      }
+
+      function updateWatchlistBadge() {
+        const badge = document.getElementById('watchlistCountBadge');
+        if (badge) badge.textContent = getWatchlist().length;
+      }
+
+      function shareItem(id, title, e) {
+        if (e) e.stopPropagation();
+        const shareUrl = window.location.origin + window.location.pathname + '?highlight=' + id;
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(shareUrl).then(() => {
+            if (window.showToast) {
+              window.showToast(`Sharable link for "${title}" copied to clipboard!`, 'success', 'Link Copied');
+            } else {
+              alert('Link copied to clipboard: ' + shareUrl);
+            }
+          });
+        }
+      }
+
+      function exportPrintSummary() {
+        window.print();
+      }
+
+      function switchCatalogTab(tab) {
+        currentTab = tab;
+        const btnAll = document.getElementById('tabBtnAll');
+        const btnMatches = document.getElementById('tabBtnMatches');
+        const btnWatchlist = document.getElementById('tabBtnWatchlist');
+        const filterBar = document.getElementById('catalogFilterBar');
+        const grid = document.getElementById('catalogGrid');
+        const tableContainer = document.getElementById('catalogTableContainer');
+        const matchesContainer = document.getElementById('smartMatchesContainer');
+
+        [btnAll, btnMatches, btnWatchlist].forEach(b => {
+          if (b) {
+            b.classList.remove('active', 'text-light');
+            b.classList.add('text-secondary');
+          }
+        });
+
+        if (tab === 'all') {
+          btnAll.classList.add('active', 'text-light');
+          filterBar.classList.remove('d-none');
+          matchesContainer.classList.add('d-none');
+          if (currentViewMode === 'grid') {
+            grid.classList.remove('d-none');
+            tableContainer.classList.add('d-none');
+          } else {
+            grid.classList.add('d-none');
+            tableContainer.classList.remove('d-none');
+          }
+          fetchCatalogItems();
+        } else if (tab === 'matches') {
+          btnMatches.classList.add('active', 'text-light');
+          filterBar.classList.add('d-none');
+          grid.classList.add('d-none');
+          tableContainer.classList.add('d-none');
+          matchesContainer.classList.remove('d-none');
+          fetchSmartMatches();
+        } else if (tab === 'watchlist') {
+          btnWatchlist.classList.add('active', 'text-light');
+          filterBar.classList.remove('d-none');
+          matchesContainer.classList.add('d-none');
+          renderWatchlistView();
+        }
+      }
+
+      function renderWatchlistView() {
+        const watchlistIds = getWatchlist();
+        const grid = document.getElementById('catalogGrid');
+        const tableContainer = document.getElementById('catalogTableContainer');
+        const watchlistedItems = currentItems.filter(i => watchlistIds.includes(Number(i.id)));
+
+        document.getElementById('totalCountDisplay').textContent = `Showing ${watchlistedItems.length} bookmarked alerts in your Watchlist`;
+
+        if (watchlistedItems.length === 0) {
+          grid.classList.remove('d-none');
+          tableContainer.classList.add('d-none');
+          grid.innerHTML = `
+            <div class="glass-panel text-center p-5 col-12" style="grid-column: 1/-1;">
+              <i class="bi bi-star text-amber mb-3 d-block" style="font-size: 3rem; color: var(--color-amber-400);"></i>
+              <h3 class="text-light fw-bold">Your Watchlist is Empty</h3>
+              <p class="text-muted">Click the star icon on any alert to monitor status changes, police updates, or finder reports.</p>
+              <button class="btn btn-secondary mt-2" onclick="switchCatalogTab('all')">Browse Catalog</button>
+            </div>
+          `;
+          return;
+        }
+
+        renderItemsList(watchlistedItems);
+      }
+
+      function renderItemsList(items) {
+        const grid = document.getElementById('catalogGrid');
+        let html = '';
+        items.forEach(item => {
+          const badgeClass = item.item_type === 'lost' ? 'badge-lost' : 'badge-found';
+          const bookmarked = isWatchlisted(item.id);
+          html += `
+            <div class="item-card card-interactive-glow ${item.item_type === 'lost' ? 'card-urgent-glow' : ''}">
+              <div class="item-card-media">
+                <img src="${item.picture || 'images/default_item.jpg'}" alt="${escapeHtml(item.title)}" loading="lazy">
+                <span class="badge ${badgeClass} item-card-badge">${item.item_type}</span>
+                ${item.reward_amount > 0 ? `<span class="item-card-reward"><i class="bi bi-gift-fill me-1"></i>৳${Number(item.reward_amount).toLocaleString()}</span>` : ''}
+                <button type="button" class="btn-bookmark ${bookmarked ? 'active' : ''} position-absolute top-0 start-0 m-2" onclick="toggleWatchlist(${item.id}, event)" title="${bookmarked ? 'Remove Watchlist' : 'Add to Watchlist'}">
+                  <i class="bi ${bookmarked ? 'bi-star-fill' : 'bi-star'}"></i>
+                </button>
+              </div>
+              <div class="item-card-body">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                  <span class="text-muted small text-uppercase fw-bold" style="font-size: 0.725rem;">${escapeHtml(item.category)}</span>
+                  <button type="button" class="btn btn-ghost btn-sm p-0 text-muted" onclick="shareItem(${item.id}, '${escapeHtml(item.title).replace(/'/g, "\\'")}', event)" title="Share Link">
+                    <i class="bi bi-share"></i>
+                  </button>
+                </div>
+                <h3 class="item-card-title">${escapeHtml(item.title)}</h3>
+                <p class="item-card-desc">${escapeHtml(item.description)}</p>
+                
+                <div class="item-card-meta">
+                  <span><i class="bi bi-geo-alt me-1 text-emerald"></i>${escapeHtml(item.district)}, ${escapeHtml(item.division)}</span>
+                  <span><i class="bi bi-calendar3 me-1"></i>${item.date_lost_or_found}</span>
+                </div>
+
+                <div class="mt-3 pt-2 border-top border-subtle d-flex gap-2">
+                  <button type="button" class="btn btn-secondary btn-sm flex-grow-1" onclick="openItemModal(${item.id})">
+                    <i class="bi bi-eye"></i> Details
+                  </button>
+                  ${item.item_type === 'found' ? `
+                    <button type="button" class="btn btn-primary btn-sm flex-grow-1" onclick="claimItem(${item.id}, '${escapeHtml(item.title).replace(/'/g, "\\'")}')">
+                      <i class="bi bi-hand-index-thumb"></i> Claim
+                    </button>
+                  ` : `
+                    <a href="tel:${item.contact_phone}" class="btn btn-ghost btn-sm border border-subtle flex-grow-1">
+                      <i class="bi bi-telephone text-emerald"></i> Call
+                    </a>
+                  `}
+                </div>
+              </div>
+            </div>
+          `;
+        });
+        grid.innerHTML = html;
+        if (currentViewMode === 'table') {
+          renderTableView();
+        }
+      }
+
       function fetchCatalogItems() {
         const query = document.getElementById('searchFilterInput').value;
         const type = document.getElementById('typeFilterSelect').value;
         const cat = document.getElementById('categoryFilterSelect').value;
         const div = document.getElementById('divisionFilterSelect').value;
+        const sort = (document.getElementById('sortFilterSelect') || {}).value || 'newest';
         const grid = document.getElementById('catalogGrid');
 
         let url = `api/items.php?action=list&limit=60`;
@@ -460,8 +670,19 @@
           .then(r => r.json())
           .then(data => {
             if (data.success && data.data.items) {
-              const items = data.data.items;
+              let items = data.data.items;
+
+              // Apply client-side sort
+              if (sort === 'oldest') {
+                items.sort((a, b) => a.id - b.id);
+              } else if (sort === 'reward') {
+                items.sort((a, b) => (b.reward_amount || 0) - (a.reward_amount || 0));
+              } else {
+                items.sort((a, b) => b.id - a.id);
+              }
+
               currentItems = items;
+              updateWatchlistBadge();
               document.getElementById('totalCountDisplay').textContent = `Showing ${items.length} verified reports across Bangladesh`;
 
               if (items.length === 0) {
@@ -476,49 +697,7 @@
                 return;
               }
 
-              let html = '';
-              items.forEach(item => {
-                const badgeClass = item.item_type === 'lost' ? 'badge-lost' : 'badge-found';
-                html += `
-                  <div class="item-card">
-                    <div class="item-card-media">
-                      <img src="${item.picture || 'images/default_item.jpg'}" alt="${escapeHtml(item.title)}" loading="lazy">
-                      <span class="badge ${badgeClass} item-card-badge">${item.item_type}</span>
-                      ${item.reward_amount > 0 ? `<span class="item-card-reward"><i class="bi bi-gift-fill me-1"></i>৳${Number(item.reward_amount).toLocaleString()}</span>` : ''}
-                    </div>
-                    <div class="item-card-body">
-                      <div class="text-muted small text-uppercase mb-1" style="font-size: 0.725rem; font-weight: 700;">${escapeHtml(item.category)}</div>
-                      <h3 class="item-card-title">${escapeHtml(item.title)}</h3>
-                      <p class="item-card-desc">${escapeHtml(item.description)}</p>
-                      
-                      <div class="item-card-meta">
-                        <span><i class="bi bi-geo-alt me-1 text-emerald"></i>${escapeHtml(item.district)}, ${escapeHtml(item.division)}</span>
-                        <span><i class="bi bi-calendar3 me-1"></i>${item.date_lost_or_found}</span>
-                      </div>
-
-                      <div class="mt-3 pt-2 border-top border-subtle d-flex gap-2">
-                        <button type="button" class="btn btn-secondary btn-sm flex-grow-1" onclick="openItemModal(${item.id})">
-                          <i class="bi bi-eye"></i> Details
-                        </button>
-                        ${item.item_type === 'found' ? `
-                          <button type="button" class="btn btn-primary btn-sm flex-grow-1" onclick="claimItem(${item.id}, '${escapeHtml(item.title).replace(/'/g, "\\'")}')">
-                            <i class="bi bi-hand-index-thumb"></i> Claim
-                          </button>
-                        ` : `
-                          <a href="tel:${item.contact_phone}" class="btn btn-ghost btn-sm border border-subtle flex-grow-1">
-                            <i class="bi bi-telephone text-emerald"></i> Call
-                          </a>
-                        `}
-                      </div>
-                    </div>
-                  </div>
-                `;
-              });
-              grid.innerHTML = html;
-
-              if (currentViewMode === 'table') {
-                renderTableView();
-              }
+              renderItemsList(items);
             }
           })
           .catch(err => {

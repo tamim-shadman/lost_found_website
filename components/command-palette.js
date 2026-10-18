@@ -212,4 +212,238 @@
       }
     }
   });
+
+  // 4. Civic Web Audio Feedback Engine (Zero external dependencies)
+  let soundEnabled = localStorage.getItem('lf_sound') !== 'muted';
+  let audioCtx = null;
+
+  function initAudio() {
+    if (!audioCtx && (window.AudioContext || window.webkitAudioContext)) {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (audioCtx && audioCtx.state === 'suspended') {
+      audioCtx.resume();
+    }
+  }
+
+  window.playCivicSound = function (type = 'click') {
+    if (!soundEnabled) return;
+    try {
+      initAudio();
+      if (!audioCtx) return;
+      const now = audioCtx.currentTime;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      if (type === 'success') {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(523.25, now); // C5
+        osc.frequency.exponentialRampToValueAtTime(659.25, now + 0.12); // E5
+        gain.gain.setValueAtTime(0.08, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+        osc.start(now);
+        osc.stop(now + 0.35);
+      } else if (type === 'alert') {
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(660, now);
+        osc.frequency.exponentialRampToValueAtTime(440, now + 0.2);
+        gain.gain.setValueAtTime(0.12, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+        osc.start(now);
+        osc.stop(now + 0.35);
+      } else if (type === 'chime') {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(440, now);
+        osc.frequency.exponentialRampToValueAtTime(880, now + 0.15);
+        gain.gain.setValueAtTime(0.06, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+        osc.start(now);
+        osc.stop(now + 0.25);
+      } else { // soft click
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(800, now);
+        gain.gain.setValueAtTime(0.04, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+        osc.start(now);
+        osc.stop(now + 0.05);
+      }
+    } catch (e) {}
+  };
+
+  window.toggleSound = function () {
+    soundEnabled = !soundEnabled;
+    localStorage.setItem('lf_sound', soundEnabled ? 'enabled' : 'muted');
+    const soundIcons = document.querySelectorAll('.sound-toggle-icon');
+    soundIcons.forEach(i => {
+      i.className = soundEnabled ? 'bi bi-volume-up-fill sound-toggle-icon' : 'bi bi-volume-mute-fill sound-toggle-icon';
+    });
+    if (soundEnabled) {
+      window.playCivicSound('chime');
+      window.showToast('Audio feedback activated', 'info', 'Civic Sound');
+    } else {
+      window.showToast('Audio feedback muted', 'info', 'Civic Sound');
+    }
+  };
+
+  // 5. Global Toast Notification System
+  window.showToast = function (message, type = 'success', title = '') {
+    let container = document.getElementById('lfToastContainer');
+    if (!container) {
+      container = document.createElement('div');
+      container.id = 'lfToastContainer';
+      container.className = 'lf-toast-container';
+      document.body.appendChild(container);
+    }
+
+    const toast = document.createElement('div');
+    toast.className = 'lf-toast';
+
+    let iconClass = 'bi-check-circle-fill text-emerald';
+    let defaultTitle = 'Success';
+    if (type === 'error' || type === 'danger') {
+      iconClass = 'bi-exclamation-triangle-fill text-rose';
+      defaultTitle = 'Attention';
+      window.playCivicSound('alert');
+    } else if (type === 'info') {
+      iconClass = 'bi-info-circle-fill text-indigo';
+      defaultTitle = 'Notice';
+      window.playCivicSound('chime');
+    } else {
+      window.playCivicSound('success');
+    }
+
+    toast.innerHTML = `
+      <i class="bi ${iconClass} fs-5 mt-1"></i>
+      <div class="flex-grow-1">
+        <div class="fw-bold" style="font-size: 0.9rem;">${title || defaultTitle}</div>
+        <div class="small text-secondary" style="font-size: 0.825rem; line-height: 1.4;">${message}</div>
+      </div>
+      <button type="button" class="btn-close btn-close-white small ms-2" aria-label="Close" style="font-size: 0.7rem;"></button>
+      <div class="lf-toast-progress"></div>
+    `;
+
+    const closeBtn = toast.querySelector('.btn-close');
+    closeBtn.onclick = () => {
+      toast.classList.add('toast-exit');
+      setTimeout(() => toast.remove(), 280);
+    };
+
+    container.appendChild(toast);
+
+    setTimeout(() => {
+      if (toast.parentNode) {
+        toast.classList.add('toast-exit');
+        setTimeout(() => toast.remove(), 280);
+      }
+    }, 4000);
+  };
+
+  // 6. Floating SOS Emergency Hub & Scroll-to-Top Injector
+  function injectSosFloatingHub() {
+    if (document.getElementById('sosFloatingHub')) return;
+
+    const hub = document.createElement('div');
+    hub.id = 'sosFloatingHub';
+    hub.className = 'sos-floating-hub';
+    hub.innerHTML = `
+      <div class="sos-quick-panel" id="sosQuickPanel">
+        <div class="text-uppercase fw-bold px-2 py-1 small text-rose" style="font-size: 0.68rem; letter-spacing: 0.05em;">
+          <i class="bi bi-broadcast me-1"></i> National Emergency Hub
+        </div>
+        <a href="tel:999" class="btn btn-danger btn-sm text-start py-2 px-3 d-flex align-items-center gap-2">
+          <i class="bi bi-shield-fill-exclamation fs-5"></i>
+          <div>
+            <div class="fw-bold lh-1">Police / Fire / Ambulance</div>
+            <small style="font-size: 0.72rem; opacity: 0.85;">Dial Hotline 999 (24/7)</small>
+          </div>
+        </a>
+        <a href="tel:1098" class="btn btn-secondary btn-sm text-start py-2 px-3 d-flex align-items-center gap-2">
+          <i class="bi bi-people-fill text-indigo fs-5"></i>
+          <div>
+            <div class="fw-bold lh-1">Child Protection</div>
+            <small style="font-size: 0.72rem; opacity: 0.85;">Helpline 1098</small>
+          </div>
+        </a>
+        <a href="chatbot.html" class="btn btn-secondary btn-sm text-start py-2 px-3 d-flex align-items-center gap-2">
+          <i class="bi bi-robot text-emerald fs-5"></i>
+          <div>
+            <div class="fw-bold lh-1">AI Emergency Assistant</div>
+            <small style="font-size: 0.72rem; opacity: 0.85;">Police GD procedures & guidance</small>
+          </div>
+        </a>
+        <a href="submit_lostitems.html?type=lost" class="btn btn-secondary btn-sm text-start py-2 px-3 d-flex align-items-center gap-2">
+          <i class="bi bi-plus-circle text-amber fs-5"></i>
+          <div>
+            <div class="fw-bold lh-1">Report Lost / Found</div>
+            <small style="font-size: 0.72rem; opacity: 0.85;">Instant incident broadcast</small>
+          </div>
+        </a>
+      </div>
+
+      <div class="d-flex align-items-center gap-2">
+        <button type="button" class="scroll-top-btn" id="scrollTopBtn" onclick="scrollToTop()" title="Back to top" aria-label="Scroll to top">
+          <i class="bi bi-arrow-up"></i>
+        </button>
+        <button type="button" class="sos-trigger-btn" id="sosTriggerBtn" onclick="toggleSosHub()" title="Emergency Hotlines & SOS" aria-label="Emergency Hotlines">
+          <div class="sos-pulse-ring"></div>
+          <i class="bi bi-shield-fill-exclamation" id="sosIcon"></i>
+        </button>
+      </div>
+    `;
+    document.body.appendChild(hub);
+
+    // Scroll progress handler
+    window.addEventListener('scroll', () => {
+      const scrollBtn = document.getElementById('scrollTopBtn');
+      if (scrollBtn) {
+        if (window.scrollY > 250) {
+          scrollBtn.classList.add('visible');
+        } else {
+          scrollBtn.classList.remove('visible');
+        }
+      }
+    });
+  }
+
+  window.toggleSosHub = function () {
+    const panel = document.getElementById('sosQuickPanel');
+    const icon = document.getElementById('sosIcon');
+    if (!panel) return;
+    const isActive = panel.classList.toggle('active');
+    if (isActive) {
+      window.playCivicSound('alert');
+      icon.className = 'bi bi-x-lg';
+    } else {
+      window.playCivicSound('click');
+      icon.className = 'bi bi-shield-fill-exclamation';
+    }
+  };
+
+  window.scrollToTop = function () {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.playCivicSound('click');
+  };
+
+  // Close SOS panel when clicking outside
+  document.addEventListener('click', (e) => {
+    const hub = document.getElementById('sosFloatingHub');
+    if (hub && !hub.contains(e.target)) {
+      const panel = document.getElementById('sosQuickPanel');
+      const icon = document.getElementById('sosIcon');
+      if (panel && panel.classList.contains('active')) {
+        panel.classList.remove('active');
+        if (icon) icon.className = 'bi bi-shield-fill-exclamation';
+      }
+    }
+  });
+
+  // Inject Hub when DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', injectSosFloatingHub);
+  } else {
+    injectSosFloatingHub();
+  }
 })();
+

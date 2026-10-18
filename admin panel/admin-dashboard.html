@@ -8,7 +8,7 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="../css/design-system.css">
@@ -18,7 +18,7 @@
         min-height: 100vh;
       }
       .admin-sidebar {
-        width: 260px;
+        width: 270px;
         background: rgba(7, 9, 14, 0.95);
         border-right: 1px solid var(--border-subtle);
         display: flex;
@@ -29,10 +29,11 @@
         bottom: 0;
         left: 0;
         z-index: 100;
+        backdrop-filter: blur(12px);
       }
       .admin-content {
         flex: 1;
-        margin-left: 260px;
+        margin-left: 270px;
         padding: 2rem;
       }
       .sidebar-nav-item {
@@ -51,18 +52,25 @@
       .sidebar-nav-item:hover, .sidebar-nav-item.active {
         background: rgba(16, 185, 129, 0.12);
         color: var(--color-emerald-400);
+        box-shadow: 0 2px 10px rgba(16, 185, 129, 0.1);
       }
       .metric-box {
         background: var(--bg-surface-elevated);
         border: 1px solid var(--border-subtle);
         border-radius: var(--radius-lg);
         padding: 1.25rem 1.5rem;
+        transition: transform var(--transition-fast), border-color var(--transition-fast);
+      }
+      .metric-box:hover {
+        transform: translateY(-2px);
+        border-color: rgba(16, 185, 129, 0.4);
       }
       .metric-box-val {
-        font-size: 2rem;
+        font-size: 2.2rem;
         font-weight: 800;
         line-height: 1;
         margin-bottom: 0.25rem;
+        letter-spacing: -0.02em;
       }
       .admin-table {
         width: 100%;
@@ -104,6 +112,20 @@
       }
       .admin-drawer-overlay.active {
         display: block;
+      }
+      .live-pulse-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--color-emerald-400);
+        display: inline-block;
+        box-shadow: 0 0 10px var(--color-emerald-400);
+        animation: pulseLive 2s infinite ease-in-out;
+      }
+      @keyframes pulseLive {
+        0% { transform: scale(0.9); opacity: 0.7; }
+        50% { transform: scale(1.3); opacity: 1; box-shadow: 0 0 14px var(--color-emerald-400); }
+        100% { transform: scale(0.9); opacity: 0.7; }
       }
       @media (max-width: 992px) {
         .admin-mobile-header {
@@ -151,10 +173,10 @@
         <aside class="admin-sidebar">
             <div class="d-flex align-items-center justify-content-between mb-4 px-2">
                 <div class="d-flex align-items-center gap-2">
-                    <img src="../images/logo.png" alt="Logo" width="32" height="32" class="rounded-circle border border-emerald">
+                    <img src="../images/logo.png" alt="Logo" width="34" height="34" class="rounded-circle border border-emerald">
                     <div>
-                        <div class="fw-bold text-light" style="font-size: 1rem;">L&F Bangladesh</div>
-                        <small class="badge bg-emerald-subtle text-emerald" style="font-size: 0.65rem;">Staff Console</small>
+                        <div class="fw-bold text-light lh-1" style="font-size: 1.05rem;">Lost &amp; Found <span style="color: var(--color-emerald-400);">BD</span></div>
+                        <small class="badge bg-emerald-subtle text-emerald" style="font-size: 0.65rem;"><span class="live-pulse-dot me-1"></span> Staff Console</small>
                     </div>
                 </div>
                 <button type="button" class="btn btn-ghost btn-sm d-lg-none" onclick="toggleAdminDrawer()" aria-label="Close Sidebar">
@@ -173,7 +195,7 @@
                     <i class="bi bi-shield-check"></i> Claims Verification
                 </a>
                 <a href="#telemetry" class="sidebar-nav-item" onclick="switchAdminSection('telemetry', this)">
-                    <i class="bi bi-cpu"></i> Smart Match & QR Radar
+                    <i class="bi bi-radar text-emerald"></i> Match Radar &amp; QR
                 </a>
                 <a href="#users" class="sidebar-nav-item" onclick="switchAdminSection('users', this)">
                     <i class="bi bi-people"></i> User Accounts
@@ -192,47 +214,58 @@
 
         <!-- Main Content Area -->
         <main class="admin-content">
-            <div class="d-flex justify-content-between align-items-center mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
                 <div>
                     <h1 class="text-light fw-bold mb-1" style="font-size: 1.85rem;" id="sectionTitle">Moderation Desk Overview</h1>
-                    <p class="text-secondary small mb-0">Live administrative feed and verification desk.</p>
+                    <p class="text-secondary small mb-0">Live administrative feed, cross-match radar, and verification desk.</p>
                 </div>
-                <div class="d-flex gap-2">
-                    <button type="button" class="btn btn-secondary btn-sm" onclick="loadAdminMetrics()">
-                        <i class="bi bi-arrow-clockwise"></i> Refresh Live Data
+                <div class="d-flex align-items-center gap-2 flex-wrap">
+                    <!-- Audio Toggle Button -->
+                    <button type="button" class="btn btn-ghost btn-sm text-secondary p-2 border border-subtle" id="navSoundToggleBtn" onclick="if(window.toggleSound) toggleSound()" title="Toggle Audio Synthesizer">
+                      <i class="bi bi-volume-up text-emerald" id="navSoundIcon"></i>
+                    </button>
+
+                    <!-- Auto-Sync Toggle -->
+                    <button type="button" class="btn btn-ghost btn-sm text-light border border-subtle d-flex align-items-center gap-2" id="autoSyncToggleBtn" onclick="toggleAutoSync()">
+                      <span class="live-pulse-dot"></span>
+                      <span id="autoSyncLabel" style="font-size: 0.8rem;">Auto-Sync: ON</span>
+                    </button>
+
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="loadAdminMetrics(true)">
+                        <i class="bi bi-arrow-clockwise me-1"></i> Refresh Live Data
                     </button>
                 </div>
             </div>
 
             <!-- Overview Section -->
-            <div id="adminSectionOverview">
+            <div id="adminSectionOverview" class="animate-slide-up">
                 <div class="row g-3 mb-4">
                     <div class="col-sm-6 col-lg-3">
-                        <div class="metric-box">
+                        <div class="metric-box card-interactive-glow">
                             <div class="text-muted small fw-semibold mb-1">Registered Users</div>
                             <div class="metric-box-val text-light" id="statUsers">--</div>
-                            <small class="text-emerald"><i class="bi bi-arrow-up me-1"></i>Active Accounts</small>
+                            <small class="text-emerald"><i class="bi bi-arrow-up me-1"></i>Active Citizen Accounts</small>
                         </div>
                     </div>
                     <div class="col-sm-6 col-lg-3">
-                        <div class="metric-box">
+                        <div class="metric-box card-interactive-glow">
                             <div class="text-muted small fw-semibold mb-1">Verified Reports</div>
                             <div class="metric-box-val text-emerald" id="statVerified">--</div>
-                            <small class="text-muted">Live on catalog</small>
+                            <small class="text-muted">Live on public catalog</small>
                         </div>
                     </div>
                     <div class="col-sm-6 col-lg-3">
-                        <div class="metric-box">
+                        <div class="metric-box card-interactive-glow">
                             <div class="text-muted small fw-semibold mb-1">Pending Moderation</div>
                             <div class="metric-box-val text-amber" id="statPending">--</div>
-                            <small class="text-amber">Awaiting review</small>
+                            <small class="text-amber">Awaiting officer review</small>
                         </div>
                     </div>
                     <div class="col-sm-6 col-lg-3">
-                        <div class="metric-box">
+                        <div class="metric-box card-interactive-glow">
                             <div class="text-muted small fw-semibold mb-1">Missing Persons</div>
                             <div class="metric-box-val text-rose" id="statMissing">--</div>
-                            <small class="text-rose">Active police alerts</small>
+                            <small class="text-rose">Active national broadcast alerts</small>
                         </div>
                     </div>
                 </div>
@@ -246,6 +279,9 @@
                         <button class="btn btn-secondary btn-sm" onclick="switchAdminSection('claims', document.querySelector('[href=\"#claims\"]'))">
                             <i class="bi bi-shield-check me-1"></i> Review Pending Claims
                         </button>
+                        <button class="btn btn-secondary btn-sm" onclick="switchAdminSection('telemetry', document.querySelector('[href=\"#telemetry\"]'))">
+                            <i class="bi bi-radar me-1 text-emerald"></i> Match Radar Inspector
+                        </button>
                         <button class="btn btn-secondary btn-sm" onclick="switchAdminSection('users', document.querySelector('[href=\"#users\"]'))">
                             <i class="bi bi-person-gear me-1"></i> Manage User Status
                         </button>
@@ -254,7 +290,7 @@
             </div>
 
             <!-- Reports Section -->
-            <div id="adminSectionReports" style="display: none;">
+            <div id="adminSectionReports" style="display: none;" class="animate-slide-up">
                 <div class="glass-panel p-4 mb-4">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h3 class="text-light fw-bold mb-0" style="font-size: 1.2rem;">Item Listings Directory</h3>
@@ -283,7 +319,7 @@
             </div>
 
             <!-- Claims Section -->
-            <div id="adminSectionClaims" style="display: none;">
+            <div id="adminSectionClaims" style="display: none;" class="animate-slide-up">
                 <div class="glass-panel p-4 mb-4">
                     <h3 class="text-light fw-bold mb-3" style="font-size: 1.2rem;">Ownership Claims Queue</h3>
                     <div class="table-responsive">
@@ -308,7 +344,7 @@
             </div>
 
             <!-- Smart Match & QR Radar Telemetry Section -->
-            <div id="adminSectionTelemetry" style="display: none;">
+            <div id="adminSectionTelemetry" style="display: none;" class="animate-slide-up">
                 <div class="row g-4 mb-4">
                     <div class="col-12 col-xl-6">
                         <div class="glass-panel p-4 h-100">
@@ -367,7 +403,7 @@
             </div>
 
             <!-- Users Section -->
-            <div id="adminSectionUsers" style="display: none;">
+            <div id="adminSectionUsers" style="display: none;" class="animate-slide-up">
                 <div class="glass-panel p-4 mb-4">
                     <h3 class="text-light fw-bold mb-3" style="font-size: 1.2rem;">User Accounts Registry</h3>
                     <div class="table-responsive">
@@ -394,6 +430,33 @@
     </div>
 
     <script>
+      let autoSyncActive = true;
+      let autoSyncTimer = null;
+
+      function toggleAutoSync() {
+        autoSyncActive = !autoSyncActive;
+        const btn = document.getElementById('autoSyncToggleBtn');
+        const label = document.getElementById('autoSyncLabel');
+        if (autoSyncActive) {
+          label.textContent = 'Auto-Sync: ON';
+          btn.classList.remove('opacity-50');
+          startAutoSync();
+        } else {
+          label.textContent = 'Auto-Sync: OFF';
+          btn.classList.add('opacity-50');
+          if (autoSyncTimer) clearInterval(autoSyncTimer);
+        }
+      }
+
+      function startAutoSync() {
+        if (autoSyncTimer) clearInterval(autoSyncTimer);
+        autoSyncTimer = setInterval(() => {
+          if (autoSyncActive) {
+            loadAdminMetrics(false);
+          }
+        }, 15000);
+      }
+
       function toggleAdminDrawer() {
         const sidebar = document.querySelector('.admin-sidebar');
         const overlay = document.getElementById('adminDrawerOverlay');
@@ -402,6 +465,7 @@
       }
 
       function switchAdminSection(section, link) {
+        if (window.playCivicSound) playCivicSound('click');
         if (window.innerWidth <= 992) {
           const sidebar = document.querySelector('.admin-sidebar');
           const overlay = document.getElementById('adminDrawerOverlay');
@@ -433,7 +497,7 @@
         if (section === 'users') loadUsersData();
       }
 
-      function loadAdminMetrics() {
+      function loadAdminMetrics(manual = false) {
         fetch('../api/admin.php?action=dashboard')
           .then(r => {
             if (r.status === 403) {
@@ -449,6 +513,10 @@
               document.getElementById('statVerified').textContent = m.verified_items;
               document.getElementById('statPending').textContent = m.pending_items;
               document.getElementById('statMissing').textContent = m.active_missing;
+              if (manual) {
+                if (window.playCivicSound) playCivicSound('chime');
+                if (window.showToast) showToast('Live metrics refreshed from database.', 'info', 'Console Telemetry');
+              }
             }
           })
           .catch(() => {});
@@ -494,7 +562,8 @@
         .then(r => r.json())
         .then(data => {
           if (data.success) {
-            alert('Item deleted.');
+            if (window.playCivicSound) playCivicSound('click');
+            if (window.showToast) showToast('Item report deleted.', 'info', 'Admin Action');
             loadReportsData();
           } else {
             alert(data.error || 'Failed to delete item.');
@@ -524,8 +593,8 @@
                     <td><span class="badge bg-amber-subtle text-amber">${c.status}</span></td>
                     <td>
                       <div class="d-flex gap-1">
-                        <button class="btn btn-primary btn-sm p-1 px-2" onclick="resolveClaim(${c.id}, 'approved')"><i class="bi bi-check-lg"></i></button>
-                        <button class="btn btn-danger btn-sm p-1 px-2" onclick="resolveClaim(${c.id}, 'rejected')"><i class="bi bi-x-lg"></i></button>
+                        <button class="btn btn-primary btn-sm p-1 px-2" onclick="resolveClaim(${c.id}, 'approved')" title="Approve Claim"><i class="bi bi-check-lg"></i></button>
+                        <button class="btn btn-danger btn-sm p-1 px-2" onclick="resolveClaim(${c.id}, 'rejected')" title="Reject Claim"><i class="bi bi-x-lg"></i></button>
                       </div>
                     </td>
                   </tr>
@@ -547,7 +616,8 @@
         .then(r => r.json())
         .then(data => {
           if (data.success) {
-            alert('Claim decision recorded.');
+            if (window.playCivicSound) playCivicSound('success');
+            if (window.showToast) showToast(`Claim #${id} status set to ${status}.`, 'success', 'Claim Decision Recorded');
             loadClaimsData();
           } else {
             alert(data.error || 'Failed.');
@@ -594,6 +664,8 @@
         .then(r => r.json())
         .then(data => {
           if (data.success) {
+            if (window.playCivicSound) playCivicSound('click');
+            if (window.showToast) showToast(`User #${id} status updated to ${status}.`, 'info', 'User Governance');
             loadUsersData();
           }
         });
@@ -627,7 +699,7 @@
                       </span>
                     </td>
                     <td>
-                      <a href="../recentposts.html?q=${encodeURIComponent(p.lost_item.title)}" target="_blank" class="btn btn-secondary btn-sm p-1 px-2" title="Inspect Match">
+                      <a href="../recentposts.html?query=${encodeURIComponent(p.lost_item.title)}" target="_blank" class="btn btn-secondary btn-sm p-1 px-2" title="Inspect Match">
                         <i class="bi bi-box-arrow-up-right"></i>
                       </a>
                     </td>
@@ -676,8 +748,9 @@
           });
       }
 
-      // Initial Load
+      // Initial Load & Auto-sync
       loadAdminMetrics();
+      startAutoSync();
     </script>
     <script src="../components/command-palette.js"></script>
 </body>

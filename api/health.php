@@ -30,6 +30,7 @@ $responseTimeMs = round((microtime(true) - $startTime) * 1000, 2);
 
 http_response_code($status === 'healthy' ? 200 : 503);
 echo json_encode([
+    'success' => $status === 'healthy',
     'status' => $status,
     'version' => '2.0.0',
     'environment' => getenv('APP_ENV') ?: 'production',

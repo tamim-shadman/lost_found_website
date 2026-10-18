@@ -26,14 +26,20 @@
 
 Designed and architected to the visual craftsmanship and systems engineering standards of flagship applications like **Linear**, **Stripe**, and **Raycast**, the platform features:
 
+* **Instant AI Recovery Cross-Matcher (`index.html`):** Real-time client-side semantic search in the hero section displaying live match probability scores (e.g. 94% match) against active database items.
+* **National 8-Division Incident Radar (`index.html`):** Interactive division inspector showing active searches, recovery time objective (RTO), case resolution rates, and local district police hotlines.
+* **Live Community Activity Stream (`index.html`):** Real-time ticker broadcasting continuous updates on sightings, secure returns, and community contributions across Bangladesh.
 * **Dual-Engine Smart Matching (`api/match.php`):** Weighted phonetic and Levenshtein similarity ranking automatically detecting matching lost-and-found items with precision scoring.
-* **QR Asset Shield (`api/qr_tag.php` & `/recover.html`):** Dynamic QR label generator allowing citizens to tag personal valuables (laptops, keys, luggage) and facilitate 100% anonymous, safe return handovers.
-* **Emergency Missing Persons Directory (`missing_person.html`):** Real-time police GD alert broadcasts and **One-Click Printable A4 Official Police Notice Flyers** with embedded photos and emergency dispatch hotlines.
-* **Omnibar Command Palette (`components/command-palette.js`):** Global `Cmd+K` / `Ctrl+K` keyboard launcher for instant keyword search, rapid page navigation, and live theme toggling.
-* **24/7 AI-Powered Intelligence Assistant (`chatbot.html`):** Conversational guidance answering legal Thana GD procedures, claim verification rules, and emergency hotline connections.
-* **Dual-Theme Flagship Design System (`css/design-system.css`):** Bespoke typography (**Plus Jakarta Sans** & **Inter**), fluid glassmorphism, responsive native grid, and high-contrast WCAG 2.2 AA compliance in both **Obsidian Dark** and **Clean Slate Light** modes.
-* **Standardized 4-Column Responsive Footer:** Comprehensive emergency hotlines (999, 100, 1098, 16263), national trust credentials, platform links, and live dispatch desks on 100% of routes.
-* **Executive Staff Moderation Console (`/admin panel/`):** Real-time claim dispute resolution, user status management, and platform telemetry.
+* **QR Asset Recovery Studio (`api/qr_tag.php`, `User_profile.html` & `recover.html`):** Cryptographic QR shield generator enabling anonymous, safe return handovers across Public Meetup, Police Thāna custody, or Courier delivery.
+* **Citizen Watchlist & Feed Catalog (`recentposts.html`):** Bookmark items to a localized citizen watchlist, filter by division/category, sort dynamically, and export printable incident catalogs.
+* **4-Step Animated Report Wizard (`submit_lostitems.html`):** Interactive progress stepper with quick-fill preset chips for Phone, Laptop, Wallet, Passport, and Keys.
+* **Emergency Missing Persons Directory (`missing_person.html`):** Demographic filter chips (Children <18, Elders 60+, All), audio wave broadcast beacon, and **One-Click Printable A4 Official Police Notice Flyers**.
+* **AI Copilot & Speech Guide (`chatbot.html`):** 24/7 conversational advice with browser `SpeechSynthesis` voice reading and one-click Police GD transcript export.
+* **Civic Infrastructure Gateway (`payment.html`):** Dynamic Civic Impact Calculator, multi-channel payment switcher (Card/Stripe, bKash Direct, Nagad Pay, Rocket), and printable Official Civic Patron Certificates.
+* **Visual Claim Progress Pipeline (`User_profile.html`):** 4-stage tracking pipeline (*Submitted → Review Desk → Proof Matched → Safe Return*).
+* **Zero-Dependency Web Audio Synthesizer (`components/command-palette.js`):** Custom browser `AudioContext` sound effects (`success`, `alert`, `chime`, `click`) with persistent sound toggle.
+* **SOS Quick Emergency Hub & Omnibar (`components/command-palette.js`):** Floating emergency quick dialer (999 Police, 1098 Child Protection, AI Assistant) and `Ctrl+K` keyboard launcher.
+* **Executive Staff Moderation Console (`/admin panel/`):** Real-time claim dispute resolution, 15s auto-sync telemetry pulse, user status management, and smart match radar inspector.
 
 ---
 

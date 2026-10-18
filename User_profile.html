@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" type="image/png" href="images/logo.png">
-    <title>My Profile & Claims — Lost & Found Bangladesh</title>
+    <title>Citizen Dashboard & QR Asset Studio — Lost & Found Bangladesh</title>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="css/design-system.css">
@@ -18,15 +18,16 @@
         padding-bottom: 30px;
       }
       .profile-avatar-big {
-        width: 80px;
-        height: 80px;
+        width: 84px;
+        height: 84px;
         border-radius: 50%;
-        border: 2px solid var(--color-emerald-500);
+        border: 2.5px solid var(--color-emerald-500);
         object-fit: cover;
+        box-shadow: 0 0 20px var(--color-emerald-glow);
       }
       .profile-nav-pill {
-        background: transparent;
-        border: 1px solid var(--border-subtle);
+        background: var(--bg-surface);
+        border: 1.5px solid var(--border-subtle);
         color: var(--text-secondary);
         padding: 0.65rem 1.25rem;
         border-radius: var(--radius-md);
@@ -36,11 +37,17 @@
         display: flex;
         align-items: center;
         gap: 0.5rem;
+        white-space: nowrap;
       }
-      .profile-nav-pill:hover, .profile-nav-pill.active {
-        background: var(--bg-surface-elevated);
-        color: #ffffff;
+      .profile-nav-pill:hover {
+        border-color: rgba(16, 185, 129, 0.4);
+        color: var(--text-primary);
+      }
+      .profile-nav-pill.active {
+        background: rgba(16, 185, 129, 0.12);
+        color: var(--color-emerald-400);
         border-color: var(--color-emerald-500);
+        box-shadow: 0 4px 18px var(--color-emerald-glow);
       }
       .items-grid {
         display: grid;
@@ -54,11 +61,12 @@
         overflow: hidden;
         display: flex;
         flex-direction: column;
-        transition: transform var(--transition-normal), border-color var(--transition-normal);
+        transition: transform var(--transition-normal), border-color var(--transition-normal), box-shadow var(--transition-normal);
       }
       .item-card:hover {
         transform: translateY(-4px);
         border-color: rgba(16, 185, 129, 0.4);
+        box-shadow: var(--shadow-xl);
       }
       .item-card-media {
         height: 180px;
@@ -105,100 +113,168 @@
         color: var(--text-muted);
         margin-top: auto;
       }
+
+      /* Visual Claim Progress Pipeline */
+      .claim-pipeline-track {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: relative;
+        margin: 1.5rem 0 1rem 0;
+        padding: 0 1rem;
+      }
+      .claim-pipeline-track::before {
+        content: '';
+        position: absolute;
+        top: 14px;
+        left: 2rem;
+        right: 2rem;
+        height: 2px;
+        background: var(--border-subtle);
+        z-index: 1;
+      }
+      .pipeline-step-node {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.35rem;
+      }
+      .pipeline-step-dot {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: var(--bg-surface);
+        border: 2px solid var(--border-subtle);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        transition: all var(--transition-fast);
+      }
+      .pipeline-step-node.completed .pipeline-step-dot {
+        background: var(--color-emerald-500);
+        border-color: var(--color-emerald-400);
+        color: #ffffff;
+        box-shadow: 0 0 12px var(--color-emerald-glow);
+      }
+      .pipeline-step-node.active .pipeline-step-dot {
+        background: rgba(16, 185, 129, 0.2);
+        border-color: var(--color-emerald-400);
+        color: var(--color-emerald-400);
+        box-shadow: 0 0 14px var(--color-emerald-glow);
+      }
+      .pipeline-step-label {
+        font-size: 0.72rem;
+        font-weight: 600;
+        color: var(--text-muted);
+      }
+      .pipeline-step-node.completed .pipeline-step-label,
+      .pipeline-step-node.active .pipeline-step-label {
+        color: var(--text-primary);
+      }
     </style>
 </head>
 <body>
-    <!-- Top Navigation Header -->
-    <header class="navbar-wrapper">
-      <nav class="navbar-container">
-        <a href="index.html" class="navbar-brand">
-          <img src="images/logo.png" alt="Lost & Found BD Logo" class="brand-logo">
-          <div class="brand-text-block">
-            <span class="brand-title">Lost &amp; Found</span>
-            <span class="brand-subtitle">Bangladesh</span>
+    <!-- Ambient Floating Orbs & Atmospheric Mesh -->
+    <div class="ambient-mesh-canvas" aria-hidden="true">
+      <div class="ambient-orb ambient-orb-emerald"></div>
+      <div class="ambient-orb ambient-orb-indigo"></div>
+      <div class="ambient-orb ambient-orb-rose"></div>
+    </div>
+
+    <!-- Flagship Glass Header -->
+    <header class="glass-navbar">
+      <div class="container d-flex justify-content-between align-items-center py-2 mx-auto">
+        <a href="index.html" class="navbar-brand d-flex align-items-center gap-2 text-decoration-none flex-shrink-0">
+          <img src="images/logo.png" alt="Lost & Found BD Logo" width="38" height="38" class="rounded-circle border border-subtle">
+          <div>
+            <div class="brand-title fw-bold text-light lh-1" style="font-size: 1.15rem; letter-spacing: -0.02em;">Lost & Found <span style="color: var(--color-emerald-400);">BD</span></div>
+            <small class="text-muted d-none d-sm-block" style="font-size: 0.725rem;">Citizen Profile & Recovery Hub</small>
           </div>
         </a>
 
-        <div class="navbar-links d-none d-lg-flex">
-          <a href="index.html" class="nav-link">Home</a>
-          <a href="recentposts.html" class="nav-link">Catalog</a>
-          <a href="missing_person.html" class="nav-link">Missing Persons</a>
-          <a href="chatbot.html" class="nav-link">AI Assistant</a>
-          <a href="payment.html" class="nav-link">Donate</a>
-        </div>
+        <nav class="d-none d-lg-flex align-items-center gap-2 gap-xl-3">
+          <a href="index.html" class="nav-link text-secondary fw-medium hover-light">Home</a>
+          <a href="recentposts.html" class="nav-link text-secondary fw-medium hover-light">Browse Alerts</a>
+          <a href="missing_person.html" class="nav-link text-secondary fw-medium hover-light">Missing Persons</a>
+          <a href="recover.html" class="nav-link text-secondary fw-medium hover-light"><i class="bi bi-qr-code-scan text-emerald me-1"></i> QR Shield</a>
+          <a href="chatbot.html" class="nav-link text-secondary fw-medium hover-light">AI Assistant</a>
+          <a href="payment.html" class="nav-link text-secondary fw-medium hover-light">Support</a>
+        </nav>
 
-        <div class="navbar-actions">
-          <button type="button" class="btn btn-ghost btn-sm text-muted d-flex align-items-center gap-2 px-2 py-1" onclick="window.LostFoundCmdPalette && window.LostFoundCmdPalette.open()" style="background: rgba(255,255,255,0.05); border: 1px solid var(--border-subtle); border-radius: var(--radius-md);">
-            <i class="bi bi-search"></i>
-            <span class="d-none d-md-inline" style="font-size: 0.85rem;">Omnibar...</span>
-            <kbd class="d-none d-md-inline-block px-1 py-0 rounded text-muted bg-dark border border-subtle" style="font-size: 0.7rem;">Ctrl K</kbd>
+        <div class="d-flex align-items-center gap-2 flex-shrink-0 pe-1">
+          <!-- Audio Toggle Button -->
+          <button type="button" class="btn btn-ghost btn-sm text-secondary p-2" id="navSoundToggleBtn" onclick="if(window.toggleSound) toggleSound()" title="Toggle Web Audio Synthesizer">
+            <i class="bi bi-volume-up text-emerald" id="navSoundIcon"></i>
           </button>
+
+          <button type="button" class="btn btn-ghost btn-sm d-flex align-items-center gap-2 text-muted px-2 px-xl-3 py-1 rounded-pill border border-subtle glass-subtle" onclick="window.commandPalette && window.commandPalette.open()" title="Press Ctrl+K to search">
+            <i class="bi bi-search"></i>
+            <span class="d-none d-xl-inline" style="font-size: 0.85rem;">Omnibar...</span>
+            <kbd class="d-none d-xxl-inline-block px-1 py-0 rounded text-muted bg-dark border border-subtle" style="font-size: 0.7rem;">Ctrl K</kbd>
+          </button>
+
           <button type="button" class="btn btn-ghost btn-sm text-light p-2" onclick="toggleTheme()" aria-label="Toggle Theme" title="Toggle Theme">
             <i class="bi bi-circle-half" id="themeToggleIcon"></i>
           </button>
-          <a href="User_profile.html" class="btn btn-secondary btn-sm d-none d-sm-inline-flex active">
+
+          <a href="User_profile.html" class="btn btn-outline-secondary btn-sm d-none d-sm-inline-flex active text-emerald border-emerald">
             <i class="bi bi-person-circle me-1"></i> <span id="navUserName">My Profile</span>
           </a>
-          <a href="submit_lostitems.html" class="btn btn-primary btn-sm">
+
+          <a href="submit_lostitems.html" class="btn btn-primary btn-sm btn-pill flex-shrink-0">
             <i class="bi bi-plus-circle me-1"></i> Report Item
           </a>
-          <button type="button" class="btn btn-ghost btn-icon d-lg-none" onclick="toggleMobileNav()" aria-label="Toggle Navigation">
-            <i class="bi bi-list fs-4"></i>
-          </button>
         </div>
-      </nav>
-
-      <!-- Mobile Dropdown Menu -->
-      <div id="mobileNavMenu" class="mobile-nav-panel d-none">
-        <a href="index.html" class="mobile-nav-link">Home</a>
-        <a href="recentposts.html" class="mobile-nav-link">Catalog</a>
-        <a href="missing_person.html" class="mobile-nav-link">Missing Persons</a>
-        <a href="chatbot.html" class="mobile-nav-link">AI Assistant</a>
-        <a href="payment.html" class="mobile-nav-link">Donate</a>
-        <a href="User_profile.html" class="mobile-nav-link active">My Profile</a>
-        <a href="submit_lostitems.html" class="mobile-nav-link">Report Item</a>
       </div>
     </header>
 
-    <main class="container mx-auto px-3 profile-header" style="max-width: 1100px;">
+    <main class="container mx-auto px-3 profile-header" style="max-width: 1140px;">
         <!-- User Banner Card -->
-        <div class="glass-panel p-4 mb-4 d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+        <div class="glass-panel p-4 mb-4 d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 animate-slide-up card-interactive-glow">
             <div class="d-flex align-items-center gap-3">
                 <img src="images/logo.png" alt="Avatar" class="profile-avatar-big" id="profileAvatar">
                 <div>
-                    <h1 class="text-light fw-bold mb-1" style="font-size: 1.6rem;" id="profileFullName">
-                        Tamim Shadman
-                    </h1>
+                    <div class="d-flex align-items-center gap-2 mb-1 flex-wrap">
+                      <h1 class="text-light fw-bold mb-0" style="font-size: 1.65rem;" id="profileFullName">
+                          Tamim Shadman
+                      </h1>
+                      <span class="badge bg-emerald-subtle text-emerald" id="profileRole"><i class="bi bi-shield-check me-1"></i> Verified Citizen</span>
+                      <span class="badge bg-indigo-subtle text-indigo"><i class="bi bi-award-fill me-1"></i> Public Safety Guardian</span>
+                    </div>
                     <div class="text-muted small" id="profileContact">
-                        <i class="bi bi-envelope me-1"></i><span id="profileEmail">tamimshadman@gmail.com</span>
+                        <i class="bi bi-envelope me-1 text-emerald"></i><span id="profileEmail">tamimshadman@gmail.com</span>
                         <span class="mx-2">•</span>
-                        <i class="bi bi-telephone me-1"></i><span id="profilePhone">01715000002</span>
+                        <i class="bi bi-telephone me-1 text-emerald"></i><span id="profilePhone">01715000002</span>
                         <span class="mx-2">•</span>
-                        <span class="badge bg-emerald-subtle text-emerald" id="profileRole">Verified Citizen</span>
+                        <span class="text-secondary"><i class="bi bi-shield-lock me-1"></i> 2FA Token Protected</span>
                     </div>
                 </div>
             </div>
-            <div class="d-flex gap-2">
-                <a href="submit_lostitems.html?type=lost" class="btn btn-danger btn-sm"><i class="bi bi-plus-circle me-1"></i> Post Lost Ad</a>
-                <a href="submit_lostitems.html?type=found" class="btn btn-primary btn-sm"><i class="bi bi-box-seam me-1"></i> Report Found Ad</a>
+            <div class="d-flex gap-2 flex-wrap">
+                <a href="submit_lostitems.html?type=lost" class="btn btn-danger btn-sm"><i class="bi bi-plus-circle me-1"></i> Post Lost Item</a>
+                <a href="submit_lostitems.html?type=found" class="btn btn-primary btn-sm"><i class="bi bi-box-seam me-1"></i> Report Found</a>
                 <button type="button" class="btn btn-secondary btn-sm" onclick="handleLogout()"><i class="bi bi-box-arrow-right me-1"></i> Sign Out</button>
             </div>
         </div>
 
-        <div id="profileAlert" class="alert alert-success d-none mb-4" role="alert">
+        <div id="profileAlert" class="alert alert-success d-none mb-4 animate-slide-up" role="alert">
             <i class="bi bi-check-circle-fill me-2"></i><span id="profileAlertMsg"></span>
         </div>
 
         <!-- Tab Navigation -->
-        <div class="d-flex gap-2 mb-4 overflow-x-auto pb-1">
+        <div class="d-flex gap-2 mb-4 overflow-x-auto pb-1 animate-slide-up">
             <button class="profile-nav-pill active" id="pillItems" onclick="switchProfileTab('items')">
                 <i class="bi bi-collection"></i> My Reported Items (<span id="itemsCountBadge">0</span>)
             </button>
             <button class="profile-nav-pill" id="pillClaims" onclick="switchProfileTab('claims')">
-                <i class="bi bi-hand-index-thumb"></i> Claim Status Tracking (<span id="claimsCountBadge">0</span>)
+                <i class="bi bi-hand-index-thumb"></i> Claim Status Pipeline (<span id="claimsCountBadge">0</span>)
             </button>
             <button class="profile-nav-pill" id="pillTags" onclick="switchProfileTab('tags')">
-                <i class="bi bi-qr-code-scan"></i> QR Recovery Shield (<span id="tagsCountBadge">0</span>)
+                <i class="bi bi-qr-code-scan"></i> QR Asset Recovery Shield (<span id="tagsCountBadge">0</span>)
             </button>
             <button class="profile-nav-pill" id="pillSettings" onclick="switchProfileTab('settings')">
                 <i class="bi bi-gear"></i> Account Settings
@@ -210,37 +286,40 @@
             <div id="myItemsContainer" class="items-grid">
                 <!-- Dynamically populated -->
             </div>
-            <div id="noItemsPlaceholder" class="glass-panel text-center p-5 d-none">
-                <i class="bi bi-folder-x text-muted mb-3 d-block" style="font-size: 3rem;"></i>
-                <h3 class="text-light fw-bold">No Items Reported Yet</h3>
-                <p class="text-secondary small mb-3">You haven't posted any lost or found items under this account.</p>
-                <a href="submit_lostitems.html" class="btn btn-primary btn-sm">Report an Item Now</a>
+            <div id="noItemsPlaceholder" class="glass-panel text-center p-5 d-none animate-slide-up">
+                <i class="bi bi-folder-x text-muted mb-3 d-block" style="font-size: 3.5rem;"></i>
+                <h3 class="text-light fw-bold">No Active Reports Found</h3>
+                <p class="text-secondary small mb-3">You haven't posted any lost belongings or found valuables under this account.</p>
+                <div class="d-flex justify-content-center gap-2">
+                  <a href="submit_lostitems.html?type=lost" class="btn btn-danger btn-sm"><i class="bi bi-plus-circle me-1"></i> Report Lost Item</a>
+                  <a href="submit_lostitems.html?type=found" class="btn btn-primary btn-sm"><i class="bi bi-box-seam me-1"></i> Report Found Item</a>
+                </div>
             </div>
         </div>
 
-        <!-- Tab 2: Claims Tracking -->
+        <!-- Tab 2: Claims Tracking with Interactive Pipeline -->
         <div id="tabContentClaims" style="display: none;">
             <div id="myClaimsContainer" class="d-flex flex-column gap-3">
                 <!-- Dynamically populated -->
             </div>
-            <div id="noClaimsPlaceholder" class="glass-panel text-center p-5 d-none">
-                <i class="bi bi-hand-index-thumb text-muted mb-3 d-block" style="font-size: 3rem;"></i>
-                <h3 class="text-light fw-bold">No Active Claims</h3>
-                <p class="text-secondary small mb-3">When you claim found property from our catalog, track its verification status here.</p>
-                <a href="recentposts.html?type=found" class="btn btn-secondary btn-sm">Browse Found Items</a>
+            <div id="noClaimsPlaceholder" class="glass-panel text-center p-5 d-none animate-slide-up">
+                <i class="bi bi-hand-index-thumb text-muted mb-3 d-block" style="font-size: 3.5rem;"></i>
+                <h3 class="text-light fw-bold">No Active Property Claims</h3>
+                <p class="text-secondary small mb-3">When you claim found property from our public catalog, its multi-stage police & verification progress will track here.</p>
+                <a href="recentposts.html?type=found" class="btn btn-primary btn-sm">Browse Found Valuables</a>
             </div>
         </div>
 
-        <!-- Tab 3: QR Asset Recovery Shield -->
+        <!-- Tab 3: QR Asset Recovery Shield Studio -->
         <div id="tabContentTags" style="display: none;">
-            <div class="glass-panel p-4 mb-4">
+            <div class="glass-panel p-4 mb-4 animate-slide-up">
                 <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
                     <div>
-                        <span class="badge bg-indigo-subtle text-indigo mb-2" style="background: rgba(99, 102, 241, 0.15); color: var(--color-indigo-400);"><i class="bi bi-shield-lock-fill me-1"></i> Proactive Loss Defense</span>
-                        <h2 class="text-light fw-bold mb-1" style="font-size: 1.4rem;">QR Asset Protection Shield</h2>
-                        <p class="text-secondary small mb-0">Generate durable QR identification tags for your laptops, keys, wallets, and bags. Finders scan to return items securely without seeing your private details.</p>
+                        <span class="badge bg-indigo-subtle text-indigo mb-2" style="background: rgba(99, 102, 241, 0.15); color: var(--color-indigo-400);"><i class="bi bi-shield-lock-fill me-1"></i> Cryptographic Privacy Shield</span>
+                        <h2 class="text-light fw-bold mb-1" style="font-size: 1.4rem;">QR Asset Protection Studio</h2>
+                        <p class="text-secondary small mb-0">Generate weatherproof identification tags for laptops, keys, wallets, and bags. Finders scan to coordinate returns anonymously without exposing your personal phone number or home address.</p>
                     </div>
-                    <button type="button" class="btn btn-primary btn-sm px-3 py-2" onclick="openRegisterTagModal()">
+                    <button type="button" class="btn btn-primary btn-sm px-3 py-2 shadow-lg" onclick="openRegisterTagModal()">
                         <i class="bi bi-plus-lg me-1"></i> Register New Shield
                     </button>
                 </div>
@@ -250,39 +329,55 @@
                 <!-- Dynamically populated -->
             </div>
 
-            <div id="noTagsPlaceholder" class="glass-panel text-center p-5 d-none">
-                <i class="bi bi-qr-code text-muted mb-3 d-block" style="font-size: 3rem;"></i>
-                <h3 class="text-light fw-bold">No Active Shield Tags</h3>
-                <p class="text-secondary small mb-3">Protect your valuables proactively. Register your first QR Asset Recovery Tag now.</p>
-                <button type="button" class="btn btn-primary btn-sm" onclick="openRegisterTagModal()">Create Your First Shield</button>
+            <div id="noTagsPlaceholder" class="glass-panel text-center p-5 d-none animate-slide-up">
+                <i class="bi bi-qr-code text-muted mb-3 d-block" style="font-size: 3.5rem;"></i>
+                <h3 class="text-light fw-bold">No Valuables Protected Yet</h3>
+                <p class="text-secondary small mb-3">Protect your belongings before they go missing! Generate a free QR Asset Recovery Tag right now.</p>
+                <button type="button" class="btn btn-primary btn-sm" onclick="openRegisterTagModal()">
+                  <i class="bi bi-shield-plus me-1"></i> Create Your First Shield
+                </button>
             </div>
         </div>
 
         <!-- Tab 4: Account Settings -->
         <div id="tabContentSettings" style="display: none;">
-            <div class="glass-panel p-4 p-md-5" style="max-width: 620px;">
-                <h2 class="text-light fw-bold mb-4" style="font-size: 1.4rem;">Edit Personal Information</h2>
+            <div class="glass-panel p-4 p-md-5 animate-slide-up" style="max-width: 640px;">
+                <h2 class="text-light fw-bold mb-2" style="font-size: 1.4rem;">Edit Citizen Information</h2>
+                <p class="text-secondary small mb-4">Keep your contact information up to date so claimants and finders can reach you securely.</p>
                 <form id="settingsForm" onsubmit="handleSettingsUpdate(event)">
                     <div class="row g-3 mb-3">
                         <div class="col-md-6">
                             <label class="form-label" for="settingsFirstName">First Name</label>
-                            <input type="text" class="form-control" id="settingsFirstName" name="first_name" required>
+                            <div class="input-icon-wrapper">
+                              <i class="bi bi-person icon"></i>
+                              <input type="text" class="form-control" id="settingsFirstName" name="first_name" required>
+                            </div>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label" for="settingsLastName">Last Name</label>
-                            <input type="text" class="form-control" id="settingsLastName" name="last_name" required>
+                            <div class="input-icon-wrapper">
+                              <i class="bi bi-person icon"></i>
+                              <input type="text" class="form-control" id="settingsLastName" name="last_name" required>
+                            </div>
                         </div>
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="settingsEmail">Email Address (Immutable)</label>
-                        <input type="email" class="form-control" id="settingsEmail" disabled>
+                        <div class="input-icon-wrapper">
+                          <i class="bi bi-envelope icon"></i>
+                          <input type="email" class="form-control" id="settingsEmail" disabled>
+                        </div>
+                        <div class="text-muted small mt-1">To change your primary email, contact the national moderation desk.</div>
                     </div>
                     <div class="mb-4">
                         <label class="form-label" for="settingsPhone">Contact Phone</label>
-                        <input type="tel" class="form-control" id="settingsPhone" name="phone" required>
+                        <div class="input-icon-wrapper">
+                          <i class="bi bi-telephone icon"></i>
+                          <input type="tel" class="form-control" id="settingsPhone" name="phone" required>
+                        </div>
                     </div>
                     <button type="submit" class="btn btn-primary px-4 py-2" id="settingsSubmitBtn">
-                        Save Profile Changes
+                        <i class="bi bi-check2-circle me-1"></i> Save Profile Changes
                     </button>
                 </form>
             </div>
@@ -291,7 +386,7 @@
 
     <!-- Modal: Register QR Asset Shield -->
     <div class="cmd-palette-backdrop" id="registerTagModal" onclick="closeRegisterTagModal(event)">
-      <div class="cmd-palette-modal glass-panel p-4" onclick="event.stopPropagation()" style="max-width: 520px;">
+      <div class="cmd-palette-modal glass-panel p-4 animate-slide-up" onclick="event.stopPropagation()" style="max-width: 520px;">
         <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom border-subtle">
           <h4 class="fw-bold text-light mb-0"><i class="bi bi-shield-plus text-indigo me-2"></i>Register Protected Asset</h4>
           <button type="button" class="btn btn-ghost btn-sm text-muted" onclick="closeRegisterTagModal(null)">✕</button>
@@ -304,11 +399,11 @@
           <div class="mb-3">
             <label class="form-label">Category:</label>
             <select class="form-select" id="tagCategory" required>
-              <option value="Electronics">Electronics & Gadgets</option>
-              <option value="Wallet/Cards">Wallet & Cards</option>
-              <option value="Documents">Passport & Official IDs</option>
-              <option value="Bags">Bags & Luggage</option>
-              <option value="Keys">Keys & Access Cards</option>
+              <option value="Electronics">Electronics &amp; Gadgets</option>
+              <option value="Wallet/Cards">Wallet &amp; Cards</option>
+              <option value="Documents">Passport &amp; Official IDs</option>
+              <option value="Bags">Bags &amp; Luggage</option>
+              <option value="Keys">Keys &amp; Access Cards</option>
               <option value="Other">Other Valuables</option>
             </select>
           </div>
@@ -322,12 +417,12 @@
               <input type="number" class="form-control" id="tagRewardAmount" placeholder="0" min="0" value="500">
             </div>
           </div>
-          <div class="p-2 rounded glass-subtle small mb-3 text-muted">
+          <div class="p-2 rounded glass-subtle small mb-3 text-muted border border-subtle">
             <i class="bi bi-eye-slash-fill text-indigo me-1"></i>
-            Finders will NOT see your real phone or email. They will submit secure return reports through <code>recover.html</code>.
+            Finders will <strong>never</strong> see your real phone or email. They will submit secure return reports through <code>recover.html</code>.
           </div>
           <button type="submit" class="btn btn-primary w-100 py-2" id="btnCreateTag">
-            <span>Generate & Protect QR Shield</span>
+            <span>Generate &amp; Protect QR Shield</span>
           </button>
         </form>
       </div>
@@ -335,7 +430,7 @@
 
     <!-- Modal: View & Print QR Tag Badge -->
     <div class="cmd-palette-backdrop" id="viewTagModal" onclick="closeViewTagModal(event)">
-      <div class="cmd-palette-modal glass-panel p-4" onclick="event.stopPropagation()" style="max-width: 480px;">
+      <div class="cmd-palette-modal glass-panel p-4 animate-slide-up" onclick="event.stopPropagation()" style="max-width: 480px;">
         <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom border-subtle">
           <h4 class="fw-bold text-light mb-0">Printable QR Shield Badge</h4>
           <button type="button" class="btn btn-ghost btn-sm text-muted" onclick="closeViewTagModal(null)">✕</button>
@@ -383,7 +478,7 @@
               <li><a href="recentposts.html?type=found" class="footer-nav-link"><i class="bi bi-chevron-right text-emerald" style="font-size: 0.7rem;"></i> Found Valuables</a></li>
               <li><a href="missing_person.html" class="footer-nav-link"><i class="bi bi-chevron-right text-emerald" style="font-size: 0.7rem;"></i> Missing Persons</a></li>
               <li><a href="submit_lostitems.html" class="footer-nav-link"><i class="bi bi-chevron-right text-emerald" style="font-size: 0.7rem;"></i> File New Report</a></li>
-              <li><a href="User_profile.html" class="footer-nav-link"><i class="bi bi-chevron-right text-emerald" style="font-size: 0.7rem;"></i> QR Asset Shield</a></li>
+              <li><a href="recover.html" class="footer-nav-link"><i class="bi bi-chevron-right text-emerald" style="font-size: 0.7rem;"></i> QR Asset Shield</a></li>
               <li><a href="chatbot.html" class="footer-nav-link"><i class="bi bi-chevron-right text-emerald" style="font-size: 0.7rem;"></i> AI Assistant</a></li>
             </ul>
           </div>
@@ -449,12 +544,8 @@
     <script>
       let currentUser = null;
 
-      function toggleMobileNav() {
-        const menu = document.getElementById('mobileNavMenu');
-        menu.classList.toggle('d-none');
-      }
-
       function switchProfileTab(tab) {
+        if (window.playCivicSound) playCivicSound('click');
         document.getElementById('tabContentItems').style.display = tab === 'items' ? 'block' : 'none';
         document.getElementById('tabContentClaims').style.display = tab === 'claims' ? 'block' : 'none';
         document.getElementById('tabContentTags').style.display = tab === 'tags' ? 'block' : 'none';
@@ -491,12 +582,11 @@
               loadUserClaims(currentUser.id);
               loadUserTags();
             } else {
-              // Not authenticated - redirect to login
               window.location.href = 'login.html';
             }
           })
           .catch(() => {
-            // Fallback for offline preview
+            // Fallback preview
             currentUser = { id: 2, first_name: 'Tamim', last_name: 'Shadman', email: 'tamimshadman@gmail.com', phone: '01715000002' };
             loadUserItems(2);
             loadUserClaims(2);
@@ -517,7 +607,7 @@
               badge.textContent = items.length;
               placeholder.classList.add('d-none');
               container.innerHTML = items.map(item => `
-                <div class="item-card">
+                <div class="item-card animate-slide-up">
                   <div class="item-card-media">
                     <img src="${item.picture || 'images/default_item.jpg'}" alt="${item.title}">
                     <span class="badge ${item.item_type === 'lost' ? 'badge-lost' : 'badge-found'} item-card-badge">${item.item_type.toUpperCase()}</span>
@@ -527,12 +617,12 @@
                     <h4 class="item-card-title">${item.title}</h4>
                     <p class="item-card-desc">${item.description}</p>
                     <div class="item-card-meta">
-                      <span><i class="bi bi-geo-alt me-1"></i>${item.district}</span>
+                      <span><i class="bi bi-geo-alt me-1 text-emerald"></i>${item.district}</span>
                       <span>${item.date_lost_or_found}</span>
                     </div>
                     <div class="mt-3 pt-2 border-top border-subtle d-flex gap-2">
                       <a href="recentposts.html?query=${encodeURIComponent(item.title)}" class="btn btn-secondary btn-sm flex-grow-1">View Details</a>
-                      <button type="button" class="btn btn-danger btn-sm" onclick="deleteMyItem(${item.id})"><i class="bi bi-trash"></i></button>
+                      <button type="button" class="btn btn-danger btn-sm" onclick="deleteMyItem(${item.id})" title="Delete Report"><i class="bi bi-trash"></i></button>
                     </div>
                   </div>
                 </div>
@@ -559,20 +649,51 @@
 
               if (myClaims.length > 0) {
                 placeholder.classList.add('d-none');
-                container.innerHTML = myClaims.map(c => `
-                  <div class="glass-panel p-4 d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
-                    <div>
-                      <div class="d-flex align-items-center gap-2 mb-1">
-                        <span class="badge ${c.status === 'approved' ? 'bg-emerald-subtle text-emerald' : (c.status === 'rejected' ? 'bg-rose-subtle text-rose' : 'bg-amber-subtle text-amber')}">${c.status.toUpperCase()}</span>
-                        <span class="text-muted small">Submitted on ${c.created_at}</span>
+                container.innerHTML = myClaims.map(c => {
+                  const status = (c.status || 'pending').toLowerCase();
+                  const isApproved = status === 'approved';
+                  const isRejected = status === 'rejected';
+                  
+                  return `
+                    <div class="glass-panel p-4 animate-slide-up">
+                      <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-start gap-2 mb-2">
+                        <div>
+                          <div class="d-flex align-items-center gap-2 mb-1">
+                            <span class="badge ${isApproved ? 'bg-emerald-subtle text-emerald' : (isRejected ? 'bg-rose-subtle text-rose' : 'bg-amber-subtle text-amber')} font-mono">
+                              STATUS: ${status.toUpperCase()}
+                            </span>
+                            <span class="text-muted small">Case #CLM-${c.id || '01'} • Submitted ${c.created_at || 'Recently'}</span>
+                          </div>
+                          <h4 class="text-light fw-bold mb-1">${escapeHtml(c.item_title)}</h4>
+                          <div class="text-secondary small"><strong>Proof Submitted:</strong> ${escapeHtml(c.proof_description)}</div>
+                        </div>
+                        <span class="badge bg-indigo-subtle text-indigo p-2"><i class="bi bi-shield-check me-1"></i> GD Verification Desk</span>
                       </div>
-                      <h4 class="text-light fw-bold mb-1">${c.item_title}</h4>
-                      <div class="text-secondary small mb-2"><strong>Proof Provided:</strong> ${c.proof_description}</div>
-                      ${c.admin_notes ? `<div class="p-2 rounded glass-subtle text-emerald small"><i class="bi bi-info-circle me-1"></i>Moderator note: ${c.admin_notes}</div>` : ''}
+
+                      <!-- Visual Stepper Pipeline -->
+                      <div class="claim-pipeline-track">
+                        <div class="pipeline-step-node completed">
+                          <div class="pipeline-step-dot"><i class="bi bi-check"></i></div>
+                          <div class="pipeline-step-label">1. Submitted</div>
+                        </div>
+                        <div class="pipeline-step-node ${status !== 'pending' ? 'completed' : 'active'}">
+                          <div class="pipeline-step-dot">${status !== 'pending' ? '<i class="bi bi-check"></i>' : '2'}</div>
+                          <div class="pipeline-step-label">2. Review Desk</div>
+                        </div>
+                        <div class="pipeline-step-node ${isApproved ? 'completed' : (isRejected ? 'active text-rose' : '')}">
+                          <div class="pipeline-step-dot">${isApproved ? '<i class="bi bi-check"></i>' : (isRejected ? '✕' : '3')}</div>
+                          <div class="pipeline-step-label">3. Proof Matched</div>
+                        </div>
+                        <div class="pipeline-step-node ${isApproved ? 'completed' : ''}">
+                          <div class="pipeline-step-dot">${isApproved ? '<i class="bi bi-check"></i>' : '4'}</div>
+                          <div class="pipeline-step-label">4. Safe Return</div>
+                        </div>
+                      </div>
+
+                      ${c.admin_notes ? `<div class="p-2 rounded glass-subtle text-emerald small mt-2"><i class="bi bi-chat-left-quote me-1"></i><strong>Moderator Dispatch Note:</strong> ${escapeHtml(c.admin_notes)}</div>` : ''}
                     </div>
-                    <span class="badge badge-verified p-2"><i class="bi bi-shield-check me-1"></i> Review Desk</span>
-                  </div>
-                `).join('');
+                  `;
+                }).join('');
               } else {
                 badge.textContent = '0';
                 container.innerHTML = '';
@@ -592,6 +713,7 @@
         .then(r => r.json())
         .then(data => {
           if (data.success) {
+            if (window.playCivicSound) playCivicSound('click');
             showAlert('Report removed successfully.');
             if (currentUser) loadUserItems(currentUser.id);
           } else {
@@ -623,11 +745,14 @@
         .then(r => r.json())
         .then(data => {
           btn.disabled = false;
-          btn.textContent = 'Save Profile Changes';
+          btn.innerHTML = '<i class="bi bi-check2-circle me-1"></i> Save Profile Changes';
           if (data.success) {
+            if (window.playCivicSound) playCivicSound('success');
+            if (window.showToast) showToast('Profile updated successfully!', 'success', 'Profile Saved');
             showAlert('Profile information saved successfully!');
             loadUserProfile();
           } else {
+            if (window.playCivicSound) playCivicSound('alert');
             alert(data.error || 'Failed to update profile.');
           }
         });
@@ -659,7 +784,7 @@
                   const reportsCount = (tag.recovery_reports && tag.recovery_reports.length) || 0;
                   return `
                     <div class="col-md-6 col-12">
-                      <div class="glass-panel p-4 h-100 d-flex flex-column justify-content-between qr-badge-card">
+                      <div class="glass-panel p-4 h-100 d-flex flex-column justify-content-between qr-badge-card border border-subtle">
                         <div>
                           <div class="d-flex justify-content-between align-items-center mb-2">
                             <span class="badge text-light" style="background: var(--color-indigo-500); font-family: var(--font-mono); font-size: 0.8rem;">
@@ -671,25 +796,25 @@
                           </div>
 
                           <h4 class="text-light fw-bold mb-1">${escapeHtml(tag.item_name)}</h4>
-                          <div class="text-muted small mb-2"><i class="bi bi-tag me-1"></i>${escapeHtml(tag.category)} • Reward: ৳${Number(tag.reward_amount || 0).toLocaleString()}</div>
+                          <div class="text-muted small mb-2"><i class="bi bi-tag me-1 text-emerald"></i>${escapeHtml(tag.category)} • Reward: ৳${Number(tag.reward_amount || 0).toLocaleString()} BDT</div>
 
                           ${reportsCount > 0 ? `
                             <div class="p-2 rounded bg-success-subtle border border-success mb-3 small text-success">
-                              <i class="bi bi-bell-fill me-1"></i> <strong>${reportsCount} Finder Report Received!</strong> Check your confidential email/phone or coordinates.
+                              <i class="bi bi-bell-fill me-1"></i> <strong>${reportsCount} Finder Report Received!</strong> A safe handover has been coordinated.
                             </div>
                           ` : `
                             <div class="p-2 rounded glass-subtle small mb-3 text-muted">
-                              <i class="bi bi-shield-check text-emerald me-1"></i> Shield Active. If lost, finder will report to <code>/recover.html?tag=${tag.tag_code}</code>
+                              <i class="bi bi-shield-check text-emerald me-1"></i> Shield Active. If lost, finder scans to reach <code>recover.html?tag=${tag.tag_code}</code>
                             </div>
                           `}
                         </div>
 
                         <div class="pt-3 border-top border-subtle d-flex gap-2">
                           <button type="button" class="btn btn-secondary btn-sm flex-grow-1" onclick="openViewTagModal('${tag.tag_code}', '${escapeHtml(tag.item_name).replace(/'/g, "\\'")}', '${escapeHtml(tag.category)}', ${tag.reward_amount || 0})">
-                            <i class="bi bi-printer me-1"></i> View Tag
+                            <i class="bi bi-printer me-1"></i> Print Shield Tag
                           </button>
                           <a href="recover.html?tag=${tag.tag_code}" target="_blank" class="btn btn-ghost btn-sm border border-subtle flex-grow-1">
-                            <i class="bi bi-box-arrow-up-right me-1"></i> Public Page
+                            <i class="bi bi-box-arrow-up-right me-1"></i> Test Scan Portal
                           </a>
                         </div>
                       </div>
@@ -707,6 +832,7 @@
       }
 
       function openRegisterTagModal() {
+        if (window.playCivicSound) playCivicSound('click');
         document.getElementById('registerTagModal').classList.add('active');
       }
       function closeRegisterTagModal(e) {
@@ -735,20 +861,23 @@
         .then(r => r.json())
         .then(res => {
           btn.disabled = false;
-          btn.innerHTML = '<span>Generate & Protect QR Shield</span>';
+          btn.innerHTML = '<span>Generate &amp; Protect QR Shield</span>';
           if (res.success && res.data) {
+            if (window.playCivicSound) playCivicSound('success');
+            if (window.showToast) showToast(`Asset Shield registered! Code: ${res.data.tag_code}`, 'success', 'QR Shield Created');
             showAlert(`✅ Asset Shield registered! Assigned Unique Code: ${res.data.tag_code}`);
             document.getElementById('registerTagForm').reset();
             closeRegisterTagModal(null);
             loadUserTags();
             openViewTagModal(res.data.tag_code, res.data.item_name, res.data.category, res.data.reward_amount);
           } else {
+            if (window.playCivicSound) playCivicSound('alert');
             alert(res.error || 'Failed to create QR tag.');
           }
         })
         .catch(() => {
           btn.disabled = false;
-          btn.innerHTML = '<span>Generate & Protect QR Shield</span>';
+          btn.innerHTML = '<span>Generate &amp; Protect QR Shield</span>';
           alert('Network communication error creating tag.');
         });
       }
@@ -756,7 +885,7 @@
       function openViewTagModal(tagCode, itemName, category, reward) {
         const preview = document.getElementById('tagBadgePreviewContainer');
         preview.innerHTML = `
-          <div style="border: 2px dashed #0f172a; padding: 20px; border-radius: 8px; max-width: 320px; margin: 0 auto; background: #fff;">
+          <div style="border: 2px dashed #0f172a; padding: 20px; border-radius: 8px; max-width: 320px; margin: 0 auto; background: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
             <div style="font-size: 0.75rem; font-weight: 800; text-transform: uppercase; color: #4338ca; letter-spacing: 0.05em; margin-bottom: 4px;">LOST &amp; FOUND BD PROTECTED ASSET</div>
             <div style="font-size: 1.15rem; font-weight: 800; color: #0f172a; margin-bottom: 8px;">${itemName}</div>
             
@@ -791,6 +920,23 @@
           .finally(() => {
             window.location.href = 'login.html';
           });
+      }
+
+      function toggleTheme() {
+        const current = document.documentElement.getAttribute('data-theme') || 'dark';
+        const target = current === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', target);
+        localStorage.setItem('lf_theme', target);
+        const icon = document.getElementById('themeToggleIcon');
+        if (icon) {
+          icon.className = target === 'dark' ? 'bi bi-moon-stars' : 'bi bi-sun';
+        }
+      }
+      const savedTheme = localStorage.getItem('lf_theme') || 'dark';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+      const icon = document.getElementById('themeToggleIcon');
+      if (icon) {
+        icon.className = savedTheme === 'dark' ? 'bi bi-moon-stars' : 'bi bi-sun';
       }
 
       // Initial Load

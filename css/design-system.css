@@ -319,32 +319,63 @@ body {
   left: 0;
   right: 0;
   z-index: 1000;
-  background: rgba(7, 9, 14, 0.88);
+  background: rgba(7, 9, 14, 0.9);
   backdrop-filter: blur(24px) saturate(180%);
   -webkit-backdrop-filter: blur(24px) saturate(180%);
   border-bottom: 1px solid var(--border-subtle);
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
   transition: all var(--transition-smooth);
 }
-.glass-navbar .container {
+.glass-navbar .container,
+.glass-navbar .container-fluid {
   display: flex !important;
   flex-direction: row !important;
   justify-content: space-between !important;
   align-items: center !important;
-  min-height: 72px;
+  min-height: 70px;
+  width: 100% !important;
+  max-width: 1680px !important;
+  padding-left: clamp(1rem, 2vw, 2.5rem) !important;
+  padding-right: clamp(1.5rem, 3vw, 3.5rem) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+.glass-navbar .navbar-brand {
+  flex-shrink: 0;
 }
 .glass-navbar nav {
   display: flex !important;
   flex-direction: row !important;
   align-items: center !important;
-  gap: 1.5rem !important;
+  gap: 0.65rem !important;
+  flex-shrink: 1;
+}
+@media (min-width: 1350px) {
+  .glass-navbar nav {
+    gap: 1.15rem !important;
+  }
+}
+@media (min-width: 1550px) {
+  .glass-navbar nav {
+    gap: 1.65rem !important;
+  }
+}
+.glass-navbar .navbar-actions-group,
+.glass-navbar .d-flex.align-items-center.gap-2 {
+  flex-shrink: 0 !important;
+  gap: 0.4rem !important;
+}
+@media (min-width: 1400px) {
+  .glass-navbar .d-flex.align-items-center.gap-2 {
+    gap: 0.65rem !important;
+  }
 }
 .nav-link {
-  font-size: 0.925rem;
+  font-size: 0.865rem;
   font-weight: 500;
   color: var(--text-secondary);
   text-decoration: none;
-  padding: 0.4rem 0.65rem;
+  padding: 0.35rem 0.5rem;
   border-radius: var(--radius-sm);
   transition: color var(--transition-fast), background-color var(--transition-fast);
   white-space: nowrap;
@@ -1489,6 +1520,409 @@ a:hover {
     align-items: center;
   }
 }
+
+/* ========================================================
+   FLAGSHIP UPSCALE & INTERACTIVE ANIMATION SUITE (v3.5)
+   ======================================================== */
+
+/* 1. Staggered Entry Micro-Animations */
+.animate-stagger-1 { animation: slideUp 0.4s var(--transition-smooth) 0.05s both; }
+.animate-stagger-2 { animation: slideUp 0.4s var(--transition-smooth) 0.12s both; }
+.animate-stagger-3 { animation: slideUp 0.4s var(--transition-smooth) 0.20s both; }
+.animate-stagger-4 { animation: slideUp 0.4s var(--transition-smooth) 0.28s both; }
+
+/* 2. Interactive Card Spotlight & Border Glow */
+.card-interactive-glow {
+  position: relative;
+  transition: transform var(--transition-smooth), border-color var(--transition-smooth), box-shadow var(--transition-smooth);
+}
+.card-interactive-glow:hover {
+  transform: translateY(-5px);
+  border-color: rgba(16, 185, 129, 0.45) !important;
+  box-shadow: 0 12px 32px rgba(16, 185, 129, 0.18), 0 2px 6px rgba(0, 0, 0, 0.4) !important;
+}
+.card-urgent-glow:hover {
+  transform: translateY(-5px);
+  border-color: rgba(244, 63, 94, 0.5) !important;
+  box-shadow: 0 12px 32px rgba(244, 63, 94, 0.2), 0 2px 6px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* 3. Audio Waveform Indicator for Emergency Broadcast */
+.audio-wave-container {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  height: 14px;
+}
+.audio-wave-bar {
+  width: 3px;
+  background: var(--color-rose-400);
+  border-radius: 2px;
+  animation: audioWaveAnim 1.2s ease-in-out infinite alternate;
+}
+.audio-wave-bar:nth-child(1) { height: 6px; animation-delay: 0.1s; }
+.audio-wave-bar:nth-child(2) { height: 12px; animation-delay: 0.3s; }
+.audio-wave-bar:nth-child(3) { height: 14px; animation-delay: 0.2s; }
+.audio-wave-bar:nth-child(4) { height: 8px; animation-delay: 0.4s; }
+.audio-wave-bar:nth-child(5) { height: 4px; animation-delay: 0.15s; }
+
+@keyframes audioWaveAnim {
+  0% { transform: scaleY(0.4); }
+  100% { transform: scaleY(1.3); }
+}
+
+/* 4. Radar Scanline Sweep FX */
+.radar-scanner-wrapper {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+}
+.radar-scanner-wrapper::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.08), rgba(16, 185, 129, 0.2), transparent);
+  animation: radarSweepAnim 5s linear infinite;
+  pointer-events: none;
+}
+@keyframes radarSweepAnim {
+  0% { left: -100%; }
+  50%, 100% { left: 100%; }
+}
+
+/* 5. Live Community Activity Ticker */
+.activity-stream-bar {
+  background: rgba(14, 18, 26, 0.85);
+  border-top: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
+  backdrop-filter: blur(12px);
+  padding: 0.55rem 0;
+  overflow: hidden;
+  position: relative;
+}
+[data-theme="light"] .activity-stream-bar {
+  background: rgba(248, 250, 252, 0.95);
+  border-color: rgba(15, 23, 42, 0.08);
+}
+.activity-ticker-track {
+  display: flex;
+  gap: 2.5rem;
+  width: max-content;
+  animation: tickerScroll 38s linear infinite;
+}
+.activity-ticker-track:hover {
+  animation-play-state: paused;
+}
+.activity-ticker-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.825rem;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+@keyframes tickerScroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* 6. Smart Match Confidence Meter */
+.match-score-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: var(--radius-pill);
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: -0.01em;
+}
+.match-score-high {
+  background: rgba(16, 185, 129, 0.15);
+  color: var(--color-emerald-400);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+}
+.match-score-medium {
+  background: rgba(99, 102, 241, 0.15);
+  color: var(--color-indigo-400);
+  border: 1px solid rgba(99, 102, 241, 0.4);
+}
+
+/* 7. Watchlist / Bookmark Button */
+.btn-bookmark {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-muted);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+.btn-bookmark:hover {
+  color: var(--color-amber-400);
+  border-color: var(--color-amber-400);
+  background: rgba(245, 158, 11, 0.12);
+}
+.btn-bookmark.active {
+  color: #ffffff;
+  background: var(--color-amber-500);
+  border-color: var(--color-amber-400);
+  box-shadow: 0 0 12px var(--color-amber-glow);
+}
+
+/* 8. Interactive Division Radar Cards */
+.radar-division-card {
+  padding: 1.15rem;
+  border-radius: var(--radius-lg);
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  transition: all var(--transition-smooth);
+  cursor: pointer;
+  text-decoration: none;
+  display: block;
+}
+.radar-division-card:hover, .radar-division-card.active {
+  background: rgba(16, 185, 129, 0.08);
+  border-color: var(--color-emerald-500);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.15);
+}
+[data-theme="light"] .radar-division-card {
+  background: #ffffff;
+  border-color: rgba(15, 23, 42, 0.1);
+}
+[data-theme="light"] .radar-division-card:hover, [data-theme="light"] .radar-division-card.active {
+  background: #f0fdf4;
+  border-color: var(--color-emerald-500);
+}
+
+/* 9. Floating SOS Emergency & Quick-Action Hub */
+.sos-floating-hub {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 1040;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+}
+.sos-quick-panel {
+  display: none;
+  flex-direction: column;
+  gap: 8px;
+  background: rgba(14, 18, 26, 0.95);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 12px;
+  backdrop-filter: blur(16px);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+  animation: slideUp 0.3s var(--transition-smooth) forwards;
+}
+[data-theme="light"] .sos-quick-panel {
+  background: rgba(255, 255, 255, 0.97);
+  border-color: rgba(15, 23, 42, 0.12);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.15);
+}
+.sos-quick-panel.active {
+  display: flex;
+}
+.sos-trigger-btn {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--color-rose-500), #b91c1c);
+  color: #ffffff;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 6px 24px rgba(244, 63, 94, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  cursor: pointer;
+  transition: all var(--transition-smooth);
+  position: relative;
+}
+.sos-trigger-btn:hover {
+  transform: scale(1.08);
+  box-shadow: 0 8px 30px rgba(244, 63, 94, 0.65);
+}
+.sos-pulse-ring {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 2px solid var(--color-rose-500);
+  animation: pulse-ring 2.2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+  pointer-events: none;
+}
+.scroll-top-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  opacity: 0;
+  pointer-events: none;
+}
+.scroll-top-btn.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+.scroll-top-btn:hover {
+  color: var(--color-emerald-400);
+  border-color: var(--color-emerald-500);
+  transform: translateY(-2px);
+}
+
+/* 10. Global Toast Notification Engine */
+.lf-toast-container {
+  position: fixed;
+  top: 80px;
+  right: 20px;
+  z-index: 1090;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 380px;
+  pointer-events: none;
+}
+.lf-toast {
+  pointer-events: auto;
+  background: rgba(14, 18, 26, 0.95);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  backdrop-filter: blur(16px);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  color: var(--text-primary);
+  animation: toastSlideIn 0.35s var(--transition-bounce) forwards;
+  position: relative;
+  overflow: hidden;
+}
+[data-theme="light"] .lf-toast {
+  background: rgba(255, 255, 255, 0.98);
+  border-color: rgba(15, 23, 42, 0.12);
+  color: #0f172a;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.12);
+}
+.lf-toast.toast-exit {
+  animation: toastSlideOut 0.3s forwards ease-in;
+}
+.lf-toast-progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  background: var(--color-emerald-400);
+  width: 100%;
+  animation: toastProgress 4s linear forwards;
+}
+@keyframes toastSlideIn {
+  from { opacity: 0; transform: translateX(50px) scale(0.9); }
+  to { opacity: 1; transform: translateX(0) scale(1); }
+}
+@keyframes toastSlideOut {
+  from { opacity: 1; transform: translateX(0); }
+  to { opacity: 0; transform: translateX(60px); }
+}
+@keyframes toastProgress {
+  from { width: 100%; }
+  to { width: 0%; }
+}
+
+/* 11. Multi-Step Wizard Stepper */
+.wizard-stepper-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  margin-bottom: 2rem;
+}
+.wizard-stepper-line {
+  position: absolute;
+  top: 50%;
+  left: 10%;
+  right: 10%;
+  height: 2px;
+  background: var(--border-subtle);
+  transform: translateY(-50%);
+  z-index: 1;
+}
+.wizard-stepper-progress {
+  position: absolute;
+  top: 50%;
+  left: 10%;
+  height: 2px;
+  background: var(--color-emerald-500);
+  transform: translateY(-50%);
+  z-index: 2;
+  transition: width 0.35s ease;
+}
+.wizard-step-node {
+  position: relative;
+  z-index: 3;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--bg-surface-elevated);
+  border: 2px solid var(--border-medium);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  transition: all var(--transition-smooth);
+}
+.wizard-step-node.active {
+  background: var(--color-emerald-500);
+  border-color: var(--color-emerald-400);
+  color: #ffffff;
+  box-shadow: 0 0 16px var(--color-emerald-glow);
+}
+.wizard-step-node.completed {
+  background: var(--color-emerald-600);
+  border-color: var(--color-emerald-500);
+  color: #ffffff;
+}
+
+/* 12. Printable Emergency Missing Poster layout */
+@media print {
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+  .glass-navbar, .site-footer, .sos-floating-hub, .btn, header, footer {
+    display: none !important;
+  }
+  .printable-poster {
+    border: 4px solid #b91c1c !important;
+    padding: 24px !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+  .printable-poster * {
+    color: #000000 !important;
+  }
+}
+
 
 
 

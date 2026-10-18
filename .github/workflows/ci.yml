@@ -40,7 +40,7 @@ jobs:
           node dev-server.mjs &
           echo "Waiting for server to become healthy on port 8000..."
           for i in {1..30}; do
-            if curl -s http://localhost:8000/api/health.php | grep -q '"success":true'; then
+            if curl -s http://localhost:8000/api/health.php | grep -Eq '"status":\s*"healthy"|"success":\s*true'; then
               echo "Server is healthy!"
               break
             fi

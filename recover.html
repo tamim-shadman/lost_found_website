@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" type="image/png" href="images/logo.png">
-    <title>Asset Recovery Portal — Lost & Found BD</title>
+    <title>Asset Recovery Portal — Lost & Found Bangladesh</title>
     <meta name="description" content="Report a found item protected by the Lost & Found Bangladesh QR Shield. Safe, anonymous, and coordinated.">
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -13,41 +13,102 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="css/design-system.css">
+    <style>
+      .handover-mode-card {
+        padding: 0.85rem;
+        background: var(--bg-surface);
+        border: 1.5px solid var(--border-subtle);
+        border-radius: var(--radius-md);
+        text-align: center;
+        cursor: pointer;
+        transition: all var(--transition-fast);
+      }
+      .handover-mode-card:hover {
+        border-color: rgba(16, 185, 129, 0.4);
+        background: rgba(16, 185, 129, 0.05);
+      }
+      .handover-mode-card.active {
+        border-color: var(--color-emerald-500);
+        background: rgba(16, 185, 129, 0.12);
+        box-shadow: 0 4px 16px var(--color-emerald-glow);
+      }
+    </style>
 </head>
 <body>
+    <!-- Ambient Floating Orbs & Atmospheric Mesh -->
+    <div class="ambient-mesh-canvas" aria-hidden="true">
+      <div class="ambient-orb ambient-orb-emerald"></div>
+      <div class="ambient-orb ambient-orb-indigo"></div>
+      <div class="ambient-orb ambient-orb-rose"></div>
+    </div>
+
     <header class="glass-navbar">
-      <div class="container d-flex justify-content-between align-items-center py-2 px-3 mx-auto" style="max-width: 1320px;">
-        <a href="index.html" class="navbar-brand d-flex align-items-center gap-2 text-decoration-none">
+      <div class="container d-flex justify-content-between align-items-center py-2 mx-auto">
+        <a href="index.html" class="navbar-brand d-flex align-items-center gap-2 text-decoration-none flex-shrink-0">
           <img src="images/logo.png" alt="Lost and Found Bangladesh Logo" width="38" height="38" class="rounded-circle border border-subtle">
           <div>
             <div class="brand-title fw-bold text-light lh-1" style="font-size: 1.15rem; letter-spacing: -0.02em;">Lost & Found <span style="color: var(--color-emerald-400);">BD</span></div>
             <small class="text-muted d-none d-sm-block" style="font-size: 0.725rem;">QR Asset Recovery Shield</small>
           </div>
         </a>
-        <div class="d-flex align-items-center gap-2">
-          <a href="recentposts.html" class="btn btn-ghost btn-sm">Browse Feed</a>
-          <button type="button" class="btn btn-ghost btn-sm" onclick="toggleTheme()" aria-label="Toggle Theme">
+
+        <div class="d-flex align-items-center gap-2 flex-shrink-0 pe-1">
+          <!-- Audio Toggle Button -->
+          <button type="button" class="btn btn-ghost btn-sm text-secondary p-2" id="navSoundToggleBtn" onclick="if(window.toggleSound) toggleSound()" title="Toggle Web Audio Synthesizer">
+            <i class="bi bi-volume-up text-emerald" id="navSoundIcon"></i>
+          </button>
+
+          <a href="recentposts.html" class="btn btn-ghost btn-sm d-none d-sm-inline-flex">Browse Feed</a>
+          <button type="button" class="btn btn-ghost btn-sm text-light p-2" onclick="toggleTheme()" aria-label="Toggle Theme">
             <i class="bi bi-circle-half" id="themeToggleIcon"></i>
           </button>
         </div>
       </div>
     </header>
 
-    <main class="container mx-auto px-3" style="max-width: 680px; padding-top: 130px; padding-bottom: 60px;">
-        <div class="text-center mb-4">
-            <span class="brand-badge mb-2"><i class="bi bi-shield-check me-1"></i> Protected Asset Found</span>
-            <h1 class="text-light fw-bold mb-2" style="font-size: 2.2rem;">Coordinate Safe Return</h1>
-            <p class="text-secondary" style="font-size: 1rem;">Thank you for your civic honesty! Fill in your details below so we can notify the verified owner without exposing your private identity.</p>
+    <main class="container mx-auto px-3" style="max-width: 720px; padding-top: 130px; padding-bottom: 60px;">
+        <div class="text-center mb-4 animate-slide-up">
+            <span class="brand-badge mb-2"><i class="bi bi-shield-check me-1"></i> QR Shield Protected Asset</span>
+            <h1 class="text-light fw-bold mb-2" style="font-size: 2.2rem; letter-spacing: -0.02em;">Coordinate Safe Return</h1>
+            <p class="text-secondary" style="font-size: 1rem;">
+              Thank you for your civic honesty! Fill in your details below so our cryptographic relay can notify the verified owner without exposing your private phone or location to public eyes.
+            </p>
         </div>
 
-        <div class="glass-panel p-4 p-md-5 mb-4 animate-slide-up">
-            <div id="assetInfoCard" class="p-3 rounded glass-subtle mb-4 border border-emerald">
-                <div class="d-flex justify-content-between align-items-center mb-2">
-                    <span class="badge bg-emerald-subtle text-emerald"><i class="bi bi-qr-code me-1"></i> QR Shield Protected</span>
+        <div class="glass-panel p-4 p-md-5 mb-4 animate-slide-up card-interactive-glow">
+            <div id="assetInfoCard" class="p-3 rounded glass-subtle mb-4 border border-emerald" style="border-color: rgba(16, 185, 129, 0.4) !important;">
+                <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
+                    <span class="badge bg-emerald-subtle text-emerald"><i class="bi bi-qr-code-scan me-1"></i> Authenticated QR Tag</span>
                     <span class="font-mono text-muted small" id="displayTagCode">LF-BD-XXXXX</span>
                 </div>
                 <h3 class="fw-bold text-light mb-1" id="displayAssetName">Loading Protected Asset...</h3>
-                <div class="text-secondary small" id="displayAssetCategory">Category: Inquiring system</div>
+                <div class="text-secondary small" id="displayAssetCategory">Category: Inquiring database relay...</div>
+            </div>
+
+            <!-- Handover Preference Selector -->
+            <label class="form-label mb-2 fw-bold text-light">Recommended Safe Handover Channel:</label>
+            <div class="row g-2 mb-4">
+              <div class="col-4">
+                <div class="handover-mode-card active" onclick="selectHandoverMode('meetup', this)">
+                  <i class="bi bi-geo-alt-fill text-emerald d-block mb-1" style="font-size: 1.25rem;"></i>
+                  <strong class="d-block text-light" style="font-size: 0.85rem;">Public Place</strong>
+                  <span class="text-muted" style="font-size: 0.7rem;">Metro / Mall / Café</span>
+                </div>
+              </div>
+              <div class="col-4">
+                <div class="handover-mode-card" onclick="selectHandoverMode('thana', this)">
+                  <i class="bi bi-shield-lock-fill text-indigo d-block mb-1" style="font-size: 1.25rem;"></i>
+                  <strong class="d-block text-light" style="font-size: 0.85rem;">Police Thāna</strong>
+                  <span class="text-muted" style="font-size: 0.7rem;">Nearest Duty Officer</span>
+                </div>
+              </div>
+              <div class="col-4">
+                <div class="handover-mode-card" onclick="selectHandoverMode('courier', this)">
+                  <i class="bi bi-box-seam-fill text-amber d-block mb-1" style="font-size: 1.25rem;"></i>
+                  <strong class="d-block text-light" style="font-size: 0.85rem;">Courier / Parcel</strong>
+                  <span class="text-muted" style="font-size: 0.7rem;">Sundarban / Pathao</span>
+                </div>
+              </div>
             </div>
 
             <div id="recoveryAlertBox" class="alert d-none mb-3" role="alert"></div>
@@ -56,32 +117,41 @@
                 <input type="hidden" id="tagCodeInput">
 
                 <div class="mb-3">
-                    <label class="form-label">Your Name (or "Honest Citizen")</label>
-                    <input type="text" class="form-control" id="finderNameInput" placeholder="e.g. Tanvir Hossain" value="Honest Citizen">
+                    <label class="form-label">Your Name or Alias</label>
+                    <div class="input-icon-wrapper">
+                      <i class="bi bi-person icon"></i>
+                      <input type="text" class="form-control" id="finderNameInput" placeholder="e.g. Tanvir Hossain or Honest Citizen" value="Honest Citizen">
+                    </div>
                 </div>
 
                 <div class="row g-3 mb-3">
                     <div class="col-md-6">
                         <label class="form-label">Your Contact Phone <span class="text-rose">*</span></label>
-                        <input type="tel" class="form-control" id="finderPhoneInput" placeholder="017XXXXXXXX" required>
+                        <div class="input-icon-wrapper">
+                          <i class="bi bi-telephone icon"></i>
+                          <input type="tel" class="form-control" id="finderPhoneInput" placeholder="017XXXXXXXX" required>
+                        </div>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Found Location Landmark <span class="text-rose">*</span></label>
-                        <input type="text" class="form-control" id="foundLocationInput" placeholder="e.g. Dhanmondi Lake, Road 8/A" required>
+                        <div class="input-icon-wrapper">
+                          <i class="bi bi-geo-alt icon"></i>
+                          <input type="text" class="form-control" id="foundLocationInput" placeholder="e.g. Dhanmondi Lake, Road 8/A" required>
+                        </div>
                     </div>
                 </div>
 
                 <div class="mb-4">
-                    <label class="form-label">Safe Handover Notes & Availability</label>
-                    <textarea class="form-control" id="finderMessageInput" rows="3" placeholder="e.g. I left it with the security guard at Gate 2, or you can call me after 6 PM..."></textarea>
+                    <label class="form-label">Safe Handover Notes &amp; Availability</label>
+                    <textarea class="form-control" id="finderMessageInput" rows="3" placeholder="e.g. I have deposited the item at the reception / security desk of Building 4, or call me after 6 PM."></textarea>
                 </div>
 
                 <div class="p-3 rounded glass-subtle small mb-4 text-muted border border-subtle">
-                    <i class="bi bi-lock-fill text-emerald me-1" style="color: var(--color-emerald-400);"></i>
+                    <i class="bi bi-shield-check text-emerald me-1" style="color: var(--color-emerald-400);"></i>
                     <strong>Privacy Guarantee:</strong> Neither your phone number nor the owner's personal address will be displayed on public feeds. Communications are encrypted through the platform.
                 </div>
 
-                <button type="submit" class="btn btn-primary w-100 py-3" id="submitRecoveryBtn">
+                <button type="submit" class="btn btn-primary w-100 py-3 shadow-lg" id="submitRecoveryBtn">
                     <i class="bi bi-send-check-fill me-2" id="submitBtnIcon"></i>
                     <span id="submitBtnText">Dispatch Recovery Notification to Owner</span>
                 </button>
@@ -120,7 +190,7 @@
               <li><a href="recentposts.html?type=found" class="footer-nav-link"><i class="bi bi-chevron-right text-emerald" style="font-size: 0.7rem;"></i> Found Valuables</a></li>
               <li><a href="missing_person.html" class="footer-nav-link"><i class="bi bi-chevron-right text-emerald" style="font-size: 0.7rem;"></i> Missing Persons</a></li>
               <li><a href="submit_lostitems.html" class="footer-nav-link"><i class="bi bi-chevron-right text-emerald" style="font-size: 0.7rem;"></i> File New Report</a></li>
-              <li><a href="User_profile.html" class="footer-nav-link"><i class="bi bi-chevron-right text-emerald" style="font-size: 0.7rem;"></i> QR Asset Shield</a></li>
+              <li><a href="recover.html" class="footer-nav-link"><i class="bi bi-chevron-right text-emerald" style="font-size: 0.7rem;"></i> QR Asset Shield</a></li>
               <li><a href="chatbot.html" class="footer-nav-link"><i class="bi bi-chevron-right text-emerald" style="font-size: 0.7rem;"></i> AI Assistant</a></li>
             </ul>
           </div>
@@ -184,6 +254,26 @@
     </footer>
 
     <script>
+      let currentHandoverMode = 'meetup';
+
+      const handoverPresets = {
+        meetup: 'I have the item safely with me. We can meet at a secure, well-lit public spot (such as a shopping mall or metro station entrance) for verification.',
+        thana: 'I have deposited the item with the duty officer at the nearest police thāna. Please bring proof of ownership / national ID to collect it.',
+        courier: 'I can safely dispatch this item to you via courier (Sundarban / Pathao Parcel) upon owner address confirmation.'
+      };
+
+      function selectHandoverMode(mode, el) {
+        if (window.playCivicSound) playCivicSound('click');
+        currentHandoverMode = mode;
+        document.querySelectorAll('.handover-mode-card').forEach(c => c.classList.remove('active'));
+        el.classList.add('active');
+
+        const messageBox = document.getElementById('finderMessageInput');
+        if (!messageBox.value || Object.values(handoverPresets).includes(messageBox.value)) {
+          messageBox.value = handoverPresets[mode] || '';
+        }
+      }
+
       const urlParams = new URLSearchParams(window.location.search);
       const tagCode = urlParams.get('tag') || 'LF-BD-DEMO';
       document.getElementById('tagCodeInput').value = tagCode;
@@ -194,8 +284,9 @@
         .then(r => r.json())
         .then(res => {
           if (res.success && res.tag) {
+            if (window.playCivicSound) playCivicSound('chime');
             document.getElementById('displayAssetName').textContent = res.tag.asset_name;
-            document.getElementById('displayAssetCategory').textContent = `Category: ${res.tag.category} • Registered Protection`;
+            document.getElementById('displayAssetCategory').textContent = `Category: ${res.tag.category} • Registered Protection Active`;
           } else {
             document.getElementById('displayAssetName').textContent = 'Generic Protected Belonging';
             document.getElementById('displayAssetCategory').textContent = 'Asset Shield Active • Coordinated Return';
@@ -223,7 +314,7 @@
           finder_name: document.getElementById('finderNameInput').value.trim(),
           finder_phone: document.getElementById('finderPhoneInput').value.trim(),
           found_location: document.getElementById('foundLocationInput').value.trim(),
-          message: document.getElementById('finderMessageInput').value.trim()
+          message: `[Handover Mode: ${currentHandoverMode.toUpperCase()}] ` + document.getElementById('finderMessageInput').value.trim()
         };
 
         fetch('api/qr_tag.php', {
@@ -238,11 +329,14 @@
           btnText.textContent = 'Dispatch Recovery Notification to Owner';
 
           if (data.success) {
+            if (window.playCivicSound) playCivicSound('success');
+            if (window.showToast) showToast('Recovery notice dispatched to verified owner via SMS & Email!', 'success', 'Civic Handover Dispatched');
             box.className = 'alert alert-success mb-3';
-            box.innerHTML = '🎉 <strong>Owner Notified!</strong> Thank you for your kindness. The verified owner has received your contact details and will coordinate safe pickup.';
+            box.innerHTML = '🎉 <strong>Owner Notified!</strong> Thank you for your civic honesty. The verified owner has received your contact details and will coordinate safe pickup.';
             box.classList.remove('d-none');
             document.getElementById('recoveryNoticeForm').reset();
           } else {
+            if (window.playCivicSound) playCivicSound('alert');
             box.className = 'alert alert-danger mb-3';
             box.innerHTML = data.error || 'Failed to submit recovery notice.';
             box.classList.remove('d-none');
@@ -256,6 +350,23 @@
           box.innerHTML = 'Network error communicating with the recovery gateway. Please try again.';
           box.classList.remove('d-none');
         });
+      }
+
+      function toggleTheme() {
+        const current = document.documentElement.getAttribute('data-theme') || 'dark';
+        const target = current === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', target);
+        localStorage.setItem('lf_theme', target);
+        const icon = document.getElementById('themeToggleIcon');
+        if (icon) {
+          icon.className = target === 'dark' ? 'bi bi-moon-stars' : 'bi bi-sun';
+        }
+      }
+      const savedTheme = localStorage.getItem('lf_theme') || 'dark';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+      const icon = document.getElementById('themeToggleIcon');
+      if (icon) {
+        icon.className = savedTheme === 'dark' ? 'bi bi-moon-stars' : 'bi bi-sun';
       }
     </script>
     <script src="components/command-palette.js"></script>

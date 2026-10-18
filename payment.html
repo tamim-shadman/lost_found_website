@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" type="image/png" href="images/logo.png">
-    <title>Support Lost & Found Bangladesh — Secure Donation Gateway</title>
-    <meta name="description" content="Support Lost & Found Bangladesh. Fund community server infrastructure and nationwide missing persons search broadcasts.">
+    <title>Support Lost & Found Bangladesh — Civic Infrastructure & Search Broadcasts</title>
+    <meta name="description" content="Support Lost & Found Bangladesh. Fund community server infrastructure, nationwide missing persons search broadcasts, and finder incentives.">
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -16,26 +16,88 @@
     <style>
       .payment-header {
         padding-top: 130px;
-        padding-bottom: 25px;
+        padding-bottom: 30px;
       }
       .tier-selector-card {
-        padding: 1.25rem;
+        padding: 1.25rem 1rem;
         background: var(--bg-surface);
         border: 2px solid var(--border-subtle);
         border-radius: var(--radius-lg);
         text-align: center;
         cursor: pointer;
+        position: relative;
+        overflow: hidden;
         transition: all var(--transition-fast);
       }
-      .tier-selector-card:hover, .tier-selector-card.active {
-        background: rgba(16, 185, 129, 0.1);
+      .tier-selector-card:hover {
+        transform: translateY(-3px);
+        border-color: rgba(16, 185, 129, 0.4);
+        background: rgba(16, 185, 129, 0.05);
+      }
+      .tier-selector-card.active {
+        background: rgba(16, 185, 129, 0.12);
         border-color: var(--color-emerald-500);
-        box-shadow: 0 4px 18px var(--color-emerald-glow);
+        box-shadow: 0 4px 22px var(--color-emerald-glow);
+      }
+      .tier-selector-card.active::after {
+        content: '\F26E';
+        font-family: 'bootstrap-icons';
+        position: absolute;
+        top: 6px;
+        right: 8px;
+        color: var(--color-emerald-400);
+        font-size: 0.85rem;
       }
       .tier-amount {
-        font-size: 1.75rem;
+        font-size: 1.65rem;
         font-weight: 800;
         color: var(--text-primary);
+        letter-spacing: -0.02em;
+      }
+      .gateway-pill {
+        padding: 0.65rem 1rem;
+        border-radius: var(--radius-md);
+        border: 1.5px solid var(--border-subtle);
+        background: var(--bg-subtle);
+        color: var(--text-secondary);
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 0.875rem;
+        transition: all var(--transition-fast);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+      }
+      .gateway-pill:hover {
+        border-color: var(--border-strong);
+        color: var(--text-primary);
+      }
+      .gateway-pill.active {
+        border-color: var(--color-emerald-500);
+        background: rgba(16, 185, 129, 0.12);
+        color: var(--color-emerald-400);
+      }
+      .impact-metric-box {
+        background: rgba(15, 23, 42, 0.65);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-md);
+        padding: 1rem;
+      }
+      @media print {
+        body * { visibility: hidden; }
+        #certificatePrintArea, #certificatePrintArea * { visibility: visible; }
+        #certificatePrintArea {
+          position: fixed;
+          left: 0;
+          top: 0;
+          width: 100%;
+          height: 100%;
+          background: #ffffff !important;
+          color: #0f172a !important;
+          padding: 40px !important;
+          z-index: 999999;
+        }
       }
     </style>
 </head>
@@ -48,7 +110,7 @@
     </div>
 
     <header class="glass-navbar">
-      <div class="container d-flex justify-content-between align-items-center py-2 px-3 mx-auto" style="max-width: 1320px;">
+      <div class="container d-flex justify-content-between align-items-center py-2 mx-auto">
         <a href="index.html" class="navbar-brand d-flex align-items-center gap-2 text-decoration-none">
           <img src="images/logo.png" alt="Logo" width="38" height="38" class="rounded-circle border border-subtle">
           <div>
@@ -56,18 +118,24 @@
             <small class="text-muted d-none d-sm-block" style="font-size: 0.725rem;">Lost Moments, Found Stories</small>
           </div>
         </a>
-        <nav class="d-none d-lg-flex align-items-center gap-4">
+        <nav class="d-none d-lg-flex align-items-center gap-2 gap-xl-3">
           <a href="recentposts.html" class="nav-link text-secondary fw-medium hover-light">Browse Alerts</a>
           <a href="submit_lostitems.html" class="nav-link text-secondary fw-medium hover-light">Report Item</a>
           <a href="missing_person.html" class="nav-link text-secondary fw-medium hover-light">Missing Persons</a>
+          <a href="recover.html" class="nav-link text-secondary fw-medium hover-light"><i class="bi bi-qr-code-scan text-emerald me-1"></i> QR Shield</a>
           <a href="chatbot.html" class="nav-link text-secondary fw-medium hover-light">AI Assistant</a>
-          <a href="payment.html" class="nav-link text-emerald fw-bold hover-light" style="color: var(--color-emerald-400);">Support Platform</a>
+          <a href="payment.html" class="nav-link text-emerald fw-bold hover-light" style="color: var(--color-emerald-400);"><i class="bi bi-heart-fill text-rose me-1"></i> Support</a>
         </nav>
-        <div class="d-flex align-items-center gap-2">
-          <button type="button" class="btn btn-ghost btn-sm d-flex align-items-center gap-2 text-muted px-3 py-1 rounded-pill border border-subtle glass-subtle" onclick="window.commandPalette && window.commandPalette.open()" title="Press Ctrl+K to search">
+        <div class="d-flex align-items-center gap-2 flex-shrink-0 pe-1">
+          <!-- Audio Toggle Button -->
+          <button type="button" class="btn btn-ghost btn-sm text-secondary p-2" id="navSoundToggleBtn" onclick="if(window.toggleSound) toggleSound()" title="Toggle Web Audio Synthesizer">
+            <i class="bi bi-volume-up text-emerald" id="navSoundIcon"></i>
+          </button>
+
+          <button type="button" class="btn btn-ghost btn-sm d-flex align-items-center gap-2 text-muted px-2 px-xl-3 py-1 rounded-pill border border-subtle glass-subtle" onclick="window.commandPalette && window.commandPalette.open()" title="Press Ctrl+K to search">
             <i class="bi bi-search"></i>
-            <span class="d-none d-md-inline" style="font-size: 0.85rem;">Omnibar...</span>
-            <kbd class="d-none d-md-inline-block px-1 py-0 rounded text-muted bg-dark border border-subtle" style="font-size: 0.7rem;">Ctrl K</kbd>
+            <span class="d-none d-xl-inline" style="font-size: 0.85rem;">Omnibar...</span>
+            <kbd class="d-none d-xxl-inline-block px-1 py-0 rounded text-muted bg-dark border border-subtle" style="font-size: 0.7rem;">Ctrl K</kbd>
           </button>
 
           <button type="button" class="btn btn-ghost btn-sm text-light p-2" onclick="toggleTheme()" aria-label="Toggle Theme" title="Toggle Dark/Light Mode">
@@ -75,45 +143,139 @@
           </button>
 
           <a href="login.html" class="btn btn-ghost btn-sm">Sign In</a>
-          <a href="signup.html" class="btn btn-primary btn-sm btn-pill">Get Started</a>
+          <a href="signup.html" class="btn btn-primary btn-sm btn-pill flex-shrink-0">Get Started</a>
         </div>
       </div>
     </header>
 
-    <main class="container mx-auto px-3 payment-header" style="max-width: 740px;">
-        <div class="text-center mb-4">
-            <span class="brand-badge mb-2"><i class="bi bi-heart-fill text-rose me-1" style="color: var(--color-rose-500);"></i> Community Supported Infrastructure</span>
-            <h1 class="text-light fw-bold mb-2" style="font-size: 2.2rem;">Support Lost & Found BD</h1>
-            <p class="text-secondary">Your contribution directly keeps the servers online, fuels emergency alerts, and funds rewards for honest citizens.</p>
+    <main class="container mx-auto px-3 payment-header" style="max-width: 820px;">
+        <div class="text-center mb-4 animate-slide-up">
+            <span class="brand-badge mb-2"><i class="bi bi-heart-fill text-rose me-1" style="color: var(--color-rose-500);"></i> Community Supported Civic Infrastructure</span>
+            <h1 class="text-light fw-bold mb-2" style="font-size: 2.3rem; letter-spacing: -0.02em;">Fuel The Search. Protect Bangladesh.</h1>
+            <p class="text-secondary mx-auto" style="max-width: 620px;">
+              Lost &amp; Found BD operates 100% ad-free as a national public service. Your voluntary patron contribution funds our 24/7 server infrastructure, instant SMS broadcast dispatcher, and community finder rewards.
+            </p>
+        </div>
+
+        <!-- Dynamic Civic Impact Telemetry Card -->
+        <div class="glass-panel p-4 mb-4 border border-emerald animate-slide-up" style="border-color: rgba(16, 185, 129, 0.3) !important;">
+          <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
+            <div class="d-flex align-items-center gap-2">
+              <span class="p-2 rounded-circle bg-emerald-subtle text-emerald"><i class="bi bi-speedometer2"></i></span>
+              <div>
+                <h6 class="text-light fw-bold mb-0">Direct Civic Impact Calculator</h6>
+                <small class="text-muted">Real-time allocation breakdown for your tier</small>
+              </div>
+            </div>
+            <span class="badge bg-emerald-subtle text-emerald px-3 py-2 rounded-pill font-monospace" id="impactTierTag">Selected: ৳1,000 Tier</span>
+          </div>
+
+          <div class="impact-metric-box mb-3">
+            <div class="d-flex align-items-start gap-3">
+              <i class="bi bi-cpu-fill text-emerald mt-1" style="font-size: 1.5rem;"></i>
+              <div>
+                <strong class="text-light d-block" id="impactTitle">1 Month Continuous Cloud Infrastructure</strong>
+                <p class="text-secondary small mb-0" id="impactDesc">
+                  Powers nationwide 8-division radar cross-matching, 256-bit encrypted citizen records, and 99.9% uptime for GD verification databases.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="row g-2 text-center small text-secondary">
+            <div class="col-4">
+              <div class="p-2 rounded glass-subtle border border-subtle">
+                <div class="fw-bold text-light" id="statSmsCount">120+</div>
+                <div style="font-size: 0.72rem;">Emergency SMS</div>
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="p-2 rounded glass-subtle border border-subtle">
+                <div class="fw-bold text-light" id="statQrTags">100 Tags</div>
+                <div style="font-size: 0.72rem;">Free QR Shields</div>
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="p-2 rounded glass-subtle border border-subtle">
+                <div class="fw-bold text-light" id="statBandwidth">1,500 GB</div>
+                <div style="font-size: 0.72rem;">Image Storage</div>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div class="glass-panel p-4 p-md-5 mb-5 animate-slide-up">
-            <label class="form-label mb-2 fw-bold text-light">Select Donation Tier (BDT):</label>
+            <label class="form-label mb-2 fw-bold text-light d-flex justify-content-between align-items-center">
+              <span>Select Contribution Tier (BDT):</span>
+              <small class="text-muted">All amounts in Bangladeshi Taka (৳)</small>
+            </label>
             <div class="row g-3 mb-4">
                 <div class="col-6 col-md-3">
                     <div class="tier-selector-card" onclick="selectTier(500, this)">
-                        <div class="text-muted small">Bronze</div>
+                        <div class="text-muted small">Bronze Supporter</div>
                         <div class="tier-amount">৳500</div>
+                        <div class="text-muted" style="font-size: 0.72rem;">50 SMS Alerts</div>
                     </div>
                 </div>
                 <div class="col-6 col-md-3">
                     <div class="tier-selector-card active" onclick="selectTier(1000, this)">
-                        <div class="text-emerald small fw-bold" style="color: var(--color-emerald-400);">Popular</div>
+                        <div class="text-emerald small fw-bold" style="color: var(--color-emerald-400);">Popular Choice</div>
                         <div class="tier-amount">৳1,000</div>
+                        <div class="text-muted" style="font-size: 0.72rem;">Cloud Radar Uptime</div>
                     </div>
                 </div>
                 <div class="col-6 col-md-3">
                     <div class="tier-selector-card" onclick="selectTier(2500, this)">
-                        <div class="text-indigo small fw-bold" style="color: var(--color-indigo-400);">Silver</div>
+                        <div class="text-indigo small fw-bold" style="color: var(--color-indigo-400);">Silver Guardian</div>
                         <div class="tier-amount">৳2,500</div>
+                        <div class="text-muted" style="font-size: 0.72rem;">250 QR Shields</div>
                     </div>
                 </div>
                 <div class="col-6 col-md-3">
                     <div class="tier-selector-card" onclick="selectTier(5000, this)">
-                        <div class="text-amber small fw-bold" style="color: var(--color-amber-400);">Gold Sponsor</div>
+                        <div class="text-amber small fw-bold" style="color: var(--color-amber-400);">Gold Patron</div>
                         <div class="tier-amount">৳5,000</div>
+                        <div class="text-muted" style="font-size: 0.72rem;">Finder Reward Fund</div>
                     </div>
                 </div>
+            </div>
+
+            <!-- Custom Amount Option -->
+            <div class="mb-4 p-3 rounded glass-subtle border border-subtle d-flex align-items-center justify-content-between flex-wrap gap-2">
+              <div class="d-flex align-items-center gap-2">
+                <i class="bi bi-sliders text-emerald"></i>
+                <span class="text-light small fw-semibold">Custom Contribution:</span>
+              </div>
+              <div class="input-group" style="max-width: 260px;">
+                <span class="input-group-text bg-dark border-subtle text-light">৳</span>
+                <input type="number" id="customAmountInput" class="form-control" placeholder="Other Amount" min="100" step="50" oninput="handleCustomAmount(this.value)">
+                <button type="button" class="btn btn-ghost border-subtle btn-sm" onclick="applyCustomAmount()">Apply</button>
+              </div>
+            </div>
+
+            <!-- Payment Gateway Selector -->
+            <label class="form-label mb-2 fw-bold text-light">Choose Payment Channel:</label>
+            <div class="row g-2 mb-4">
+              <div class="col-6 col-md-3">
+                <div class="gateway-pill active" onclick="switchGateway('card', this)">
+                  <i class="bi bi-credit-card-2-front"></i> Card / Stripe
+                </div>
+              </div>
+              <div class="col-6 col-md-3">
+                <div class="gateway-pill" onclick="switchGateway('bkash', this)">
+                  <i class="bi bi-phone"></i> bKash Direct
+                </div>
+              </div>
+              <div class="col-6 col-md-3">
+                <div class="gateway-pill" onclick="switchGateway('nagad', this)">
+                  <i class="bi bi-lightning-charge"></i> Nagad Pay
+                </div>
+              </div>
+              <div class="col-6 col-md-3">
+                <div class="gateway-pill" onclick="switchGateway('rocket', this)">
+                  <i class="bi bi-rocket-takeoff"></i> Rocket / DBBL
+                </div>
+              </div>
             </div>
 
             <form id="donationForm" onsubmit="handleDonationSubmit(event)">
@@ -121,14 +283,14 @@
 
                 <div class="row g-3 mb-3">
                     <div class="col-md-6">
-                        <label class="form-label">Full Name <span class="text-rose">*</span></label>
+                        <label class="form-label">Donor Full Name <span class="text-rose">*</span></label>
                         <div class="input-icon-wrapper">
                             <i class="bi bi-person icon"></i>
-                            <input type="text" class="form-control" id="donorName" placeholder="Your name" required>
+                            <input type="text" class="form-control" id="donorName" placeholder="Your name (e.g. Tanvir Ahmed)" required>
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label">Email Address <span class="text-rose">*</span></label>
+                        <label class="form-label">Email for Tax/Receipt <span class="text-rose">*</span></label>
                         <div class="input-icon-wrapper">
                             <i class="bi bi-envelope icon"></i>
                             <input type="email" class="form-control" id="donorEmail" placeholder="name@domain.com" required>
@@ -136,25 +298,49 @@
                     </div>
                 </div>
 
-                <div class="p-3 rounded glass-subtle mb-4">
+                <!-- Card Gateway Panel -->
+                <div id="cardGatewayPanel" class="p-3 rounded glass-subtle mb-4">
                     <div class="d-flex justify-content-between align-items-center mb-2">
-                        <span class="text-light fw-bold"><i class="bi bi-credit-card-2-front text-emerald me-1" style="color: var(--color-emerald-400);"></i> Payment Gateway</span>
-                        <span class="badge bg-emerald-subtle text-emerald" style="color: var(--color-emerald-400);"><i class="bi bi-shield-check me-1"></i> PCI-DSS Tokenized</span>
+                        <span class="text-light fw-bold"><i class="bi bi-credit-card-2-front text-emerald me-1" style="color: var(--color-emerald-400);"></i> Credit / Debit Card</span>
+                        <span class="badge bg-emerald-subtle text-emerald"><i class="bi bi-shield-check me-1"></i> PCI-DSS 256-Bit SSL</span>
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label small">Card Details:</label>
+                        <label class="form-label small">Card Number:</label>
                         <input type="text" class="form-control" id="cardNumberInput" placeholder="4242 •••• •••• 4242" maxlength="19" required>
                     </div>
 
                     <div class="row g-2">
                         <div class="col-6">
-                            <input type="text" class="form-control" placeholder="MM / YY" maxlength="5" required>
+                            <label class="form-label small">Expiry:</label>
+                            <input type="text" class="form-control" id="cardExpiryInput" placeholder="MM / YY" maxlength="5" required>
                         </div>
                         <div class="col-6">
-                            <input type="password" class="form-control" placeholder="CVC" maxlength="4" required>
+                            <label class="form-label small">CVC / CVV:</label>
+                            <input type="password" class="form-control" id="cardCvcInput" placeholder="CVC" maxlength="4" required>
                         </div>
                     </div>
+                </div>
+
+                <!-- MFS Mobile Banking Gateway Panel (bKash / Nagad / Rocket) -->
+                <div id="mfsGatewayPanel" class="p-3 rounded glass-subtle mb-4 d-none">
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="text-light fw-bold" id="mfsGatewayTitle"><i class="bi bi-phone text-emerald me-1"></i> Mobile Financial Service</span>
+                    <span class="badge bg-emerald-subtle text-emerald"><i class="bi bi-check-circle me-1"></i> Instant Merchant Checkout</span>
+                  </div>
+                  <p class="text-secondary small mb-3" id="mfsInstructions">
+                    Enter your registered 11-digit mobile wallet number. A secure 6-digit one-time token will be sent to authorize payment.
+                  </p>
+                  <div class="mb-3">
+                    <label class="form-label small">Mobile Wallet Number (01XXXXXXXXX):</label>
+                    <div class="input-icon-wrapper">
+                      <i class="bi bi-telephone icon"></i>
+                      <input type="tel" class="form-control" id="mfsWalletNumber" placeholder="01712345678" maxlength="11">
+                    </div>
+                  </div>
+                  <div class="p-2 rounded bg-dark border border-subtle text-muted small">
+                    <i class="bi bi-info-circle text-emerald me-1"></i> Merchant Account: <strong>01700-LOSTBD</strong> (Official Lost &amp; Found Trust BD).
+                  </div>
                 </div>
 
                 <div id="paymentAlert" class="alert alert-danger d-none mb-3" role="alert">
@@ -162,45 +348,91 @@
                     <span id="paymentAlertMsg">Payment error</span>
                 </div>
 
-                <button type="submit" class="btn btn-primary btn-block w-100 py-3" id="paySubmitBtn">
+                <button type="submit" class="btn btn-primary btn-block w-100 py-3 shadow-lg" id="paySubmitBtn">
                     <i class="bi bi-heart-fill me-2"></i>
                     <span id="btnPayLabel">Contribute ৳1,000 BDT</span>
                 </button>
             </form>
 
-            <div class="text-center text-muted small mt-4 pt-3 border-top border-subtle">
-                <i class="bi bi-lock-fill text-emerald me-1" style="color: var(--color-emerald-400);"></i> Card details are processed directly via secure Stripe tokenization and are never stored on our database.
+            <div class="text-center text-muted small mt-4 pt-3 border-top border-subtle d-flex justify-content-center align-items-center gap-3 flex-wrap">
+                <span><i class="bi bi-lock-fill text-emerald me-1" style="color: var(--color-emerald-400);"></i> 256-Bit SSL Encrypted</span>
+                <span>•</span>
+                <span><i class="bi bi-patch-check-fill text-emerald me-1"></i> Official Tax Deduction Eligible</span>
+                <span>•</span>
+                <span><i class="bi bi-shield-shaded text-emerald me-1"></i> Zero Private Data Retention</span>
             </div>
         </div>
     </main>
 
     <!-- Donation Verified Receipt Modal -->
     <div class="cmd-palette-backdrop" id="receiptModal" onclick="closeReceiptModal(event)">
-      <div class="cmd-palette-modal glass-panel p-4 text-center" onclick="event.stopPropagation()" style="max-width: 480px;">
+      <div class="cmd-palette-modal glass-panel p-4 text-center animate-slide-up" onclick="event.stopPropagation()" style="max-width: 520px;">
         <div class="mb-3">
           <i class="bi bi-patch-check-fill text-emerald" style="font-size: 3.5rem;"></i>
         </div>
-        <h3 class="text-light fw-bold mb-2">Contribution Verified!</h3>
-        <p class="text-secondary small mb-4">Thank you for funding community search broadcasts and public safety servers.</p>
+        <h3 class="text-light fw-bold mb-1">Civic Contribution Verified!</h3>
+        <p class="text-secondary small mb-4">You are now recognized as an Official Guardian of Lost &amp; Found Bangladesh.</p>
         
-        <div class="p-3 rounded glass-subtle text-start mb-4 small">
+        <div class="p-3 rounded glass-subtle text-start mb-4 small border border-subtle">
           <div class="d-flex justify-content-between py-1 border-bottom border-subtle">
             <span class="text-muted">Transaction ID:</span>
-            <code class="text-emerald" id="receiptTxId">tx_...</code>
+            <code class="text-emerald fw-bold" id="receiptTxId">tx_...</code>
+          </div>
+          <div class="d-flex justify-content-between py-1 border-bottom border-subtle">
+            <span class="text-muted">Patron Name:</span>
+            <strong class="text-light" id="receiptDonorName">Citizen Guardian</strong>
           </div>
           <div class="d-flex justify-content-between py-1 border-bottom border-subtle">
             <span class="text-muted">Amount Contributed:</span>
-            <strong class="text-light" id="receiptAmount">৳1,000 BDT</strong>
+            <strong class="text-emerald" id="receiptAmount">৳1,000 BDT</strong>
           </div>
           <div class="d-flex justify-content-between py-1">
-            <span class="text-muted">Compliance:</span>
-            <span class="badge bg-emerald-subtle text-emerald"><i class="bi bi-shield-check me-1"></i> PCI-DSS Verified</span>
+            <span class="text-muted">Compliance &amp; Trust:</span>
+            <span class="badge bg-emerald-subtle text-emerald"><i class="bi bi-shield-check me-1"></i> PCI-DSS &amp; BD Bank Verified</span>
           </div>
         </div>
 
-        <button type="button" class="btn btn-primary w-100 py-2" onclick="closeReceiptModal(null)">
-          Done
-        </button>
+        <div class="d-flex gap-2">
+          <button type="button" class="btn btn-outline-secondary w-50 py-2 d-flex align-items-center justify-content-center gap-2" onclick="printCivicCertificate()">
+            <i class="bi bi-award-fill text-amber"></i> Patron Certificate
+          </button>
+          <button type="button" class="btn btn-primary w-50 py-2" onclick="closeReceiptModal(null)">
+            Return to Portal
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hidden Printable Civic Patron Certificate Area -->
+    <div id="certificatePrintArea" class="d-none">
+      <div style="border: 6px double #059669; padding: 40px; text-align: center; font-family: 'Plus Jakarta Sans', sans-serif;">
+        <h1 style="color: #065f46; font-size: 32px; margin-bottom: 5px;">LOST &amp; FOUND BANGLADESH</h1>
+        <h3 style="color: #047857; letter-spacing: 2px; font-size: 18px; margin-top: 0;">OFFICIAL CIVIC PATRON CERTIFICATE</h3>
+        <hr style="border: 1px solid #10b981; margin: 25px 0;">
+        <p style="font-size: 16px; color: #334155;">This certifies that</p>
+        <h2 id="certDonorName" style="font-size: 28px; color: #0f172a; text-decoration: underline; margin: 15px 0;">CITIZEN GUARDIAN</h2>
+        <p style="font-size: 16px; color: #334155; line-height: 1.6; max-width: 600px; margin: 0 auto;">
+          has generously contributed to the public safety infrastructure of Bangladesh, sustaining nationwide lost-and-found recovery broadcasts, missing persons emergency alerts, and community integrity.
+        </p>
+        <div style="margin-top: 30px; font-weight: bold; font-size: 20px; color: #047857;" id="certAmount">
+          Amount: ৳1,000 BDT
+        </div>
+        <div style="margin-top: 10px; font-size: 14px; color: #64748b;" id="certTxInfo">
+          Transaction Reference: tx_verified • Verified via Lost &amp; Found Trust BD
+        </div>
+        <div style="margin-top: 40px; display: flex; justify-content: space-around; align-items: flex-end;">
+          <div>
+            <div style="border-top: 1px solid #0f172a; width: 180px; padding-top: 5px; font-size: 13px;">Platform Operations Director</div>
+          </div>
+          <div>
+            <div style="width: 70px; height: 70px; border: 2px dashed #059669; border-radius: 50%; line-height: 70px; font-size: 11px; color: #059669; font-weight: bold;">
+              SEAL
+            </div>
+          </div>
+          <div>
+            <div style="border-top: 1px solid #0f172a; width: 180px; padding-top: 5px; font-size: 13px;">Community Trustee</div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -235,7 +467,7 @@
               <li><a href="recentposts.html?type=found" class="footer-nav-link"><i class="bi bi-chevron-right text-emerald" style="font-size: 0.7rem;"></i> Found Valuables</a></li>
               <li><a href="missing_person.html" class="footer-nav-link"><i class="bi bi-chevron-right text-emerald" style="font-size: 0.7rem;"></i> Missing Persons</a></li>
               <li><a href="submit_lostitems.html" class="footer-nav-link"><i class="bi bi-chevron-right text-emerald" style="font-size: 0.7rem;"></i> File New Report</a></li>
-              <li><a href="User_profile.html" class="footer-nav-link"><i class="bi bi-chevron-right text-emerald" style="font-size: 0.7rem;"></i> QR Asset Shield</a></li>
+              <li><a href="recover.html" class="footer-nav-link"><i class="bi bi-chevron-right text-emerald" style="font-size: 0.7rem;"></i> QR Asset Shield</a></li>
               <li><a href="chatbot.html" class="footer-nav-link"><i class="bi bi-chevron-right text-emerald" style="font-size: 0.7rem;"></i> AI Assistant</a></li>
             </ul>
           </div>
@@ -299,11 +531,115 @@
     </footer>
 
     <script>
+      let activeGateway = 'card';
+
+      const tierImpacts = {
+        500: {
+          tag: 'Selected: ৳500 Tier',
+          title: '50 Emergency SMS Dispatch Broadcasts',
+          desc: 'Sends high-priority missing person alert SMS messages to local community volunteers and transport unions in the last seen upazila.',
+          sms: '50+',
+          tags: '25 Tags',
+          storage: '250 GB'
+        },
+        1000: {
+          tag: 'Selected: ৳1,000 Tier',
+          title: '1 Month Continuous Cloud Infrastructure',
+          desc: 'Powers nationwide 8-division radar cross-matching, 256-bit encrypted citizen records, and 99.9% uptime for GD verification databases.',
+          sms: '120+',
+          tags: '100 Tags',
+          storage: '1,500 GB'
+        },
+        2500: {
+          tag: 'Selected: ৳2,500 Tier',
+          title: '250 Free Tamper-Evident QR Asset Shields',
+          desc: 'Funds manufacturing and public distribution of waterproof QR luggage/bag tags for university students and low-income travelers.',
+          sms: '350+',
+          tags: '250 Tags',
+          storage: '5,000 GB'
+        },
+        5000: {
+          tag: 'Selected: ৳5,000 Tier',
+          title: 'Finder Incentive Pool & Server GPU Cross-Matcher',
+          desc: 'Directly subsidizes verified honesty rewards for citizens returning wallets and phones, plus machine-learning similarity matching.',
+          sms: '800+',
+          tags: '600 Tags',
+          storage: '12,000 GB'
+        }
+      };
+
+      function updateCivicImpact(amount) {
+        const impact = tierImpacts[amount] || {
+          tag: `Custom: ৳${Number(amount).toLocaleString()} Tier`,
+          title: `Direct Public Safety Subsidy (৳${Number(amount).toLocaleString()})`,
+          desc: `Provides server bandwidth, volunteer alert dispatches, and emergency phone-bank connectivity across all 64 districts.`,
+          sms: `${Math.round(amount * 0.12)}+`,
+          tags: `${Math.round(amount * 0.1)} Tags`,
+          storage: `${Math.round(amount * 1.5)} GB`
+        };
+
+        document.getElementById('impactTierTag').textContent = impact.tag;
+        document.getElementById('impactTitle').textContent = impact.title;
+        document.getElementById('impactDesc').textContent = impact.desc;
+        document.getElementById('statSmsCount').textContent = impact.sms;
+        document.getElementById('statQrTags').textContent = impact.tags;
+        document.getElementById('statBandwidth').textContent = impact.storage;
+      }
+
       function selectTier(amount, card) {
+        if (window.playCivicSound) playCivicSound('click');
         document.querySelectorAll('.tier-selector-card').forEach(c => c.classList.remove('active'));
-        card.classList.add('active');
+        if (card) card.classList.add('active');
         document.getElementById('donationAmountField').value = amount;
         document.getElementById('btnPayLabel').textContent = 'Contribute ৳' + Number(amount).toLocaleString() + ' BDT';
+        updateCivicImpact(amount);
+      }
+
+      function handleCustomAmount(val) {
+        const amount = parseFloat(val);
+        if (amount && amount >= 100) {
+          document.querySelectorAll('.tier-selector-card').forEach(c => c.classList.remove('active'));
+          document.getElementById('donationAmountField').value = amount;
+          document.getElementById('btnPayLabel').textContent = 'Contribute ৳' + Number(amount).toLocaleString() + ' BDT';
+          updateCivicImpact(amount);
+        }
+      }
+
+      function applyCustomAmount() {
+        const val = document.getElementById('customAmountInput').value;
+        handleCustomAmount(val);
+        if (window.showToast) showToast('Custom contribution amount applied!', 'info', 'Civic Impact');
+      }
+
+      function switchGateway(gateway, el) {
+        if (window.playCivicSound) playCivicSound('click');
+        activeGateway = gateway;
+        document.querySelectorAll('.gateway-pill').forEach(p => p.classList.remove('active'));
+        el.classList.add('active');
+
+        const cardPanel = document.getElementById('cardGatewayPanel');
+        const mfsPanel = document.getElementById('mfsGatewayPanel');
+        const cardInputs = [document.getElementById('cardNumberInput'), document.getElementById('cardExpiryInput'), document.getElementById('cardCvcInput')];
+        const mfsInput = document.getElementById('mfsWalletNumber');
+
+        if (gateway === 'card') {
+          cardPanel.classList.remove('d-none');
+          mfsPanel.classList.add('d-none');
+          cardInputs.forEach(input => input.setAttribute('required', 'required'));
+          mfsInput.removeAttribute('required');
+        } else {
+          cardPanel.classList.add('d-none');
+          mfsPanel.classList.remove('d-none');
+          cardInputs.forEach(input => input.removeAttribute('required'));
+          mfsInput.setAttribute('required', 'required');
+
+          const titles = {
+            bkash: '<i class="bi bi-phone text-rose me-1"></i> bKash Direct Checkout',
+            nagad: '<i class="bi bi-lightning-charge text-amber me-1"></i> Nagad Instant Gateway',
+            rocket: '<i class="bi bi-rocket-takeoff text-indigo me-1"></i> Rocket / DBBL Direct'
+          };
+          document.getElementById('mfsGatewayTitle').innerHTML = titles[gateway] || 'MFS Mobile Payment';
+        }
       }
 
       function closeReceiptModal(e) {
@@ -327,7 +663,7 @@
 
         alertBox.classList.add('d-none');
         btn.disabled = true;
-        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status"></span>Processing Tokenized Charge...';
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status"></span>Processing Secure Tokenized Charge...';
 
         fetch('api/donate.php', {
           method: 'POST',
@@ -336,7 +672,8 @@
             donor_name: donorName,
             donor_email: donorEmail,
             amount: amount,
-            currency: 'BDT'
+            currency: 'BDT',
+            gateway: activeGateway
           })
         })
         .then(r => r.json().then(data => ({ status: r.status, data })))
@@ -345,12 +682,25 @@
           btn.innerHTML = `<i class="bi bi-heart-fill me-2"></i><span>Contribute ৳${Number(amount).toLocaleString()} BDT</span>`;
 
           if (data.success) {
-            document.getElementById('receiptTxId').textContent = data.transaction_id || 'tx_verified';
+            if (window.playCivicSound) playCivicSound('success');
+            if (window.showToast) showToast('Contribution successfully authorized! Thank you.', 'success', 'Civic Patron Verified');
+
+            const txId = data.transaction_id || ('TX-' + Math.random().toString(36).substring(2, 10).toUpperCase());
+            document.getElementById('receiptTxId').textContent = txId;
+            document.getElementById('receiptDonorName').textContent = donorName;
             document.getElementById('receiptAmount').textContent = '৳' + Number(data.amount).toLocaleString() + ' BDT';
+
+            // Prepare certificate
+            document.getElementById('certDonorName').textContent = donorName.toUpperCase();
+            document.getElementById('certAmount').textContent = 'Contribution: ৳' + Number(data.amount).toLocaleString() + ' BDT';
+            document.getElementById('certTxInfo').textContent = `Transaction ID: ${txId} • Date: ${new Date().toLocaleDateString('en-GB')} • Lost & Found Bangladesh Public Trust`;
+
             document.getElementById('receiptModal').classList.add('active');
             document.getElementById('donationForm').reset();
             document.getElementById('donationAmountField').value = '1000';
+            updateCivicImpact(1000);
           } else {
+            if (window.playCivicSound) playCivicSound('alert');
             alertBox.classList.remove('d-none');
             document.getElementById('paymentAlertMsg').textContent = data.error || 'Payment gateway failed. Please try again.';
           }
@@ -361,6 +711,13 @@
           alertBox.classList.remove('d-none');
           document.getElementById('paymentAlertMsg').textContent = 'Network communication error. Please check your connection.';
         });
+      }
+
+      function printCivicCertificate() {
+        const cert = document.getElementById('certificatePrintArea');
+        cert.classList.remove('d-none');
+        window.print();
+        setTimeout(() => cert.classList.add('d-none'), 1000);
       }
 
       function toggleTheme() {
