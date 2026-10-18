@@ -1,17 +1,26 @@
 <?php
-    include "config.php";
+declare(strict_types=1);
 
-    if(isset($_GET['id'])) {
-    $id = $_GET['id'];
+require_once dirname(__DIR__) . '/src/autoload.php';
 
-    $sql = "DELETE FROM `founditem` WHERE `id` = '$id'";
+use App\Services\AuthService;
+use App\Services\ItemService;
+use App\Utils\Security;
 
-    $result = $conn->query($sql);
+Security::initSession();
+$auth = new AuthService();
+$currentUser = $auth->getCurrentUser();
 
-    if ($result == TRUE) {
-        echo "Record deleted successfully.";
-    }else{
-        echo "Error" . $sql . "<br>" . $conn->error;
-    }
+if (!$currentUser || !in_array($currentUser['role'], ['admin', 'moderator'])) {
+    http_response_code(403);
+    die("Unauthorized.");
 }
 
+$id = (int)($_GET['id'] ?? 0);
+if ($id > 0) {
+    $itemService = new ItemService();
+    $itemService->deleteItem($id, (int)$currentUser['id'], true);
+}
+
+header("Location: view.php");
+exit();

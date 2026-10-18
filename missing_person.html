@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" type="image/png" href="images/logo.png">
+    <title>Missing Persons Directory — Bangladesh Police Coordinated</title>
+    <meta name="description" content="National Missing Persons Directory in Bangladesh. Report missing loved ones, check police GD alerts, and aid community sightings.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="css/design-system.css">
+    <style>
+      .missing-header {
+        padding-top: 130px;
+        padding-bottom: 30px;
+      }
+      .emergency-call-card {
+        background: linear-gradient(135deg, rgba(244, 63, 94, 0.15), rgba(14, 18, 26, 0.9));
+        border: 1px solid rgba(244, 63, 94, 0.3);
+        border-radius: var(--radius-lg);
+        padding: 1.25rem 1.5rem;
+      }
+      .person-card {
+        border-radius: var(--radius-lg);
+        background: var(--bg-surface);
+        border: 1px solid var(--border-subtle);
+        overflow: hidden;
+        transition: transform var(--transition-smooth), border-color var(--transition-smooth);
+      }
+      .person-card:hover {
+        transform: translateY(-4px);
+        border-color: rgba(244, 63, 94, 0.35);
+      }
+    </style>
+</head>
+<body>
+    <header class="glass-navbar">
+      <div class="container d-flex justify-content-between align-items-center py-2 px-3 mx-auto" style="max-width: 1320px;">
+        <a href="index.html" class="navbar-brand d-flex align-items-center gap-2 text-decoration-none">
+          <img src="images/logo.png" alt="Logo" width="38" height="38" class="rounded-circle border border-subtle">
+          <div>
+            <div class="brand-title fw-bold text-light lh-1" style="font-size: 1.15rem; letter-spacing: -0.02em;">Lost & Found <span style="color: var(--color-emerald-400);">BD</span></div>
+            <small class="text-muted d-none d-sm-block" style="font-size: 0.725rem;">Lost Moments, Found Stories</small>
+          </div>
+        </a>
+        <nav class="d-none d-lg-flex align-items-center gap-4">
+          <a href="recentposts.html" class="nav-link text-secondary fw-medium hover-light">Browse Alerts</a>
+          <a href="submit_lostitems.html" class="nav-link text-secondary fw-medium hover-light">Report Item</a>
+          <a href="missing_person.html" class="nav-link text-rose fw-bold hover-light" style="color: var(--color-rose-400);">Missing Persons</a>
+          <a href="chatbot.html" class="nav-link text-secondary fw-medium hover-light">AI Assistant</a>
+          <a href="payment.html" class="nav-link text-secondary fw-medium hover-light">Support Platform</a>
+        </nav>
+        <div class="d-flex align-items-center gap-2">
+          <button type="button" class="btn btn-ghost btn-sm text-muted d-flex align-items-center gap-2 px-2 py-1" onclick="window.LostFoundCmdPalette && window.LostFoundCmdPalette.open()" style="background: rgba(255,255,255,0.05); border: 1px solid var(--border-subtle); border-radius: var(--radius-md);">
+            <i class="bi bi-search"></i>
+            <span class="d-none d-md-inline" style="font-size: 0.85rem;">Omnibar...</span>
+            <kbd class="d-none d-md-inline-block px-1 py-0 rounded text-muted bg-dark border border-subtle" style="font-size: 0.7rem;">Ctrl K</kbd>
+          </button>
+          <button type="button" class="btn btn-ghost btn-sm text-light p-2" onclick="toggleTheme()" aria-label="Toggle Theme" title="Toggle Theme">
+            <i class="bi bi-circle-half" id="themeToggleIcon"></i>
+          </button>
+          <a href="login.html" class="btn btn-ghost btn-sm">Sign In</a>
+          <a href="signup.html" class="btn btn-primary btn-sm btn-pill">Get Started</a>
+        </div>
+      </div>
+    </header>
+
+    <main class="container mx-auto px-3" style="max-width: 1320px;">
+        <div class="missing-header">
+            <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3">
+                <div>
+                    <span class="badge badge-missing mb-2"><i class="bi bi-shield-fill-check me-1"></i> Coordinated with Bangladesh Police</span>
+                    <h1 class="text-light fw-bold mb-1" style="font-size: 2.2rem;">National Missing Persons Directory</h1>
+                    <p class="text-secondary mb-0">Help reunite missing children, elders, and vulnerable citizens across Bangladesh.</p>
+                </div>
+                <button type="button" class="btn btn-danger btn-pill px-4 py-3" onclick="openReportModal()">
+                    <i class="bi bi-person-fill-plus me-1"></i> File Missing Person Report
+                </button>
+            </div>
+        </div>
+
+        <div class="emergency-call-card mb-4 d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+            <div class="d-flex align-items-center gap-3">
+                <i class="bi bi-telephone-outbound-fill text-rose fs-1" style="color: var(--color-rose-500);"></i>
+                <div>
+                    <div class="fw-bold text-light">Immediate Emergency Response</div>
+                    <small class="text-secondary">If someone has just gone missing or you have sighted a vulnerable child, dial immediately:</small>
+                </div>
+            </div>
+            <div class="d-flex flex-wrap gap-2">
+                <a href="tel:999" class="btn btn-danger btn-sm px-3 py-2"><i class="bi bi-shield-fill-exclamation me-1"></i> Police: 999</a>
+                <a href="tel:1098" class="btn btn-secondary btn-sm px-3 py-2"><i class="bi bi-people-fill me-1" style="color: var(--color-emerald-400);"></i> Child Helpline: 1098</a>
+                <a href="tel:109" class="btn btn-secondary btn-sm px-3 py-2"><i class="bi bi-gender-female me-1" style="color: var(--color-rose-400);"></i> Helpline: 109</a>
+            </div>
+        </div>
+
+        <div class="glass-panel p-3 mb-4 d-flex flex-wrap align-items-center gap-3">
+            <div class="flex-grow-1" style="min-width: 240px;">
+                <input type="text" class="form-control" id="searchMissingInput" placeholder="Search name, last seen location, clothes..." oninput="filterMissingPersons()">
+            </div>
+            <select class="form-select" style="max-width: 200px;" id="divMissingSelect" onchange="filterMissingPersons()">
+                <option value="All">All Divisions</option>
+                <option value="Dhaka">Dhaka</option>
+                <option value="Chattogram">Chattogram</option>
+                <option value="Sylhet">Sylhet</option>
+                <option value="Rajshahi">Rajshahi</option>
+                <option value="Khulna">Khulna</option>
+                <option value="Barishal">Barishal</option>
+                <option value="Rangpur">Rangpur</option>
+                <option value="Mymensingh">Mymensingh</option>
+            </select>
+        </div>
+
+        <div class="row g-4 mb-5" id="missingGridContainer">
+            <div class="text-center py-5 col-12"><span class="badge-dot"></span> Loading active alerts...</div>
+        </div>
+    </main>
+
+    <!-- File Missing Person Modal -->
+    <div class="cmd-palette-backdrop" id="reportMissingModal" onclick="closeReportModal(event)">
+        <div class="cmd-palette-modal glass-panel p-4" onclick="event.stopPropagation()" style="max-width: 640px; max-height: 85vh; overflow-y: auto;">
+            <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom border-subtle">
+                <h4 class="fw-bold text-light mb-0"><i class="bi bi-person-fill-plus text-rose me-2" style="color: var(--color-rose-400);"></i> File Missing Person Report</h4>
+                <button type="button" class="btn btn-ghost btn-sm text-muted" onclick="closeReportModal(null)">✕</button>
+            </div>
+
+            <div id="mpAlertBox" class="alert d-none mb-3" role="alert"></div>
+
+            <form onsubmit="handleMissingReportSubmit(event)">
+                <div class="row g-3 mb-3">
+                    <div class="col-md-8">
+                        <label class="form-label">Full Name <span class="text-rose">*</span></label>
+                        <input type="text" class="form-control" id="mpName" placeholder="Full name of person" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Age <span class="text-rose">*</span></label>
+                        <input type="number" class="form-control" id="mpAge" min="0" max="120" placeholder="e.g. 24" required>
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Division <span class="text-rose">*</span></label>
+                        <select class="form-select" id="mpDivision" required>
+                            <option value="Dhaka" selected>Dhaka</option>
+                            <option value="Chattogram">Chattogram</option>
+                            <option value="Sylhet">Sylhet</option>
+                            <option value="Rajshahi">Rajshahi</option>
+                            <option value="Khulna">Khulna</option>
+                            <option value="Barishal">Barishal</option>
+                            <option value="Rangpur">Rangpur</option>
+                            <option value="Mymensingh">Mymensingh</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">District / Thana <span class="text-rose">*</span></label>
+                        <input type="text" class="form-control" id="mpDistrict" placeholder="e.g. Mirpur, Sadarghat, Agrabad" required>
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Missing Date <span class="text-rose">*</span></label>
+                        <input type="date" class="form-control" id="mpDate" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Police GD Number (If filed)</label>
+                        <input type="text" class="form-control" id="mpGD" placeholder="e.g. GD-1024/Mirpur">
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Last Seen Location Landmark <span class="text-rose">*</span></label>
+                    <input type="text" class="form-control" id="mpLocation" placeholder="e.g. Near Mirpur-10 bus stand" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Clothing Description <span class="text-rose">*</span></label>
+                    <textarea class="form-control" id="mpClothing" rows="2" placeholder="e.g. Blue shirt, black trousers..." required></textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Distinguishing Features & Medical Conditions</label>
+                    <textarea class="form-control" id="mpFeatures" rows="2" placeholder="e.g. Glasses, birthmark, speech impairment..."></textarea>
+                </div>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <label class="form-label">Contact Phone <span class="text-rose">*</span></label>
+                        <input type="tel" class="form-control" id="mpPhone" placeholder="017XXXXXXXX" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Emergency Phone (Optional)</label>
+                        <input type="tel" class="form-control" id="mpEmergency" placeholder="018XXXXXXXX">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-danger w-100 py-3" id="mpSubmitBtn">
+                    <i class="bi bi-broadcast me-2" id="mpSubmitIcon"></i>
+                    <span id="mpSubmitText">Broadcast Missing Person Alert</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Report Sighting Modal -->
+    <div class="cmd-palette-backdrop" id="sightingModal" onclick="closeSightingModal(event)">
+        <div class="cmd-palette-modal glass-panel p-4" onclick="event.stopPropagation()" style="max-width: 580px; max-height: 85vh; overflow-y: auto;">
+            <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom border-subtle">
+                <div>
+                    <h4 class="fw-bold text-light mb-0"><i class="bi bi-eye-fill text-emerald me-2" style="color: var(--color-emerald-400);"></i> Report Sighting</h4>
+                    <small class="text-secondary" id="sightingPersonTitle">Sighting for missing individual</small>
+                </div>
+                <button type="button" class="btn btn-ghost btn-sm text-muted" onclick="closeSightingModal(null)">✕</button>
+            </div>
+
+            <div id="sightingAlertBox" class="alert d-none mb-3" role="alert"></div>
+
+            <form id="sightingReportForm" onsubmit="handleSightingSubmit(event)">
+                <input type="hidden" id="sightingPersonId">
+
+                <div class="mb-3">
+                    <label class="form-label">Sighting Location / Thana / Landmark <span class="text-rose">*</span></label>
+                    <input type="text" class="form-control" id="sightingLocation" placeholder="e.g. Near Mohakhali Flyover footbridge" required>
+                </div>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Date & Time of Sighting <span class="text-rose">*</span></label>
+                        <input type="datetime-local" class="form-control" id="sightingTime" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Your Contact Phone <span class="text-rose">*</span></label>
+                        <input type="tel" class="form-control" id="sightingReporterPhone" placeholder="01XXXXXXXXX" required>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Sighting Observations & Details <span class="text-rose">*</span></label>
+                    <textarea class="form-control" id="sightingDetails" rows="3" placeholder="Describe clothing worn, direction person was heading, accompanied by anyone, physical condition..." required></textarea>
+                </div>
+
+                <div class="p-3 rounded glass-subtle small mb-4 text-muted">
+                    <i class="bi bi-shield-lock-fill text-emerald me-1" style="color: var(--color-emerald-400);"></i>
+                    Your phone number is confidentially encrypted and only shared with investigating law enforcement officers and the registered family.
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100 py-3" id="sightingSubmitBtn">
+                    <i class="bi bi-send-check-fill me-2" id="sightingBtnIcon"></i>
+                    <span id="sightingBtnText">Submit Sighting to Police & Family</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Printable Police Flyer Modal -->
+    <div class="cmd-palette-backdrop" id="policeFlyerModal" onclick="closeFlyerModal(event)">
+      <div class="cmd-palette-modal glass-panel p-4" onclick="event.stopPropagation()" style="max-width: 760px; max-height: 92vh; overflow-y: auto;">
+        <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom border-subtle">
+          <div>
+            <span class="badge bg-danger-subtle text-danger mb-1"><i class="bi bi-file-earmark-pdf me-1"></i> Official Document Generator</span>
+            <h4 class="fw-bold text-light mb-0">Missing Person Police Notice Flyer</h4>
+          </div>
+          <div class="d-flex gap-2">
+            <button type="button" class="btn btn-primary btn-sm px-3" onclick="window.print()">
+              <i class="bi bi-printer-fill me-1"></i> Print / Save PDF
+            </button>
+            <button type="button" class="btn btn-ghost btn-sm text-muted" onclick="closeFlyerModal(null)">✕</button>
+          </div>
+        </div>
+
+        <!-- Rendered Flyer Preview Container -->
+        <div id="flyerRenderContainer" class="p-4 bg-white text-dark rounded shadow-sm">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Modern Flagship Site Footer -->
+    <footer class="site-footer mt-5 pt-5 pb-4">
+      <div class="container mx-auto px-3" style="max-width: 1320px;">
+        <div class="row g-4 mb-4">
+          <!-- Column 1: Brand & National Trust Signature -->
+          <div class="col-12 col-md-6 col-lg-4">
+            <div class="d-flex align-items-center gap-2 mb-3">
+              <img src="images/logo.png" alt="Lost and Found Bangladesh Logo" width="36" height="36" class="rounded-circle border border-emerald">
+              <div>
+                <span class="footer-brand-title">Lost &amp; Found <span style="color: var(--color-emerald-400);">Bangladesh</span></span>
+                <div class="text-muted small" style="font-size: 0.75rem;">National Recovery &amp; Public Safety Network</div>
+              </div>
+            </div>
+            <p class="text-secondary mb-3" style="font-size: 0.9rem; line-height: 1.6;">
+              Bangladesh's nationwide community recovery network. Dedicated to reuniting lost belongings, securing citizen identity credentials, and locating missing persons in partnership with citizens and Bangladesh Police.
+            </p>
+            <div class="d-flex flex-wrap align-items-center gap-2">
+              <span class="badge-trust-tag"><span class="badge-dot"></span> 24/7 Moderation Desk</span>
+              <span class="badge-trust-tag"><i class="bi bi-shield-check text-emerald"></i> GD Verified</span>
+              <span class="badge-trust-tag"><i class="bi bi-broadcast text-rose"></i> 8 Divisions Radar</span>
+            </div>
+          </div>
+
+          <!-- Column 2: Platform Navigation & Tools -->
+          <div class="col-6 col-md-3 col-lg-2">
+            <h6 class="footer-section-title"><i class="bi bi-compass text-emerald me-1"></i> Navigation</h6>
+            <ul class="footer-nav-list">
+              <li><a href="recentposts.html?type=lost" class="footer-nav-link"><i class="bi bi-chevron-right text-emerald" style="font-size: 0.7rem;"></i> Lost Belongings</a></li>
+              <li><a href="recentposts.html?type=found" class="footer-nav-link"><i class="bi bi-chevron-right text-emerald" style="font-size: 0.7rem;"></i> Found Valuables</a></li>
+              <li><a href="missing_person.html" class="footer-nav-link"><i class="bi bi-chevron-right text-emerald" style="font-size: 0.7rem;"></i> Missing Persons</a></li>
+              <li><a href="submit_lostitems.html" class="footer-nav-link"><i class="bi bi-chevron-right text-emerald" style="font-size: 0.7rem;"></i> File New Report</a></li>
+              <li><a href="User_profile.html" class="footer-nav-link"><i class="bi bi-chevron-right text-emerald" style="font-size: 0.7rem;"></i> QR Asset Shield</a></li>
+              <li><a href="chatbot.html" class="footer-nav-link"><i class="bi bi-chevron-right text-emerald" style="font-size: 0.7rem;"></i> AI Assistant</a></li>
+            </ul>
+          </div>
+
+          <!-- Column 3: Emergency Dispatch & Hotlines -->
+          <div class="col-6 col-md-3 col-lg-3">
+            <h6 class="footer-section-title"><i class="bi bi-telephone-outbound text-rose me-1"></i> Hotlines</h6>
+            <div class="d-flex flex-column gap-2">
+              <a href="tel:999" class="footer-hotline-chip">
+                <span><i class="bi bi-shield-fill-exclamation text-rose me-1"></i> National Police</span>
+                <span class="badge bg-rose-subtle text-rose fw-bold">999</span>
+              </a>
+              <a href="tel:100" class="footer-hotline-chip">
+                <span><i class="bi bi-telephone-inbound-fill text-emerald me-1"></i> Police Help Desk</span>
+                <span class="badge bg-emerald-subtle text-emerald fw-bold">100</span>
+              </a>
+              <a href="tel:1098" class="footer-hotline-chip">
+                <span><i class="bi bi-people-fill text-indigo me-1"></i> Child Protection</span>
+                <span class="badge bg-indigo-subtle text-indigo fw-bold">1098</span>
+              </a>
+              <a href="tel:16263" class="footer-hotline-chip">
+                <span><i class="bi bi-hospital-fill text-amber me-1"></i> Health Service</span>
+                <span class="badge bg-amber-subtle text-amber fw-bold">16263</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Column 4: Trust & Infrastructure Support -->
+          <div class="col-12 col-md-6 col-lg-3">
+            <h6 class="footer-section-title"><i class="bi bi-heart-pulse text-emerald me-1"></i> Public Trust</h6>
+            <p class="text-secondary small mb-3">
+              100% free non-profit civic infrastructure powered by community goodwill. Your reports are encrypted and strictly verified.
+            </p>
+            <a href="payment.html" class="btn btn-glow-emerald w-100 py-2 d-flex align-items-center justify-content-center gap-2 mb-3">
+              <i class="bi bi-heart-fill text-rose"></i> Support Platform
+            </a>
+            <div class="d-flex flex-wrap gap-2 text-muted" style="font-size: 0.75rem;">
+              <span><i class="bi bi-shield-lock-fill text-emerald me-1"></i> 256-Bit SSL</span>
+              <span>•</span>
+              <span><i class="bi bi-patch-check-fill text-emerald me-1"></i> Community Backed</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sub-footer bar -->
+        <div class="sub-footer-bar">
+          <div class="text-secondary small">
+            &copy; 2026 <strong>Lost &amp; Found Bangladesh</strong>. Nationwide Public Safety &amp; Community Recovery Platform.
+          </div>
+          <div class="d-flex flex-wrap align-items-center gap-3 text-secondary small">
+            <a href="#" class="footer-nav-link" onclick="alert('Privacy Policy: All personal contact info is safeguarded. NIDs & serial numbers are never exposed to unauthenticated scrapers.'); return false;">Privacy Policy</a>
+            <span>•</span>
+            <a href="#" class="footer-nav-link" onclick="alert('Terms of Service: Fraudulent or deceptive reports will be permanently banned and reported to law enforcement.'); return false;">Terms of Service</a>
+            <span>•</span>
+            <a href="chatbot.html" class="footer-nav-link">Support FAQ</a>
+            <span>•</span>
+            <a href="admin panel/admin-dashboard.html" class="footer-nav-link text-emerald"><i class="bi bi-lock me-1"></i> Staff Portal</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      let searchDebounceTimer = null;
+      let currentMissingPersons = [];
+      document.getElementById('mpDate').value = new Date().toISOString().split('T')[0];
+
+      function escapeHtml(str) {
+        if (!str) return '';
+        return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+      }
+
+      function openReportModal() {
+        document.getElementById('reportMissingModal').classList.add('active');
+        const box = document.getElementById('mpAlertBox');
+        box.className = 'alert d-none mb-3';
+      }
+      function closeReportModal(e) {
+        if (e && e.target !== document.getElementById('reportMissingModal')) return;
+        document.getElementById('reportMissingModal').classList.remove('active');
+      }
+
+      function openSightingModal(personId, personName) {
+        document.getElementById('sightingPersonId').value = personId;
+        document.getElementById('sightingPersonTitle').textContent = `Reporting Sighting for: ${personName}`;
+        // Set current local datetime
+        const now = new Date();
+        now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+        document.getElementById('sightingTime').value = now.toISOString().slice(0, 16);
+        const box = document.getElementById('sightingAlertBox');
+        box.className = 'alert d-none mb-3';
+        document.getElementById('sightingModal').classList.add('active');
+      }
+
+      function closeSightingModal(e) {
+        if (e && e.target !== document.getElementById('sightingModal')) return;
+        document.getElementById('sightingModal').classList.remove('active');
+      }
+
+      function generatePoliceFlyer(id) {
+        const p = currentMissingPersons.find(item => Number(item.id) === Number(id));
+        if (!p) return;
+
+        const container = document.getElementById('flyerRenderContainer');
+        const escapedName = escapeHtml(p.full_name);
+        const photoUrl = p.photo || 'images/default_person.jpg';
+
+        container.innerHTML = `
+          <div class="printable-flyer">
+            <div class="flyer-header text-center mb-3">
+              <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-2">
+                <span class="text-danger fw-bold fs-6">BANGLADESH POLICE COORDINATED ALERT</span>
+                <span class="badge bg-danger text-light px-2 py-1 fs-6">EMERGENCY NOTICE</span>
+                <span class="text-muted small">LOST &amp; FOUND BD REGISTRY</span>
+              </div>
+              <h1 class="text-danger fw-black mb-1" style="font-size: 2.2rem; letter-spacing: 0.05em; font-family: 'Inter', sans-serif;">MISSING PERSON / নিখোঁজ বিজ্ঞপ্তি</h1>
+              <div class="fw-bold text-dark fs-5">General Diary (GD) Ref: <u>${escapeHtml(p.gd_number || 'PENDING VERIFICATION')}</u></div>
+            </div>
+
+            <div class="row g-3 align-items-center mb-4">
+              <div class="col-4 text-center">
+                <div style="border: 3px solid #dc3545; padding: 4px; border-radius: 6px; display: inline-block;">
+                  <img src="${photoUrl}" alt="${escapedName}" style="width: 100%; max-width: 200px; height: 230px; object-fit: cover; border-radius: 4px;">
+                </div>
+              </div>
+              <div class="col-8">
+                <table class="table table-bordered table-sm mb-0" style="border-color: #333;">
+                  <tbody>
+                    <tr>
+                      <th class="bg-light" style="width: 35%;">Full Name:</th>
+                      <td class="fw-bold fs-5 text-uppercase">${escapedName}</td>
+                    </tr>
+                    <tr>
+                      <th class="bg-light">Age:</th>
+                      <td>${p.age} Years Old</td>
+                    </tr>
+                    <tr>
+                      <th class="bg-light">Missing Since:</th>
+                      <td class="fw-bold text-danger">${escapeHtml(p.missing_date)}</td>
+                    </tr>
+                    <tr>
+                      <th class="bg-light">Last Seen Location:</th>
+                      <td>${escapeHtml(p.last_seen_details || '')}, ${escapeHtml(p.last_seen_district)}, ${escapeHtml(p.last_seen_division)}</td>
+                    </tr>
+                    <tr>
+                      <th class="bg-light">Clothing When Missing:</th>
+                      <td>${escapeHtml(p.clothing_description || 'Not specified')}</td>
+                    </tr>
+                    <tr>
+                      <th class="bg-light">Distinguishing Marks:</th>
+                      <td>${escapeHtml(p.distinguishing_features || 'None reported')}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Emergency Contact Banner -->
+            <div class="p-3 bg-light border border-dark rounded mb-3 text-center">
+              <div class="fw-bold text-danger fs-5 mb-1"><i class="bi bi-telephone-fill me-2"></i> IF SIGHTED, IMMEDIATELY CONTACT:</div>
+              <div class="d-flex justify-content-around fw-bold fs-5 text-dark">
+                <span>Family: <u>${escapeHtml(p.contact_phone)}</u></span>
+                ${p.emergency_phone ? `<span>Emergency: <u>${escapeHtml(p.emergency_phone)}</u></span>` : ''}
+                <span>Police: <u>999</u></span>
+                <span>Childline: <u>1098</u></span>
+              </div>
+            </div>
+
+            <!-- Verification & QR verification footer -->
+            <div class="d-flex justify-content-between align-items-center border-top pt-2 small text-muted">
+              <div>
+                <div><strong>Registry Identifier:</strong> MP-BD-${p.id}-${new Date().getFullYear()}</div>
+                <div>Authorized under Code of Criminal Procedure (CrPC). Please do not deface.</div>
+              </div>
+              <div class="text-end">
+                <div class="fw-bold text-dark">Scan to report digital sightings online:</div>
+                <div style="font-family: monospace; font-size: 0.8rem;">lostandfoundbd.org/missing_person.html?id=${p.id}</div>
+              </div>
+            </div>
+          </div>
+        `;
+
+        document.getElementById('policeFlyerModal').classList.add('active');
+      }
+
+      function closeFlyerModal(e) {
+        if (e && e.target !== document.getElementById('policeFlyerModal')) return;
+        document.getElementById('policeFlyerModal').classList.remove('active');
+      }
+
+      function loadMissingList() {
+        const query = document.getElementById('searchMissingInput').value;
+        const div = document.getElementById('divMissingSelect').value;
+        const container = document.getElementById('missingGridContainer');
+
+        let url = `api/missing.php?action=list&limit=50`;
+        if (query) url += `&query=${encodeURIComponent(query)}`;
+        if (div && div !== 'All') url += `&division=${encodeURIComponent(div)}`;
+
+        fetch(url)
+          .then(r => r.json())
+          .then(data => {
+            if (data.success && data.data.persons) {
+              const persons = data.data.persons;
+              currentMissingPersons = persons;
+              if (persons.length === 0) {
+                container.innerHTML = `
+                  <div class="glass-panel text-center p-5 col-12">
+                    <i class="bi bi-check-circle-fill text-emerald mb-3 d-block" style="font-size: 3rem;"></i>
+                    <h3 class="text-light fw-bold">No Active Reports</h3>
+                    <p class="text-muted">No missing person records match your current filters.</p>
+                  </div>
+                `;
+                return;
+              }
+
+              let html = '';
+              persons.forEach(p => {
+                const escapedName = escapeHtml(p.full_name);
+                html += `
+                  <div class="col-12 col-md-6 col-lg-4">
+                    <div class="person-card h-100 d-flex flex-column">
+                      <div style="height: 240px; overflow: hidden; position: relative; background: #000;">
+                        <img src="${p.photo || 'images/default_person.jpg'}" alt="${escapedName}" style="width: 100%; height: 100%; object-fit: cover;">
+                        <span class="badge badge-missing position-absolute top-0 start-0 m-3">${p.status}</span>
+                        ${p.gd_number ? `<span class="badge bg-dark text-emerald position-absolute bottom-0 start-0 m-3" style="border: 1px solid var(--border-subtle);"><i class="bi bi-shield-check me-1"></i>${escapeHtml(p.gd_number)}</span>` : ''}
+                      </div>
+
+                      <div class="p-4 d-flex flex-column flex-grow-1">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                          <h3 class="fw-bold text-light mb-0" style="font-size: 1.3rem;">${escapedName}</h3>
+                          <span class="badge bg-secondary-subtle text-light" style="font-size: 0.75rem;">${p.age} Years</span>
+                        </div>
+
+                        <div class="text-rose mb-3" style="font-size: 0.85rem; color: var(--color-rose-400);">
+                          <i class="bi bi-geo-alt-fill me-1"></i>Last seen: ${escapeHtml(p.last_seen_district)}, ${escapeHtml(p.last_seen_division)}
+                        </div>
+
+                        <div class="p-3 rounded glass-subtle small mb-3 flex-grow-1">
+                          <div class="mb-1"><strong>Date:</strong> ${escapeHtml(p.missing_date)}</div>
+                          <div class="mb-1"><strong>Clothing:</strong> ${escapeHtml(p.clothing_description)}</div>
+                          <div><strong>Details:</strong> ${escapeHtml(p.last_seen_details)}</div>
+                        </div>
+
+                        <div class="d-flex gap-2 mb-2">
+                          <a href="tel:${escapeHtml(p.contact_phone)}" class="btn btn-danger btn-sm flex-grow-1 py-2">
+                            <i class="bi bi-telephone-fill me-1"></i> Call Family
+                          </a>
+                          <button type="button" class="btn btn-secondary btn-sm flex-grow-1 py-2" onclick="openSightingModal(${p.id}, '${escapedName.replace(/'/g, "\\'")}')">
+                            <i class="bi bi-eye-fill me-1"></i> Sighting
+                          </button>
+                        </div>
+                        <button type="button" class="btn btn-ghost btn-sm border border-subtle w-100 py-2" onclick="generatePoliceFlyer(${p.id})">
+                          <i class="bi bi-printer me-1 text-emerald"></i> One-Click Printable Police Flyer
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                `;
+              });
+              container.innerHTML = html;
+            }
+          });
+      }
+
+      function filterMissingPersons() {
+        if (searchDebounceTimer) clearTimeout(searchDebounceTimer);
+        searchDebounceTimer = setTimeout(() => {
+          loadMissingList();
+        }, 300);
+      }
+
+      function handleMissingReportSubmit(e) {
+        e.preventDefault();
+        const btn = document.getElementById('mpSubmitBtn');
+        const btnText = document.getElementById('mpSubmitText');
+        const btnIcon = document.getElementById('mpSubmitIcon');
+        const box = document.getElementById('mpAlertBox');
+
+        btn.disabled = true;
+        btnIcon.className = 'spinner-border spinner-border-sm me-2';
+        btnText.textContent = 'Broadcasting Alert...';
+
+        const payload = {
+          action: 'create',
+          full_name: document.getElementById('mpName').value.trim(),
+          age: parseInt(document.getElementById('mpAge').value, 10),
+          last_seen_division: document.getElementById('mpDivision').value,
+          last_seen_district: document.getElementById('mpDistrict').value.trim(),
+          missing_date: document.getElementById('mpDate').value,
+          gd_number: document.getElementById('mpGD').value.trim(),
+          last_seen_details: document.getElementById('mpLocation').value.trim(),
+          clothing_description: document.getElementById('mpClothing').value.trim(),
+          distinguishing_features: document.getElementById('mpFeatures').value.trim(),
+          contact_phone: document.getElementById('mpPhone').value.trim(),
+          emergency_phone: document.getElementById('mpEmergency').value.trim()
+        };
+
+        fetch('api/missing.php', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify(payload)
+        })
+        .then(r => r.json())
+        .then(data => {
+          btn.disabled = false;
+          btnIcon.className = 'bi bi-broadcast me-2';
+          btnText.textContent = 'Broadcast Missing Person Alert';
+
+          if (data.success) {
+            box.className = 'alert alert-success mb-3';
+            box.innerHTML = '🎉 <strong>Alert Broadcasted!</strong> Missing person report has been distributed to emergency responders and published to the directory.';
+            box.classList.remove('d-none');
+            setTimeout(() => {
+              closeReportModal(null);
+              loadMissingList();
+            }, 1200);
+          } else {
+            box.className = 'alert alert-danger mb-3';
+            box.innerHTML = data.error || 'Failed to submit report. Please check required fields.';
+            box.classList.remove('d-none');
+          }
+        })
+        .catch(() => {
+          btn.disabled = false;
+          btnIcon.className = 'bi bi-broadcast me-2';
+          btnText.textContent = 'Broadcast Missing Person Alert';
+          box.className = 'alert alert-danger mb-3';
+          box.innerHTML = 'Network error communicating with the missing persons registry. Please try again.';
+          box.classList.remove('d-none');
+        });
+      }
+
+      function handleSightingSubmit(e) {
+        e.preventDefault();
+        const btn = document.getElementById('sightingSubmitBtn');
+        const btnText = document.getElementById('sightingBtnText');
+        const btnIcon = document.getElementById('sightingBtnIcon');
+        const box = document.getElementById('sightingAlertBox');
+
+        btn.disabled = true;
+        btnIcon.className = 'spinner-border spinner-border-sm me-2';
+        btnText.textContent = 'Recording Sighting to Police Dispatch...';
+
+        const payload = {
+          action: 'sighting',
+          person_id: parseInt(document.getElementById('sightingPersonId').value, 10),
+          location: document.getElementById('sightingLocation').value.trim(),
+          details: `Time: ${document.getElementById('sightingTime').value}. Notes: ${document.getElementById('sightingDetails').value.trim()}`,
+          reporter_phone: document.getElementById('sightingReporterPhone').value.trim()
+        };
+
+        fetch('api/missing.php', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify(payload)
+        })
+        .then(r => r.json())
+        .then(data => {
+          btn.disabled = false;
+          btnIcon.className = 'bi bi-send-check-fill me-2';
+          btnText.textContent = 'Submit Sighting to Police & Family';
+
+          if (data.success) {
+            box.className = 'alert alert-success mb-3';
+            box.innerHTML = `✅ <strong>Sighting Recorded!</strong> Reference: <code>${data.sighting_ref || 'SIG-BD-' + Date.now()}</code>. Law enforcement dispatched.`;
+            box.classList.remove('d-none');
+            document.getElementById('sightingReportForm').reset();
+            setTimeout(() => {
+              closeSightingModal(null);
+              loadMissingList();
+            }, 1500);
+          } else {
+            box.className = 'alert alert-danger mb-3';
+            box.innerHTML = data.error || 'Failed to record sighting.';
+            box.classList.remove('d-none');
+          }
+        })
+        .catch(() => {
+          btn.disabled = false;
+          btnIcon.className = 'bi bi-send-check-fill me-2';
+          btnText.textContent = 'Submit Sighting to Police & Family';
+          box.className = 'alert alert-danger mb-3';
+          box.innerHTML = 'Network error sending sighting report. Please call 999 immediately if urgent.';
+          box.classList.remove('d-none');
+        });
+      }
+
+      loadMissingList();
+    </script>
+    <script src="components/command-palette.js"></script>
+</body>
+</html>

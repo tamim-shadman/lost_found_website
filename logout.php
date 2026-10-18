@@ -1,21 +1,14 @@
 <?php
-session_start();
+declare(strict_types=1);
 
-// Unset all session variables
-$_SESSION = array();
+require_once __DIR__ . '/src/autoload.php';
 
-// Destroy the session
-session_destroy();
+use App\Services\AuthService;
+use App\Utils\Security;
 
-// Remove the session cookie by setting its expiration to the past
-if (isset($_COOKIE[session_name()])) {
-    setcookie(session_name(), '', time() - 3600, '/');
-}
+Security::initSession();
+$auth = new AuthService();
+$auth->logout();
 
-// Unset any custom cookies
-setcookie('session_id', '', time() - 3600, '/'); // Assuming you set a custom session ID cookie
-
-// Redirect to the login page or any other desired page
 header("Location: index.php");
 exit();
-?>

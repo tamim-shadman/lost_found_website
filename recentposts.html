@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" type="image/png" href="images/logo.png">
+    <title>Browse Lost & Found Alerts — Lost & Found BD</title>
+    <meta name="description" content="Explore verified lost and found item alerts across all 8 divisions in Bangladesh. Search by category, city, or keyword.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="css/design-system.css">
+    <style>
+      .catalog-header {
+        padding-top: 130px;
+        padding-bottom: 25px;
+      }
+      .filter-bar {
+        background: var(--bg-surface-glass);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-lg);
+        padding: 1.25rem;
+      }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <header class="glass-navbar">
+      <div class="container d-flex justify-content-between align-items-center py-2 px-3 mx-auto" style="max-width: 1320px;">
+        <a href="index.html" class="navbar-brand d-flex align-items-center gap-2 text-decoration-none">
+          <img src="images/logo.png" alt="Lost and Found Bangladesh Logo" width="38" height="38" class="rounded-circle border border-subtle">
+          <div>
+            <div class="brand-title fw-bold text-light lh-1" style="font-size: 1.15rem; letter-spacing: -0.02em;">Lost & Found <span style="color: var(--color-emerald-400);">BD</span></div>
+            <small class="text-muted d-none d-sm-block" style="font-size: 0.725rem;">Lost Moments, Found Stories</small>
+          </div>
+        </a>
+
+        <nav class="d-none d-lg-flex align-items-center gap-4">
+          <a href="recentposts.html" class="nav-link text-emerald fw-bold hover-light" style="color: var(--color-emerald-400);">Browse Alerts</a>
+          <a href="submit_lostitems.html" class="nav-link text-secondary fw-medium hover-light">Report Item</a>
+          <a href="missing_person.html" class="nav-link text-secondary fw-medium hover-light">Missing Persons</a>
+          <a href="chatbot.html" class="nav-link text-secondary fw-medium hover-light">AI Assistant</a>
+          <a href="payment.html" class="nav-link text-secondary fw-medium hover-light">Support Platform</a>
+        </nav>
+
+        <div class="d-flex align-items-center gap-2">
+          <button type="button" class="btn btn-ghost btn-sm d-flex align-items-center gap-2 text-muted px-3 py-1 rounded-pill border border-subtle glass-subtle" onclick="openCmdPalette()" title="Press Ctrl+K to search">
+            <i class="bi bi-search"></i>
+            <span class="d-none d-md-inline" style="font-size: 0.85rem;">Omnibar...</span>
+            <kbd class="d-none d-md-inline-block px-1 py-0 rounded text-muted bg-dark border border-subtle" style="font-size: 0.7rem;">Ctrl K</kbd>
+          </button>
+          <button type="button" class="btn btn-ghost btn-sm text-light p-2" onclick="toggleTheme()" aria-label="Toggle Theme" title="Toggle Theme">
+            <i class="bi bi-circle-half" id="themeToggleIcon"></i>
+          </button>
+          <a href="login.html" class="btn btn-ghost btn-sm">Sign In</a>
+          <a href="signup.html" class="btn btn-primary btn-sm btn-pill">Get Started</a>
+        </div>
+      </div>
+    </header>
+
+    <main class="container mx-auto px-3" style="max-width: 1320px;">
+        <div class="catalog-header">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+                <div>
+                    <span class="brand-badge mb-2">Verified Public Registry</span>
+                    <h1 class="text-light fw-bold mb-1" style="font-size: 2.2rem;">Lost & Found Alerts Catalog</h1>
+                    <p class="text-secondary mb-0" id="totalCountDisplay">Browse active community reports across Bangladesh</p>
+                </div>
+                <div class="d-flex flex-wrap align-items-center gap-2">
+                    <div class="view-toggle-group me-2">
+                        <button type="button" class="view-toggle-btn active" id="btnViewGrid" onclick="setViewMode('grid')" title="Visual Cards View">
+                            <i class="bi bi-grid-3x3-gap-fill me-1"></i> Grid
+                        </button>
+                        <button type="button" class="view-toggle-btn" id="btnViewTable" onclick="setViewMode('table')" title="High-Density Table View">
+                            <i class="bi bi-table me-1"></i> Table
+                        </button>
+                    </div>
+                    <a href="submit_lostitems.html?type=lost" class="btn btn-danger btn-sm btn-pill px-3 py-2">
+                        <i class="bi bi-search me-1"></i> Report Lost
+                    </a>
+                    <a href="submit_lostitems.html?type=found" class="btn btn-primary btn-sm btn-pill px-3 py-2">
+                        <i class="bi bi-box-seam me-1"></i> Report Found
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mode Switch Tabs -->
+        <div class="d-flex gap-2 mb-4 border-bottom border-subtle pb-2">
+            <button class="btn btn-ghost active text-light px-3 py-2 fw-semibold" id="tabBtnAll" onclick="switchCatalogTab('all')">
+                <i class="bi bi-collection-fill me-2 text-emerald"></i> All Community Alerts
+            </button>
+            <button class="btn btn-ghost text-secondary px-3 py-2 fw-semibold" id="tabBtnMatches" onclick="switchCatalogTab('matches')">
+                <i class="bi bi-magic me-2 text-indigo" style="color: var(--color-indigo-400);"></i> Algorithmic Smart Matches 
+                <span class="badge bg-indigo text-light ms-1" id="smartMatchesBadge" style="background: var(--color-indigo-500); font-size: 0.7rem;">0</span>
+            </button>
+        </div>
+
+        <!-- Filter Bar -->
+        <div class="filter-bar mb-4" id="catalogFilterBar">
+            <form id="catalogFilterForm" onsubmit="applyCatalogFilters(event)" class="row g-3 align-items-center">
+                <div class="col-lg-4 col-md-12">
+                    <div class="input-icon-wrapper">
+                        <i class="bi bi-search icon"></i>
+                        <input type="text" class="form-control" id="searchFilterInput" placeholder="Search keyword, brand, location...">
+                    </div>
+                </div>
+
+                <div class="col-sm-4 col-lg-2">
+                    <select class="form-select" id="typeFilterSelect" onchange="fetchCatalogItems()">
+                        <option value="all">All Report Types</option>
+                        <option value="lost">Lost Items</option>
+                        <option value="found">Found Valuables</option>
+                    </select>
+                </div>
+
+                <div class="col-sm-4 col-lg-3">
+                    <select class="form-select" id="categoryFilterSelect" onchange="fetchCatalogItems()">
+                        <option value="All">All Categories</option>
+                        <option value="Electronics">Electronics & Gadgets</option>
+                        <option value="Wallet/Cards">Wallet, Cards & Money</option>
+                        <option value="Documents">ID & Documents</option>
+                        <option value="Bags">Bags & Luggage</option>
+                        <option value="Jewelry">Jewelry & Watches</option>
+                        <option value="Pets">Pets & Animals</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <div class="col-sm-4 col-lg-2">
+                    <select class="form-select" id="divisionFilterSelect" onchange="fetchCatalogItems()">
+                        <option value="All">All Divisions</option>
+                        <option value="Dhaka">Dhaka</option>
+                        <option value="Chattogram">Chattogram</option>
+                        <option value="Sylhet">Sylhet</option>
+                        <option value="Rajshahi">Rajshahi</option>
+                        <option value="Khulna">Khulna</option>
+                        <option value="Barishal">Barishal</option>
+                        <option value="Rangpur">Rangpur</option>
+                        <option value="Mymensingh">Mymensingh</option>
+                    </select>
+                </div>
+
+                <div class="col-lg-1 col-md-12 text-end">
+                    <button type="submit" class="btn btn-primary w-100 py-2"><i class="bi bi-filter"></i> Filter</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Items Grid Container -->
+        <div class="items-grid mb-5" id="catalogGrid">
+            <div class="text-center py-5 col-12"><span class="badge-dot"></span> Loading active reports...</div>
+        </div>
+
+        <!-- High-Density Table Container -->
+        <div class="glass-panel p-3 mb-5 d-none" id="catalogTableContainer">
+            <div class="table-responsive">
+                <table class="table-dense">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Status</th>
+                            <th>Item & Description</th>
+                            <th>Category</th>
+                            <th>Location</th>
+                            <th>Date</th>
+                            <th>Reward</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="catalogTableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Smart Match Pairs Container -->
+        <div class="mb-5 d-none" id="smartMatchesContainer">
+            <div class="p-3 mb-3 glass-panel d-flex align-items-center justify-content-between">
+                <div>
+                    <h4 class="fw-bold text-light mb-1"><i class="bi bi-magic text-indigo me-2" style="color: var(--color-indigo-400);"></i> Algorithmic Smart Match Candidates</h4>
+                    <p class="text-muted small mb-0">Cross-referencing lost and found reports using category, geographic radius, keyword Dice similarity, and date proximity.</p>
+                </div>
+                <button type="button" class="btn btn-ghost btn-sm border border-subtle" onclick="fetchSmartMatches()">
+                    <i class="bi bi-arrow-clockwise me-1"></i> Refresh Matches
+                </button>
+            </div>
+            <div class="row g-3" id="smartMatchesList">
+                <div class="text-center py-5 col-12"><span class="badge-dot"></span> Analyzing cross-reference pairs...</div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Details Modal -->
+    <div class="cmd-palette-backdrop" id="itemDetailModal" onclick="closeItemModal(event)">
+      <div class="cmd-palette-modal glass-panel p-4" onclick="event.stopPropagation()" style="max-width: 600px;">
+        <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom border-subtle">
+          <h4 class="fw-bold text-light mb-0" id="modalItemTitle">Item Details</h4>
+          <button type="button" class="btn btn-ghost btn-sm text-muted" onclick="closeItemModal(null)">✕</button>
+        </div>
+        <div id="modalItemBody" class="py-2 text-start"></div>
+      </div>
+    </div>
+
+    <!-- Claim Modal -->
+    <div class="cmd-palette-backdrop" id="claimModal" onclick="closeClaimModal(event)">
+      <div class="cmd-palette-modal glass-panel p-4" onclick="event.stopPropagation()" style="max-width: 520px;">
+        <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom border-subtle">
+          <h4 class="fw-bold text-light mb-0">Submit Ownership Claim</h4>
+          <button type="button" class="btn btn-ghost btn-sm text-muted" onclick="closeClaimModal(null)">✕</button>
+        </div>
+        <form id="claimSubmitForm" onsubmit="handleClaimSubmit(event)">
+          <input type="hidden" id="claimItemId" name="item_id">
+          <div class="mb-3">
+            <label class="form-label">Claiming Item:</label>
+            <input type="text" class="form-control" id="claimItemNameDisplay" readonly>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Describe Ownership Proof:</label>
+            <textarea class="form-control" name="proof_description" id="claimProofDesc" rows="3" placeholder="Provide serial numbers, receipts, matching stickers..." required></textarea>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Contact Phone Number:</label>
+            <input type="tel" class="form-control" name="contact_phone" id="claimPhone" placeholder="017XXXXXXXX" required>
+          </div>
+          <button type="submit" class="btn btn-primary w-100 py-2">
+            <span>Submit for Verification</span>
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Modern Flagship Site Footer -->
+    <footer class="site-footer mt-5 pt-5 pb-4">
+      <div class="container mx-auto px-3" style="max-width: 1320px;">
+        <div class="row g-4 mb-4">
+          <!-- Column 1: Brand & National Trust Signature -->
+          <div class="col-12 col-md-6 col-lg-4">
+            <div class="d-flex align-items-center gap-2 mb-3">
+              <img src="images/logo.png" alt="Lost and Found Bangladesh Logo" width="36" height="36" class="rounded-circle border border-emerald">
+              <div>
+                <span class="footer-brand-title">Lost &amp; Found <span style="color: var(--color-emerald-400);">Bangladesh</span></span>
+                <div class="text-muted small" style="font-size: 0.75rem;">National Recovery &amp; Public Safety Network</div>
+              </div>
+            </div>
+            <p class="text-secondary mb-3" style="font-size: 0.9rem; line-height: 1.6;">
+              Bangladesh's nationwide community recovery network. Dedicated to reuniting lost belongings, securing citizen identity credentials, and locating missing persons in partnership with citizens and Bangladesh Police.
+            </p>
+            <div class="d-flex flex-wrap align-items-center gap-2">
+              <span class="badge-trust-tag"><span class="badge-dot"></span> 24/7 Moderation Desk</span>
+              <span class="badge-trust-tag"><i class="bi bi-shield-check text-emerald"></i> GD Verified</span>
+              <span class="badge-trust-tag"><i class="bi bi-broadcast text-rose"></i> 8 Divisions Radar</span>
+            </div>
+          </div>
+
+          <!-- Column 2: Platform Navigation & Tools -->
+          <div class="col-6 col-md-3 col-lg-2">
+            <h6 class="footer-section-title"><i class="bi bi-compass text-emerald me-1"></i> Navigation</h6>
+            <ul class="footer-nav-list">
+              <li><a href="recentposts.html?type=lost" class="footer-nav-link"><i class="bi bi-chevron-right text-emerald" style="font-size: 0.7rem;"></i> Lost Belongings</a></li>
+              <li><a href="recentposts.html?type=found" class="footer-nav-link"><i class="bi bi-chevron-right text-emerald" style="font-size: 0.7rem;"></i> Found Valuables</a></li>
+              <li><a href="missing_person.html" class="footer-nav-link"><i class="bi bi-chevron-right text-emerald" style="font-size: 0.7rem;"></i> Missing Persons</a></li>
+              <li><a href="submit_lostitems.html" class="footer-nav-link"><i class="bi bi-chevron-right text-emerald" style="font-size: 0.7rem;"></i> File New Report</a></li>
+              <li><a href="User_profile.html" class="footer-nav-link"><i class="bi bi-chevron-right text-emerald" style="font-size: 0.7rem;"></i> QR Asset Shield</a></li>
+              <li><a href="chatbot.html" class="footer-nav-link"><i class="bi bi-chevron-right text-emerald" style="font-size: 0.7rem;"></i> AI Assistant</a></li>
+            </ul>
+          </div>
+
+          <!-- Column 3: Emergency Dispatch & Hotlines -->
+          <div class="col-6 col-md-3 col-lg-3">
+            <h6 class="footer-section-title"><i class="bi bi-telephone-outbound text-rose me-1"></i> Hotlines</h6>
+            <div class="d-flex flex-column gap-2">
+              <a href="tel:999" class="footer-hotline-chip">
+                <span><i class="bi bi-shield-fill-exclamation text-rose me-1"></i> National Police</span>
+                <span class="badge bg-rose-subtle text-rose fw-bold">999</span>
+              </a>
+              <a href="tel:100" class="footer-hotline-chip">
+                <span><i class="bi bi-telephone-inbound-fill text-emerald me-1"></i> Police Help Desk</span>
+                <span class="badge bg-emerald-subtle text-emerald fw-bold">100</span>
+              </a>
+              <a href="tel:1098" class="footer-hotline-chip">
+                <span><i class="bi bi-people-fill text-indigo me-1"></i> Child Protection</span>
+                <span class="badge bg-indigo-subtle text-indigo fw-bold">1098</span>
+              </a>
+              <a href="tel:16263" class="footer-hotline-chip">
+                <span><i class="bi bi-hospital-fill text-amber me-1"></i> Health Service</span>
+                <span class="badge bg-amber-subtle text-amber fw-bold">16263</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Column 4: Trust & Infrastructure Support -->
+          <div class="col-12 col-md-6 col-lg-3">
+            <h6 class="footer-section-title"><i class="bi bi-heart-pulse text-emerald me-1"></i> Public Trust</h6>
+            <p class="text-secondary small mb-3">
+              100% free non-profit civic infrastructure powered by community goodwill. Your reports are encrypted and strictly verified.
+            </p>
+            <a href="payment.html" class="btn btn-glow-emerald w-100 py-2 d-flex align-items-center justify-content-center gap-2 mb-3">
+              <i class="bi bi-heart-fill text-rose"></i> Support Platform
+            </a>
+            <div class="d-flex flex-wrap gap-2 text-muted" style="font-size: 0.75rem;">
+              <span><i class="bi bi-shield-lock-fill text-emerald me-1"></i> 256-Bit SSL</span>
+              <span>•</span>
+              <span><i class="bi bi-patch-check-fill text-emerald me-1"></i> Community Backed</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sub-footer bar -->
+        <div class="sub-footer-bar">
+          <div class="text-secondary small">
+            &copy; 2026 <strong>Lost &amp; Found Bangladesh</strong>. Nationwide Public Safety &amp; Community Recovery Platform.
+          </div>
+          <div class="d-flex flex-wrap align-items-center gap-3 text-secondary small">
+            <a href="#" class="footer-nav-link" onclick="alert('Privacy Policy: All personal contact info is safeguarded. NIDs & serial numbers are never exposed to unauthenticated scrapers.'); return false;">Privacy Policy</a>
+            <span>•</span>
+            <a href="#" class="footer-nav-link" onclick="alert('Terms of Service: Fraudulent or deceptive reports will be permanently banned and reported to law enforcement.'); return false;">Terms of Service</a>
+            <span>•</span>
+            <a href="chatbot.html" class="footer-nav-link">Support FAQ</a>
+            <span>•</span>
+            <a href="admin panel/admin-dashboard.html" class="footer-nav-link text-emerald"><i class="bi bi-lock me-1"></i> Staff Portal</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      let currentItems = [];
+      let currentViewMode = 'grid';
+      let currentTab = 'all';
+
+      function setViewMode(mode) {
+        currentViewMode = mode;
+        const btnGrid = document.getElementById('btnViewGrid');
+        const btnTable = document.getElementById('btnViewTable');
+        const grid = document.getElementById('catalogGrid');
+        const tableContainer = document.getElementById('catalogTableContainer');
+
+        if (mode === 'grid') {
+          btnGrid.classList.add('active');
+          btnTable.classList.remove('active');
+          grid.classList.remove('d-none');
+          tableContainer.classList.add('d-none');
+        } else {
+          btnTable.classList.add('active');
+          btnGrid.classList.remove('active');
+          grid.classList.add('d-none');
+          tableContainer.classList.remove('d-none');
+          renderTableView();
+        }
+      }
+
+      function switchCatalogTab(tab) {
+        currentTab = tab;
+        const btnAll = document.getElementById('tabBtnAll');
+        const btnMatches = document.getElementById('tabBtnMatches');
+        const filterBar = document.getElementById('catalogFilterBar');
+        const grid = document.getElementById('catalogGrid');
+        const tableContainer = document.getElementById('catalogTableContainer');
+        const matchesContainer = document.getElementById('smartMatchesContainer');
+
+        if (tab === 'all') {
+          btnAll.classList.add('active', 'text-light');
+          btnAll.classList.remove('text-secondary');
+          btnMatches.classList.remove('active', 'text-light');
+          btnMatches.classList.add('text-secondary');
+
+          filterBar.classList.remove('d-none');
+          matchesContainer.classList.add('d-none');
+          if (currentViewMode === 'grid') {
+            grid.classList.remove('d-none');
+            tableContainer.classList.add('d-none');
+          } else {
+            grid.classList.add('d-none');
+            tableContainer.classList.remove('d-none');
+          }
+        } else {
+          btnMatches.classList.add('active', 'text-light');
+          btnMatches.classList.remove('text-secondary');
+          btnAll.classList.remove('active', 'text-light');
+          btnAll.classList.add('text-secondary');
+
+          filterBar.classList.add('d-none');
+          grid.classList.add('d-none');
+          tableContainer.classList.add('d-none');
+          matchesContainer.classList.remove('d-none');
+          fetchSmartMatches();
+        }
+      }
+
+      function renderTableView() {
+        const tbody = document.getElementById('catalogTableBody');
+        if (!tbody) return;
+
+        if (!currentItems || currentItems.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="8" class="text-center py-4 text-muted">No items to display</td></tr>';
+          return;
+        }
+
+        let rows = '';
+        currentItems.forEach(item => {
+          const badgeClass = item.item_type === 'lost' ? 'badge-lost' : 'badge-found';
+          const rewardStr = item.reward_amount > 0 ? `<span class="text-amber fw-bold">৳${Number(item.reward_amount).toLocaleString()}</span>` : '<span class="text-muted">—</span>';
+          rows += `
+            <tr>
+              <td class="text-muted" style="font-family: var(--font-mono); font-size: 0.8rem;">#${item.id}</td>
+              <td><span class="badge ${badgeClass}">${item.item_type}</span></td>
+              <td>
+                <div class="fw-semibold text-light">${escapeHtml(item.title)}</div>
+                <div class="text-muted small text-truncate" style="max-width: 320px;">${escapeHtml(item.description || '')}</div>
+              </td>
+              <td><span class="badge badge-verified">${escapeHtml(item.category || 'General')}</span></td>
+              <td class="small text-muted"><i class="bi bi-geo-alt me-1 text-emerald"></i>${escapeHtml(item.district || '')}, ${escapeHtml(item.division || '')}</td>
+              <td class="small text-muted" style="white-space: nowrap;">${item.date_lost_or_found || ''}</td>
+              <td>${rewardStr}</td>
+              <td class="text-end">
+                <div class="d-inline-flex gap-1">
+                  <button type="button" class="btn btn-secondary btn-sm px-2 py-1" onclick="openItemModal(${item.id})" title="View Details">
+                    <i class="bi bi-eye"></i>
+                  </button>
+                  ${item.item_type === 'found' ? `
+                    <button type="button" class="btn btn-primary btn-sm px-2 py-1" onclick="claimItem(${item.id}, '${escapeHtml(item.title).replace(/'/g, "\\'")}')" title="Claim Ownership">
+                      <i class="bi bi-hand-index-thumb"></i> Claim
+                    </button>
+                  ` : `
+                    <a href="tel:${item.contact_phone}" class="btn btn-ghost btn-sm border border-subtle px-2 py-1" title="Call Owner">
+                      <i class="bi bi-telephone text-emerald"></i>
+                    </a>
+                  `}
+                </div>
+              </td>
+            </tr>
+          `;
+        });
+        tbody.innerHTML = rows;
+      }
+
+      function escapeHtml(str) {
+        if (!str) return '';
+        return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+      }
+
+      function fetchCatalogItems() {
+        const query = document.getElementById('searchFilterInput').value;
+        const type = document.getElementById('typeFilterSelect').value;
+        const cat = document.getElementById('categoryFilterSelect').value;
+        const div = document.getElementById('divisionFilterSelect').value;
+        const grid = document.getElementById('catalogGrid');
+
+        let url = `api/items.php?action=list&limit=60`;
+        if (query) url += `&query=${encodeURIComponent(query)}`;
+        if (type && type !== 'all') url += `&type=${type}`;
+        if (cat && cat !== 'All') url += `&category=${encodeURIComponent(cat)}`;
+        if (div && div !== 'All') url += `&division=${encodeURIComponent(div)}`;
+
+        fetch(url)
+          .then(r => r.json())
+          .then(data => {
+            if (data.success && data.data.items) {
+              const items = data.data.items;
+              currentItems = items;
+              document.getElementById('totalCountDisplay').textContent = `Showing ${items.length} verified reports across Bangladesh`;
+
+              if (items.length === 0) {
+                grid.innerHTML = `
+                  <div class="glass-panel text-center p-5 col-12" style="grid-column: 1/-1;">
+                    <i class="bi bi-search text-muted mb-3 d-block" style="font-size: 3rem;"></i>
+                    <h3 class="text-light fw-bold">No Matching Reports</h3>
+                    <p class="text-muted">We could not find any reports matching your filters. Try clearing some options.</p>
+                  </div>
+                `;
+                if (currentViewMode === 'table') renderTableView();
+                return;
+              }
+
+              let html = '';
+              items.forEach(item => {
+                const badgeClass = item.item_type === 'lost' ? 'badge-lost' : 'badge-found';
+                html += `
+                  <div class="item-card">
+                    <div class="item-card-media">
+                      <img src="${item.picture || 'images/default_item.jpg'}" alt="${escapeHtml(item.title)}" loading="lazy">
+                      <span class="badge ${badgeClass} item-card-badge">${item.item_type}</span>
+                      ${item.reward_amount > 0 ? `<span class="item-card-reward"><i class="bi bi-gift-fill me-1"></i>৳${Number(item.reward_amount).toLocaleString()}</span>` : ''}
+                    </div>
+                    <div class="item-card-body">
+                      <div class="text-muted small text-uppercase mb-1" style="font-size: 0.725rem; font-weight: 700;">${escapeHtml(item.category)}</div>
+                      <h3 class="item-card-title">${escapeHtml(item.title)}</h3>
+                      <p class="item-card-desc">${escapeHtml(item.description)}</p>
+                      
+                      <div class="item-card-meta">
+                        <span><i class="bi bi-geo-alt me-1 text-emerald"></i>${escapeHtml(item.district)}, ${escapeHtml(item.division)}</span>
+                        <span><i class="bi bi-calendar3 me-1"></i>${item.date_lost_or_found}</span>
+                      </div>
+
+                      <div class="mt-3 pt-2 border-top border-subtle d-flex gap-2">
+                        <button type="button" class="btn btn-secondary btn-sm flex-grow-1" onclick="openItemModal(${item.id})">
+                          <i class="bi bi-eye"></i> Details
+                        </button>
+                        ${item.item_type === 'found' ? `
+                          <button type="button" class="btn btn-primary btn-sm flex-grow-1" onclick="claimItem(${item.id}, '${escapeHtml(item.title).replace(/'/g, "\\'")}')">
+                            <i class="bi bi-hand-index-thumb"></i> Claim
+                          </button>
+                        ` : `
+                          <a href="tel:${item.contact_phone}" class="btn btn-ghost btn-sm border border-subtle flex-grow-1">
+                            <i class="bi bi-telephone text-emerald"></i> Call
+                          </a>
+                        `}
+                      </div>
+                    </div>
+                  </div>
+                `;
+              });
+              grid.innerHTML = html;
+
+              if (currentViewMode === 'table') {
+                renderTableView();
+              }
+            }
+          })
+          .catch(err => {
+            console.error('Failed to load items', err);
+          });
+
+        // Background update match count
+        fetch('api/match.php?action=system_pairs&min_confidence=40')
+          .then(r => r.json())
+          .then(d => {
+            if (d.success && d.data && d.data.pairs) {
+              document.getElementById('smartMatchesBadge').textContent = d.data.pairs.length;
+            }
+          })
+          .catch(() => {});
+      }
+
+      function fetchSmartMatches() {
+        const list = document.getElementById('smartMatchesList');
+        list.innerHTML = '<div class="text-center py-5 col-12"><span class="badge-dot"></span> Analyzing cross-reference pairs with weighted token similarity...</div>';
+
+        fetch('api/match.php?action=system_pairs&min_confidence=35')
+          .then(r => r.json())
+          .then(res => {
+            if (res.success && res.data && res.data.pairs) {
+              const pairs = res.data.pairs;
+              document.getElementById('smartMatchesBadge').textContent = pairs.length;
+
+              if (pairs.length === 0) {
+                list.innerHTML = `
+                  <div class="glass-panel text-center p-5 col-12">
+                    <i class="bi bi-check2-circle text-emerald mb-3 d-block" style="font-size: 3rem;"></i>
+                    <h4 class="text-light fw-bold">No High-Confidence Unclaimed Matches</h4>
+                    <p class="text-muted">Currently all reported lost items have zero high-confidence matches with reported found items. The smart engine runs continuously as new reports arrive.</p>
+                  </div>
+                `;
+                return;
+              }
+
+              let html = '';
+              pairs.forEach(pair => {
+                const conf = pair.confidence;
+                let confBadgeClass = 'badge-match-medium';
+                if (conf >= 70) confBadgeClass = 'badge-match-high';
+                else if (conf < 50) confBadgeClass = 'badge-match-low';
+
+                html += `
+                  <div class="col-lg-6 col-12">
+                    <div class="glass-panel p-4 h-100 d-flex flex-column justify-content-between position-relative" style="border: 1px solid rgba(99, 102, 241, 0.25);">
+                      <div>
+                        <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom border-subtle">
+                          <span class="match-confidence-badge ${confBadgeClass}">
+                            <i class="bi bi-magic me-1"></i> ${conf}% Smart Match
+                          </span>
+                          <span class="text-muted small" style="font-family: var(--font-mono);">${pair.breakdown.days_apart}d apart</span>
+                        </div>
+
+                        <!-- Match Pair Comparison Columns -->
+                        <div class="row g-2 mb-3">
+                          <!-- Lost Item Side -->
+                          <div class="col-6">
+                            <div class="p-2 rounded" style="background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.2);">
+                              <span class="badge badge-lost mb-1" style="font-size: 0.65rem;">LOST REPORT</span>
+                              <div class="fw-bold text-light small text-truncate" title="${escapeHtml(pair.lost_item.title)}">${escapeHtml(pair.lost_item.title)}</div>
+                              <div class="text-muted" style="font-size: 0.725rem;"><i class="bi bi-geo-alt me-1"></i>${escapeHtml(pair.lost_item.district)}</div>
+                              <div class="text-muted" style="font-size: 0.725rem;"><i class="bi bi-calendar3 me-1"></i>${pair.lost_item.date_lost_or_found}</div>
+                            </div>
+                          </div>
+
+                          <!-- Found Item Side -->
+                          <div class="col-6">
+                            <div class="p-2 rounded" style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.2);">
+                              <span class="badge badge-found mb-1" style="font-size: 0.65rem;">FOUND VALUABLE</span>
+                              <div class="fw-bold text-light small text-truncate" title="${escapeHtml(pair.found_item.title)}">${escapeHtml(pair.found_item.title)}</div>
+                              <div class="text-muted" style="font-size: 0.725rem;"><i class="bi bi-geo-alt me-1"></i>${escapeHtml(pair.found_item.district)}</div>
+                              <div class="text-muted" style="font-size: 0.725rem;"><i class="bi bi-calendar3 me-1"></i>${pair.found_item.date_lost_or_found}</div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <!-- Match Breakdown Badges -->
+                        <div class="d-flex flex-wrap gap-1 mb-3">
+                          <span class="badge ${pair.breakdown.category_match ? 'bg-success-subtle text-success' : 'bg-secondary-subtle text-muted'}" style="font-size: 0.7rem;">
+                            <i class="bi bi-check2"></i> Cat: ${escapeHtml(pair.lost_item.category)}
+                          </span>
+                          <span class="badge ${pair.breakdown.district_match ? 'bg-success-subtle text-success' : (pair.breakdown.division_match ? 'bg-info-subtle text-info' : 'bg-secondary-subtle text-muted')}" style="font-size: 0.7rem;">
+                            <i class="bi bi-geo"></i> ${pair.breakdown.district_match ? 'Same District' : (pair.breakdown.division_match ? 'Same Division' : 'Different Loc')}
+                          </span>
+                          <span class="badge bg-indigo-subtle text-indigo" style="font-size: 0.7rem;">
+                            <i class="bi bi-percent"></i> Lexical Dice: ${Math.round(pair.breakdown.text_dice * 100)}%
+                          </span>
+                        </div>
+                      </div>
+
+                      <div class="pt-2 border-top border-subtle d-flex gap-2">
+                        <button type="button" class="btn btn-secondary btn-sm flex-grow-1" onclick="openItemModal(${pair.found_item.id})">
+                          <i class="bi bi-eye me-1"></i> View Found (#${pair.found_item.id})
+                        </button>
+                        <button type="button" class="btn btn-primary btn-sm flex-grow-1" onclick="claimItem(${pair.found_item.id}, '${escapeHtml(pair.found_item.title).replace(/'/g, "\\'")}')">
+                          <i class="bi bi-shield-check me-1"></i> Claim Match
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                `;
+              });
+              list.innerHTML = html;
+            }
+          })
+          .catch(() => {
+            list.innerHTML = '<div class="glass-panel text-center p-4 col-12 text-muted">Error calculating match candidates. Ensure the backend match service is online.</div>';
+          });
+      }
+
+      function applyCatalogFilters(e) {
+        e.preventDefault();
+        fetchCatalogItems();
+      }
+
+      function openItemModal(id) {
+        const modal = document.getElementById('itemDetailModal');
+        modal.classList.add('active');
+        const body = document.getElementById('modalItemBody');
+        const title = document.getElementById('modalItemTitle');
+        body.innerHTML = '<div class="text-center py-4"><span class="badge-dot"></span> Loading details...</div>';
+
+        fetch('api/items.php?action=get&id=' + id)
+          .then(r => r.json())
+          .then(data => {
+            if (data.success && data.item) {
+              const item = data.item;
+              title.textContent = item.title;
+              body.innerHTML = `
+                <div class="mb-3" style="max-height: 240px; overflow: hidden; border-radius: var(--radius-md);">
+                  <img src="${item.picture || 'images/default_item.jpg'}" alt="${escapeHtml(item.title)}" style="width: 100%; height: 220px; object-fit: cover;">
+                </div>
+                <div class="d-flex gap-2 mb-3">
+                  <span class="badge ${item.item_type === 'lost' ? 'badge-lost' : 'badge-found'}">${item.item_type}</span>
+                  <span class="badge badge-verified">${escapeHtml(item.category)}</span>
+                  ${item.reward_amount > 0 ? `<span class="badge bg-amber-subtle text-amber">৳${item.reward_amount} Reward</span>` : ''}
+                </div>
+                <p class="text-light mb-3">${escapeHtml(item.description)}</p>
+                <div class="p-3 rounded glass-subtle mb-3 small">
+                  <div><strong>Location:</strong> ${escapeHtml(item.specific_location || '')}, ${escapeHtml(item.district || '')}, ${escapeHtml(item.division || '')}</div>
+                  <div><strong>Date:</strong> ${item.date_lost_or_found}</div>
+                </div>
+                <div class="d-flex gap-2">
+                  <a href="tel:${item.contact_phone}" class="btn btn-secondary flex-grow-1"><i class="bi bi-telephone"></i> Call: ${item.contact_phone}</a>
+                </div>
+              `;
+            }
+          });
+      }
+
+      function closeItemModal(e) {
+        if (e && e.target !== document.getElementById('itemDetailModal')) return;
+        document.getElementById('itemDetailModal').classList.remove('active');
+      }
+
+      function claimItem(id, title) {
+        document.getElementById('claimItemId').value = id;
+        document.getElementById('claimItemNameDisplay').value = title;
+        document.getElementById('claimProofDesc').value = '';
+        document.getElementById('claimPhone').value = '';
+        const submitBtn = document.querySelector('#claimSubmitForm button[type="submit"]');
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<span>Submit for Verification</span>';
+        document.getElementById('claimModal').classList.add('active');
+      }
+
+      function closeClaimModal(e) {
+        if (e && e.target !== document.getElementById('claimModal')) return;
+        document.getElementById('claimModal').classList.remove('active');
+      }
+
+      function handleClaimSubmit(e) {
+        e.preventDefault();
+        const itemId = document.getElementById('claimItemId').value;
+        const proof = document.getElementById('claimProofDesc').value.trim();
+        const phone = document.getElementById('claimPhone').value.trim();
+        const submitBtn = document.querySelector('#claimSubmitForm button[type="submit"]');
+
+        if (!proof || !phone) {
+          alert('Please provide your ownership proof description and contact telephone.');
+          return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Submitting Verification...';
+
+        fetch('api/items.php', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ action: 'claim', item_id: itemId, proof_description: proof, contact_phone: phone })
+        })
+        .then(r => r.json().then(data => ({ status: r.status, data })))
+        .then(({ status, data }) => {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = '<span>Submit for Verification</span>';
+
+          if (data.success) {
+            alert('Your ownership claim has been recorded and submitted to moderators for verification!');
+            document.getElementById('claimSubmitForm').reset();
+            closeClaimModal(null);
+          } else {
+            alert(data.error || 'Claim submission failed.');
+          }
+        })
+        .catch(() => {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = '<span>Submit for Verification</span>';
+          alert('Network communication error submitting claim. Please try again.');
+        });
+      }
+
+      // Live debounced search filter
+      let searchDebounceTimer = null;
+      document.getElementById('searchFilterInput').addEventListener('input', () => {
+        clearTimeout(searchDebounceTimer);
+        searchDebounceTimer = setTimeout(fetchCatalogItems, 300);
+      });
+
+      // Check URL parameters on load
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('type')) document.getElementById('typeFilterSelect').value = urlParams.get('type');
+      if (urlParams.get('search') || urlParams.get('query')) {
+        document.getElementById('searchFilterInput').value = urlParams.get('search') || urlParams.get('query');
+      }
+      if (urlParams.get('tab') === 'matches') {
+        switchCatalogTab('matches');
+      } else {
+        fetchCatalogItems();
+      }
+    </script>
+    <script src="components/command-palette.js"></script>
+</body>
+</html>

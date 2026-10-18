@@ -1,3 +1,4 @@
 <?php
-$con=mysqli_connect('localhost','root','','l&fbd');
-?>
+declare(strict_types=1);
+
+require_once __DIR__ . '/connection.php';

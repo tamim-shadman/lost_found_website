@@ -1,38 +1,38 @@
 <?php
-session_start();
+declare(strict_types=1);
 
-        // Check if the form is submitted
-        if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            // Establish a database connection (replace with your actual database details)
-            $conn = new mysqli("localhost", "root", "", "l&fbd");
+require_once __DIR__ . '/src/autoload.php';
 
-            // Check the connection
-            if ($conn->connect_error) {
-                die("Connection failed: " . $conn->connect_error);
-            }
+use App\Services\AuthService;
+use App\Services\MissingPersonService;
+use App\Utils\Security;
 
-            // Get form data
-            $name = $_POST['name'];
-            $nid = $_POST['nid'];
-            $phone = $_POST['phone'];
-            $missingDate = $_POST['Date'];
-            $age = $_POST['Age'];
-            $hairColor = $_POST['haircolor'];
-            $eyeColor = $_POST['eyecolor'];
-            $cloths = $_POST['Cloths'];
+Security::initSession();
+$auth = new AuthService();
+$currentUser = $auth->getCurrentUser();
+$missingService = new MissingPersonService();
 
-            // SQL query to insert data into the database (replace with your actual table name)
-            $query = "INSERT INTO missingperson (Name, Nid, Phone, Missingdate, Age, Haircolor, Eyecolor, Cloths)
-                    VALUES ('$name', '$nid', '$phone', '$missingDate', '$age', '$hairColor', '$eyeColor', '$cloths')";
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $file = $_FILES['photo'] ?? $_FILES['image'] ?? null;
+    $userId = $currentUser ? (int)$currentUser['id'] : null;
 
-            // Execute the query
-            if ($conn->query($query) === TRUE) {
-                echo "Record added successfully";
-            } else {
-                echo "Error: " . $query . "<br>" . $conn->error;
-            }
+    $res = $missingService->reportMissingPerson($_POST, $file, $userId);
 
-            // Close the database connection
-            $conn->close();
-        }
-?>
+    if ($res['success']) {
+        echo "<script>
+            alert('Missing person alert broadcasted successfully.');
+            window.location.href = 'missing_person.php';
+        </script>";
+        exit();
+    } else {
+        $errMsg = addslashes($res['error']);
+        echo "<script>
+            alert('Error: {$errMsg}');
+            window.history.back();
+        </script>";
+        exit();
+    }
+} else {
+    header("Location: missing_person.php");
+    exit();
+}

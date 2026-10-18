@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" type="image/png" href="images/logo.png">
+    <title>Support Lost & Found Bangladesh — Secure Donation Gateway</title>
+    <meta name="description" content="Support Lost & Found Bangladesh. Fund community server infrastructure and nationwide missing persons search broadcasts.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="css/design-system.css">
+    <style>
+      .payment-header {
+        padding-top: 130px;
+        padding-bottom: 25px;
+      }
+      .tier-selector-card {
+        padding: 1.25rem;
+        background: var(--bg-surface);
+        border: 2px solid var(--border-subtle);
+        border-radius: var(--radius-lg);
+        text-align: center;
+        cursor: pointer;
+        transition: all var(--transition-fast);
+      }
+      .tier-selector-card:hover, .tier-selector-card.active {
+        background: rgba(16, 185, 129, 0.1);
+        border-color: var(--color-emerald-500);
+        box-shadow: 0 4px 18px var(--color-emerald-glow);
+      }
+      .tier-amount {
+        font-size: 1.75rem;
+        font-weight: 800;
+        color: var(--text-primary);
+      }
+    </style>
+</head>
+<body>
+    <!-- Ambient Floating Orbs & Atmospheric Mesh -->
+    <div class="ambient-mesh-canvas" aria-hidden="true">
+      <div class="ambient-orb ambient-orb-emerald"></div>
+      <div class="ambient-orb ambient-orb-indigo"></div>
+      <div class="ambient-orb ambient-orb-rose"></div>
+    </div>
+
+    <header class="glass-navbar">
+      <div class="container d-flex justify-content-between align-items-center py-2 px-3 mx-auto" style="max-width: 1320px;">
+        <a href="index.html" class="navbar-brand d-flex align-items-center gap-2 text-decoration-none">
+          <img src="images/logo.png" alt="Logo" width="38" height="38" class="rounded-circle border border-subtle">
+          <div>
+            <div class="brand-title fw-bold text-light lh-1" style="font-size: 1.15rem; letter-spacing: -0.02em;">Lost & Found <span style="color: var(--color-emerald-400);">BD</span></div>
+            <small class="text-muted d-none d-sm-block" style="font-size: 0.725rem;">Lost Moments, Found Stories</small>
+          </div>
+        </a>
+        <nav class="d-none d-lg-flex align-items-center gap-4">
+          <a href="recentposts.html" class="nav-link text-secondary fw-medium hover-light">Browse Alerts</a>
+          <a href="submit_lostitems.html" class="nav-link text-secondary fw-medium hover-light">Report Item</a>
+          <a href="missing_person.html" class="nav-link text-secondary fw-medium hover-light">Missing Persons</a>
+          <a href="chatbot.html" class="nav-link text-secondary fw-medium hover-light">AI Assistant</a>
+          <a href="payment.html" class="nav-link text-emerald fw-bold hover-light" style="color: var(--color-emerald-400);">Support Platform</a>
+        </nav>
+        <div class="d-flex align-items-center gap-2">
+          <button type="button" class="btn btn-ghost btn-sm d-flex align-items-center gap-2 text-muted px-3 py-1 rounded-pill border border-subtle glass-subtle" onclick="window.commandPalette && window.commandPalette.open()" title="Press Ctrl+K to search">
+            <i class="bi bi-search"></i>
+            <span class="d-none d-md-inline" style="font-size: 0.85rem;">Omnibar...</span>
+            <kbd class="d-none d-md-inline-block px-1 py-0 rounded text-muted bg-dark border border-subtle" style="font-size: 0.7rem;">Ctrl K</kbd>
+          </button>
+
+          <button type="button" class="btn btn-ghost btn-sm text-light p-2" onclick="toggleTheme()" aria-label="Toggle Theme" title="Toggle Dark/Light Mode">
+            <i class="bi bi-circle-half" id="themeToggleIcon"></i>
+          </button>
+
+          <a href="login.html" class="btn btn-ghost btn-sm">Sign In</a>
+          <a href="signup.html" class="btn btn-primary btn-sm btn-pill">Get Started</a>
+        </div>
+      </div>
+    </header>
+
+    <main class="container mx-auto px-3 payment-header" style="max-width: 740px;">
+        <div class="text-center mb-4">
+            <span class="brand-badge mb-2"><i class="bi bi-heart-fill text-rose me-1" style="color: var(--color-rose-500);"></i> Community Supported Infrastructure</span>
+            <h1 class="text-light fw-bold mb-2" style="font-size: 2.2rem;">Support Lost & Found BD</h1>
+            <p class="text-secondary">Your contribution directly keeps the servers online, fuels emergency alerts, and funds rewards for honest citizens.</p>
+        </div>
+
+        <div class="glass-panel p-4 p-md-5 mb-5 animate-slide-up">
+            <label class="form-label mb-2 fw-bold text-light">Select Donation Tier (BDT):</label>
+            <div class="row g-3 mb-4">
+                <div class="col-6 col-md-3">
+                    <div class="tier-selector-card" onclick="selectTier(500, this)">
+                        <div class="text-muted small">Bronze</div>
+                        <div class="tier-amount">৳500</div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="tier-selector-card active" onclick="selectTier(1000, this)">
+                        <div class="text-emerald small fw-bold" style="color: var(--color-emerald-400);">Popular</div>
+                        <div class="tier-amount">৳1,000</div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="tier-selector-card" onclick="selectTier(2500, this)">
+                        <div class="text-indigo small fw-bold" style="color: var(--color-indigo-400);">Silver</div>
+                        <div class="tier-amount">৳2,500</div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="tier-selector-card" onclick="selectTier(5000, this)">
+                        <div class="text-amber small fw-bold" style="color: var(--color-amber-400);">Gold Sponsor</div>
+                        <div class="tier-amount">৳5,000</div>
+                    </div>
+                </div>
+            </div>
+
+            <form id="donationForm" onsubmit="handleDonationSubmit(event)">
+                <input type="hidden" name="amount" id="donationAmountField" value="1000">
+
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Full Name <span class="text-rose">*</span></label>
+                        <div class="input-icon-wrapper">
+                            <i class="bi bi-person icon"></i>
+                            <input type="text" class="form-control" id="donorName" placeholder="Your name" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Email Address <span class="text-rose">*</span></label>
+                        <div class="input-icon-wrapper">
+                            <i class="bi bi-envelope icon"></i>
+                            <input type="email" class="form-control" id="donorEmail" placeholder="name@domain.com" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-3 rounded glass-subtle mb-4">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="text-light fw-bold"><i class="bi bi-credit-card-2-front text-emerald me-1" style="color: var(--color-emerald-400);"></i> Payment Gateway</span>
+                        <span class="badge bg-emerald-subtle text-emerald" style="color: var(--color-emerald-400);"><i class="bi bi-shield-check me-1"></i> PCI-DSS Tokenized</span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label small">Card Details:</label>
+                        <input type="text" class="form-control" id="cardNumberInput" placeholder="4242 •••• •••• 4242" maxlength="19" required>
+                    </div>
+
+                    <div class="row g-2">
+                        <div class="col-6">
+                            <input type="text" class="form-control" placeholder="MM / YY" maxlength="5" required>
+                        </div>
+                        <div class="col-6">
+                            <input type="password" class="form-control" placeholder="CVC" maxlength="4" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="paymentAlert" class="alert alert-danger d-none mb-3" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    <span id="paymentAlertMsg">Payment error</span>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block w-100 py-3" id="paySubmitBtn">
+                    <i class="bi bi-heart-fill me-2"></i>
+                    <span id="btnPayLabel">Contribute ৳1,000 BDT</span>
+                </button>
+            </form>
+
+            <div class="text-center text-muted small mt-4 pt-3 border-top border-subtle">
+                <i class="bi bi-lock-fill text-emerald me-1" style="color: var(--color-emerald-400);"></i> Card details are processed directly via secure Stripe tokenization and are never stored on our database.
+            </div>
+        </div>
+    </main>
+
+    <!-- Donation Verified Receipt Modal -->
+    <div class="cmd-palette-backdrop" id="receiptModal" onclick="closeReceiptModal(event)">
+      <div class="cmd-palette-modal glass-panel p-4 text-center" onclick="event.stopPropagation()" style="max-width: 480px;">
+        <div class="mb-3">
+          <i class="bi bi-patch-check-fill text-emerald" style="font-size: 3.5rem;"></i>
+        </div>
+        <h3 class="text-light fw-bold mb-2">Contribution Verified!</h3>
+        <p class="text-secondary small mb-4">Thank you for funding community search broadcasts and public safety servers.</p>
+        
+        <div class="p-3 rounded glass-subtle text-start mb-4 small">
+          <div class="d-flex justify-content-between py-1 border-bottom border-subtle">
+            <span class="text-muted">Transaction ID:</span>
+            <code class="text-emerald" id="receiptTxId">tx_...</code>
+          </div>
+          <div class="d-flex justify-content-between py-1 border-bottom border-subtle">
+            <span class="text-muted">Amount Contributed:</span>
+            <strong class="text-light" id="receiptAmount">৳1,000 BDT</strong>
+          </div>
+          <div class="d-flex justify-content-between py-1">
+            <span class="text-muted">Compliance:</span>
+            <span class="badge bg-emerald-subtle text-emerald"><i class="bi bi-shield-check me-1"></i> PCI-DSS Verified</span>
+          </div>
+        </div>
+
+        <button type="button" class="btn btn-primary w-100 py-2" onclick="closeReceiptModal(null)">
+          Done
+        </button>
+      </div>
+    </div>
+
+    <!-- Modern Flagship Site Footer -->
+    <footer class="site-footer mt-5 pt-5 pb-4">
+      <div class="container mx-auto px-3" style="max-width: 1320px;">
+        <div class="row g-4 mb-4">
+          <!-- Column 1: Brand & National Trust Signature -->
+          <div class="col-12 col-md-6 col-lg-4">
+            <div class="d-flex align-items-center gap-2 mb-3">
+              <img src="images/logo.png" alt="Lost and Found Bangladesh Logo" width="36" height="36" class="rounded-circle border border-emerald">
+              <div>
+                <span class="footer-brand-title">Lost &amp; Found <span style="color: var(--color-emerald-400);">Bangladesh</span></span>
+                <div class="text-muted small" style="font-size: 0.75rem;">National Recovery &amp; Public Safety Network</div>
+              </div>
+            </div>
+            <p class="text-secondary mb-3" style="font-size: 0.9rem; line-height: 1.6;">
+              Bangladesh's nationwide community recovery network. Dedicated to reuniting lost belongings, securing citizen identity credentials, and locating missing persons in partnership with citizens and Bangladesh Police.
+            </p>
+            <div class="d-flex flex-wrap align-items-center gap-2">
+              <span class="badge-trust-tag"><span class="badge-dot"></span> 24/7 Moderation Desk</span>
+              <span class="badge-trust-tag"><i class="bi bi-shield-check text-emerald"></i> GD Verified</span>
+              <span class="badge-trust-tag"><i class="bi bi-broadcast text-rose"></i> 8 Divisions Radar</span>
+            </div>
+          </div>
+
+          <!-- Column 2: Platform Navigation & Tools -->
+          <div class="col-6 col-md-3 col-lg-2">
+            <h6 class="footer-section-title"><i class="bi bi-compass text-emerald me-1"></i> Navigation</h6>
+            <ul class="footer-nav-list">
+              <li><a href="recentposts.html?type=lost" class="footer-nav-link"><i class="bi bi-chevron-right text-emerald" style="font-size: 0.7rem;"></i> Lost Belongings</a></li>
+              <li><a href="recentposts.html?type=found" class="footer-nav-link"><i class="bi bi-chevron-right text-emerald" style="font-size: 0.7rem;"></i> Found Valuables</a></li>
+              <li><a href="missing_person.html" class="footer-nav-link"><i class="bi bi-chevron-right text-emerald" style="font-size: 0.7rem;"></i> Missing Persons</a></li>
+              <li><a href="submit_lostitems.html" class="footer-nav-link"><i class="bi bi-chevron-right text-emerald" style="font-size: 0.7rem;"></i> File New Report</a></li>
+              <li><a href="User_profile.html" class="footer-nav-link"><i class="bi bi-chevron-right text-emerald" style="font-size: 0.7rem;"></i> QR Asset Shield</a></li>
+              <li><a href="chatbot.html" class="footer-nav-link"><i class="bi bi-chevron-right text-emerald" style="font-size: 0.7rem;"></i> AI Assistant</a></li>
+            </ul>
+          </div>
+
+          <!-- Column 3: Emergency Dispatch & Hotlines -->
+          <div class="col-6 col-md-3 col-lg-3">
+            <h6 class="footer-section-title"><i class="bi bi-telephone-outbound text-rose me-1"></i> Hotlines</h6>
+            <div class="d-flex flex-column gap-2">
+              <a href="tel:999" class="footer-hotline-chip">
+                <span><i class="bi bi-shield-fill-exclamation text-rose me-1"></i> National Police</span>
+                <span class="badge bg-rose-subtle text-rose fw-bold">999</span>
+              </a>
+              <a href="tel:100" class="footer-hotline-chip">
+                <span><i class="bi bi-telephone-inbound-fill text-emerald me-1"></i> Police Help Desk</span>
+                <span class="badge bg-emerald-subtle text-emerald fw-bold">100</span>
+              </a>
+              <a href="tel:1098" class="footer-hotline-chip">
+                <span><i class="bi bi-people-fill text-indigo me-1"></i> Child Protection</span>
+                <span class="badge bg-indigo-subtle text-indigo fw-bold">1098</span>
+              </a>
+              <a href="tel:16263" class="footer-hotline-chip">
+                <span><i class="bi bi-hospital-fill text-amber me-1"></i> Health Service</span>
+                <span class="badge bg-amber-subtle text-amber fw-bold">16263</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Column 4: Trust & Infrastructure Support -->
+          <div class="col-12 col-md-6 col-lg-3">
+            <h6 class="footer-section-title"><i class="bi bi-heart-pulse text-emerald me-1"></i> Public Trust</h6>
+            <p class="text-secondary small mb-3">
+              100% free non-profit civic infrastructure powered by community goodwill. Your reports are encrypted and strictly verified.
+            </p>
+            <a href="payment.html" class="btn btn-glow-emerald w-100 py-2 d-flex align-items-center justify-content-center gap-2 mb-3">
+              <i class="bi bi-heart-fill text-rose"></i> Support Platform
+            </a>
+            <div class="d-flex flex-wrap gap-2 text-muted" style="font-size: 0.75rem;">
+              <span><i class="bi bi-shield-lock-fill text-emerald me-1"></i> 256-Bit SSL</span>
+              <span>•</span>
+              <span><i class="bi bi-patch-check-fill text-emerald me-1"></i> Community Backed</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sub-footer bar -->
+        <div class="sub-footer-bar">
+          <div class="text-secondary small">
+            &copy; 2026 <strong>Lost &amp; Found Bangladesh</strong>. Nationwide Public Safety &amp; Community Recovery Platform.
+          </div>
+          <div class="d-flex flex-wrap align-items-center gap-3 text-secondary small">
+            <a href="#" class="footer-nav-link" onclick="alert('Privacy Policy: All personal contact info is safeguarded. NIDs & serial numbers are never exposed to unauthenticated scrapers.'); return false;">Privacy Policy</a>
+            <span>•</span>
+            <a href="#" class="footer-nav-link" onclick="alert('Terms of Service: Fraudulent or deceptive reports will be permanently banned and reported to law enforcement.'); return false;">Terms of Service</a>
+            <span>•</span>
+            <a href="chatbot.html" class="footer-nav-link">Support FAQ</a>
+            <span>•</span>
+            <a href="admin panel/admin-dashboard.html" class="footer-nav-link text-emerald"><i class="bi bi-lock me-1"></i> Staff Portal</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      function selectTier(amount, card) {
+        document.querySelectorAll('.tier-selector-card').forEach(c => c.classList.remove('active'));
+        card.classList.add('active');
+        document.getElementById('donationAmountField').value = amount;
+        document.getElementById('btnPayLabel').textContent = 'Contribute ৳' + Number(amount).toLocaleString() + ' BDT';
+      }
+
+      function closeReceiptModal(e) {
+        if (e && e.target !== document.getElementById('receiptModal')) return;
+        document.getElementById('receiptModal').classList.remove('active');
+      }
+
+      function handleDonationSubmit(e) {
+        e.preventDefault();
+        const btn = document.getElementById('paySubmitBtn');
+        const alertBox = document.getElementById('paymentAlert');
+        const donorName = document.getElementById('donorName').value.trim();
+        const donorEmail = document.getElementById('donorEmail').value.trim();
+        const amount = parseFloat(document.getElementById('donationAmountField').value || 1000);
+
+        if (!donorName || !donorEmail || amount <= 0) {
+          alertBox.classList.remove('d-none');
+          document.getElementById('paymentAlertMsg').textContent = 'Please provide donor name, email, and valid amount.';
+          return;
+        }
+
+        alertBox.classList.add('d-none');
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status"></span>Processing Tokenized Charge...';
+
+        fetch('api/donate.php', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            donor_name: donorName,
+            donor_email: donorEmail,
+            amount: amount,
+            currency: 'BDT'
+          })
+        })
+        .then(r => r.json().then(data => ({ status: r.status, data })))
+        .then(({ status, data }) => {
+          btn.disabled = false;
+          btn.innerHTML = `<i class="bi bi-heart-fill me-2"></i><span>Contribute ৳${Number(amount).toLocaleString()} BDT</span>`;
+
+          if (data.success) {
+            document.getElementById('receiptTxId').textContent = data.transaction_id || 'tx_verified';
+            document.getElementById('receiptAmount').textContent = '৳' + Number(data.amount).toLocaleString() + ' BDT';
+            document.getElementById('receiptModal').classList.add('active');
+            document.getElementById('donationForm').reset();
+            document.getElementById('donationAmountField').value = '1000';
+          } else {
+            alertBox.classList.remove('d-none');
+            document.getElementById('paymentAlertMsg').textContent = data.error || 'Payment gateway failed. Please try again.';
+          }
+        })
+        .catch(() => {
+          btn.disabled = false;
+          btn.innerHTML = `<i class="bi bi-heart-fill me-2"></i><span>Contribute ৳${Number(amount).toLocaleString()} BDT</span>`;
+          alertBox.classList.remove('d-none');
+          document.getElementById('paymentAlertMsg').textContent = 'Network communication error. Please check your connection.';
+        });
+      }
+
+      function toggleTheme() {
+        const current = document.documentElement.getAttribute('data-theme') || 'dark';
+        const target = current === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', target);
+        localStorage.setItem('lf_theme', target);
+        const icon = document.getElementById('themeToggleIcon');
+        if (icon) {
+          icon.className = target === 'dark' ? 'bi bi-moon-stars' : 'bi bi-sun';
+        }
+      }
+      const savedTheme = localStorage.getItem('lf_theme') || 'dark';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+      const icon = document.getElementById('themeToggleIcon');
+      if (icon) {
+        icon.className = savedTheme === 'dark' ? 'bi bi-moon-stars' : 'bi bi-sun';
+      }
+    </script>
+    <script src="components/command-palette.js"></script>
+</body>
+</html>

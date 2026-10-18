@@ -3,216 +3,682 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" type="images/logo.png" href="images/logo.png" >
-    <title>Lost and Found Bangladesh</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="style.css">
-    
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <script src="https://kit.fontawesome.com/d39d7cbf13.js" crossorigin="anonymous"></script>
-       
-    
+    <link rel="shortcut icon" type="image/png" href="../images/logo.png">
+    <title>Executive Moderation Console — Lost & Found Bangladesh Admin</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="../css/design-system.css">
+    <style>
+      .admin-layout {
+        display: flex;
+        min-height: 100vh;
+      }
+      .admin-sidebar {
+        width: 260px;
+        background: rgba(7, 9, 14, 0.95);
+        border-right: 1px solid var(--border-subtle);
+        display: flex;
+        flex-direction: column;
+        padding: 1.5rem 1rem;
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 100;
+      }
+      .admin-content {
+        flex: 1;
+        margin-left: 260px;
+        padding: 2rem;
+      }
+      .sidebar-nav-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.75rem 1rem;
+        border-radius: var(--radius-md);
+        color: var(--text-secondary);
+        font-weight: 600;
+        font-size: 0.9rem;
+        cursor: pointer;
+        text-decoration: none;
+        transition: all var(--transition-fast);
+      }
+      .sidebar-nav-item:hover, .sidebar-nav-item.active {
+        background: rgba(16, 185, 129, 0.12);
+        color: var(--color-emerald-400);
+      }
+      .metric-box {
+        background: var(--bg-surface-elevated);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-lg);
+        padding: 1.25rem 1.5rem;
+      }
+      .metric-box-val {
+        font-size: 2rem;
+        font-weight: 800;
+        line-height: 1;
+        margin-bottom: 0.25rem;
+      }
+      .admin-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+      }
+      .admin-table th {
+        background: rgba(255, 255, 255, 0.03);
+        color: var(--text-muted);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        padding: 0.85rem 1rem;
+        border-bottom: 1px solid var(--border-subtle);
+      }
+      .admin-table td {
+        padding: 1rem;
+        border-bottom: 1px solid var(--border-subtle);
+        color: var(--text-secondary);
+        font-size: 0.875rem;
+      }
+      .admin-mobile-header {
+        display: none;
+        background: rgba(7, 9, 14, 0.98);
+        border-bottom: 1px solid var(--border-subtle);
+        padding: 0.75rem 1rem;
+        position: sticky;
+        top: 0;
+        z-index: 105;
+      }
+      .admin-drawer-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(4px);
+        z-index: 109;
+        display: none;
+      }
+      .admin-drawer-overlay.active {
+        display: block;
+      }
+      @media (max-width: 992px) {
+        .admin-mobile-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+        .admin-sidebar {
+          transform: translateX(-100%);
+          transition: transform 0.25s ease-in-out;
+          display: flex;
+          z-index: 110;
+        }
+        .admin-sidebar.open {
+          transform: translateX(0);
+        }
+        .admin-content {
+          margin-left: 0;
+          padding: 1rem;
+        }
+      }
+    </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-black fixed-top">
-        <div class="container">
-
-            
-                <a href="admin-dashboard.html" class="text-decoration-none text-light pe-5 navbar-brand">Lost and Found BD
-                    <h6 class="fw-lighter ps-md-5 sublogo">Admin Panel</h6>
-
-                </a>
-            <!-- Toggle button -->
-            <button class="navbar-toggler shadow-none border-0 " type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon" ></span>
-            </button>
-
-            <!-- sidebar -->
-
-          <div class="sidebar offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
-            
-            <!-- sidebar body -->
-            <div class="offcanvas-body bg-black">
-                <ul class="navbar-nav justify-content-end flex-grow-1 pe-lg-1 mt-1 nav nav-underline g-5">
-                    <li>
-                        <div class="dropdown d-flex align-items-center justify-content-center pt-1 pe-1">
-                            <a href="#" class="dropdown-toggle text-decoration-none text-light" id="registrationDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Payment Gateway
-                            </a>
-                            <ul class="dropdown-menu bg-secondary-subtle" aria-labelledby="registrationDropdown">
-                                <li><a class="dropdown-item fw-bold" href="#">Manage financial transactions</a></li>
-                                <li><a class="dropdown-item fw-bold" href="#">View transactions details</a></li>
-                                
-                            </ul>
-                        </div>
-                    </li>
-    
-                    <li>
-                        <div class="dropdown d-flex align-items-center justify-content-center pt-1 pe-1">
-                            <a href="#" class="dropdown-toggle text-decoration-none text-light" id="registrationDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                               Lost and found Items
-                            </a>
-                            <ul class="dropdown-menu bg-secondary-subtle" aria-labelledby="registrationDropdown">
-                                <li><a class="dropdown-item fw-bold" href="verify.html"> Verify items</a></li>
-                                <li><a class="dropdown-item fw-bold" href="lostitems.html"> View verify results</a></li>
-                                
-                                
-                            </ul>
-                        </div>
-                    </li>
-    
-                    <li>
-                        <div class="dropdown d-flex align-items-center justify-content-center pt-1 pe-1">
-                            <a href="#" class="dropdown-toggle text-decoration-none text-light" id="registrationDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                User Profile Management
-                            </a>
-                            <ul class="dropdown-menu bg-secondary-subtle" aria-labelledby="registrationDropdown">
-                                <li><a class="dropdown-item fw-bold" href="#">Edit and manage user profiles</a></li>
-                               
-                                <li><a class="dropdown-item fw-bold" href="#">Suspend user accoun</a></li>
-                            </ul>
-                        </div>
-                    </li>
-    
-                    <li>
-                        <div class="dropdown d-flex align-items-center justify-content-center pt-1 pe-1">
-                            <a href="#" class="dropdown-toggle text-decoration-none text-light" id="registrationDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                               Email Notifications
-                            </a>
-                            <ul class="dropdown-menu bg-secondary-subtle" aria-labelledby="registrationDropdown">
-                                <li><a class="dropdown-item fw-bold" href="emailnoti.html">Send automated email notifications</a></li>
-                                <li><a class="dropdown-item fw-bold" href="previousmail.html">View prevoius emails</a></li>
-                               
-                            </ul>
-                        </div>
-                    </li>
-    
-                    <li>
-                        <div class="dropdown d-flex align-items-center justify-content-center pt-1 pe-1">
-                            <a href="#" class="dropdown-toggle text-decoration-none text-light" id="registrationDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                               Help and supports
-                            </a>
-                            <ul class="dropdown-menu bg-secondary-subtle" aria-labelledby="registrationDropdown">
-                                <li><a class="dropdown-item fw-bold" href="FAQ.html">FAQ section</a></li>
-                                <li><a class="dropdown-item fw-bold" href="inqueries.html">Handle inqueries</a></li>
-                               
-                            </ul>
-                        </div>
-                    </li>
-    
-                    
-                   
-                    <li class="nav-item">
-                        <a class="nav-link text-light" href="feedback.html">Feedbacks</a>
-                    </li>
-                  
-                </ul>
-                
-              
-              </div>
-
-
-            <!-- ager dashboard -->
-            
-        </div>
-
+    <!-- Ambient Floating Orbs & Atmospheric Mesh -->
+    <div class="ambient-mesh-canvas" aria-hidden="true">
+      <div class="ambient-orb ambient-orb-emerald"></div>
+      <div class="ambient-orb ambient-orb-indigo"></div>
+      <div class="ambient-orb ambient-orb-rose"></div>
     </div>
-       
-        
 
-</nav>
+    <div class="admin-mobile-header">
+      <div class="d-flex align-items-center gap-2">
+        <img src="../images/logo.png" alt="Logo" width="28" height="28" class="rounded-circle border border-emerald">
+        <span class="fw-bold text-light">Staff Console</span>
+      </div>
+      <button type="button" class="btn btn-secondary btn-sm" onclick="toggleAdminDrawer()" aria-label="Toggle Navigation">
+        <i class="bi bi-list fs-5"></i>
+      </button>
+    </div>
+    <div class="admin-drawer-overlay" id="adminDrawerOverlay" onclick="toggleAdminDrawer()"></div>
 
-    <main>
-
-        <div class="container" style="margin-top: 115px;">
-            <h3 class="text-bg-primary rounded-2 p-3 shadow-lg ">Admin Dashboard</h3>
-        </div>
-        <div class="container text-center mx-auto" style="margin-top: 50px;">
-            <div class="row mx-auto" style="height: 20rem; column-gap: 110px; row-gap: 15px;">
-
-                <a href="users.php" class="col-md-5 col-sm-3 bg-body-tertiary rounded d-flex flex-column p-4 text-decoration-none text-dark">
-                    <i class="bi bi-people-fill fs-5"></i> Users
-                </a>
-                <a href="view.php" class="col-md-5 col-sm-3 bg-body-tertiary rounded d-flex flex-column p-4 text-decoration-none text-dark">
-                    <i class="bi bi-file-earmark-post fs-5"></i>Posts
-                </a>
-                
-                <!-- Force next columns to break to a new line -->
-                <div class="w-100"></div>
-                
-                <a href="validate.php" class="col-md-5 col-sm-3 bg-body-tertiary rounded d-flex flex-column p-4 text-decoration-none text-dark">
-                    <i class="bi bi-stickies fs-5"></i>Validate
-                </a>
-                <a href="feedbacks.php" class="col-md-5 col-sm-3 bg-body-tertiary rounded d-flex flex-column p-4 text-decoration-none text-dark">
-                    <i class="bi bi-chat-left fs-5"></i> Feedbacks
-                </a>
-                
-                
-              
-
-        </div>
-      </main>
-
-
-      <footer class="footer">
-        <div class="footer-container">
-            <div class="row">
-                <div class="footer-col">
-                    <h4>Lost & Found</h4>
-                    <ul>
-                        <li><a href="#">about us</a></li>
-                        <li><a href="#">Contact US</a></li>
-                        <li><a href="#">our services</a></li>
-                        <li><a href="#">affiliate program</a></li>
-                    </ul>
+    <div class="admin-layout">
+        <!-- Admin Sidebar -->
+        <aside class="admin-sidebar">
+            <div class="d-flex align-items-center justify-content-between mb-4 px-2">
+                <div class="d-flex align-items-center gap-2">
+                    <img src="../images/logo.png" alt="Logo" width="32" height="32" class="rounded-circle border border-emerald">
+                    <div>
+                        <div class="fw-bold text-light" style="font-size: 1rem;">L&F Bangladesh</div>
+                        <small class="badge bg-emerald-subtle text-emerald" style="font-size: 0.65rem;">Staff Console</small>
+                    </div>
                 </div>
-                <div class="footer-col">
-                    <h4>get help</h4>
-                    <ul>
-                        <li><a href="#">FAQ</a></li>
-                        <li><a href="#">Anti-scam</a></li>
-                        <li><a href="#">Post Status</a></li>
-                        <li><a href="#">Payment Options</a></li>
-                    </ul>
+                <button type="button" class="btn btn-ghost btn-sm d-lg-none" onclick="toggleAdminDrawer()" aria-label="Close Sidebar">
+                    <i class="bi bi-x-lg text-secondary"></i>
+                </button>
+            </div>
+
+            <nav class="d-flex flex-column gap-1 flex-grow-1">
+                <a href="#overview" class="sidebar-nav-item active" onclick="switchAdminSection('overview', this)">
+                    <i class="bi bi-grid-1x2"></i> Overview Metrics
+                </a>
+                <a href="#reports" class="sidebar-nav-item" onclick="switchAdminSection('reports', this)">
+                    <i class="bi bi-collection"></i> Reports Desk
+                </a>
+                <a href="#claims" class="sidebar-nav-item" onclick="switchAdminSection('claims', this)">
+                    <i class="bi bi-shield-check"></i> Claims Verification
+                </a>
+                <a href="#telemetry" class="sidebar-nav-item" onclick="switchAdminSection('telemetry', this)">
+                    <i class="bi bi-cpu"></i> Smart Match & QR Radar
+                </a>
+                <a href="#users" class="sidebar-nav-item" onclick="switchAdminSection('users', this)">
+                    <i class="bi bi-people"></i> User Accounts
+                </a>
+            </nav>
+
+            <div class="pt-3 border-top border-subtle">
+                <a href="../index.html" class="sidebar-nav-item text-muted">
+                    <i class="bi bi-house"></i> Public Website
+                </a>
+                <a href="../logout.php" class="sidebar-nav-item text-rose">
+                    <i class="bi bi-box-arrow-right"></i> Sign Out
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="admin-content">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1 class="text-light fw-bold mb-1" style="font-size: 1.85rem;" id="sectionTitle">Moderation Desk Overview</h1>
+                    <p class="text-secondary small mb-0">Live administrative feed and verification desk.</p>
                 </div>
-                <div class="footer-col">
-                    <h4>My Account</h4>
-                    <ul>
-                        <li><a href="#">Profile</a></li>
-                        <li><a href="#">Home</a></li>
-                        <li><a href="#">My Ads</a></li>
-                        <li><a href="#">Favourite Ads</a></li>
-                    </ul>
+                <div class="d-flex gap-2">
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="loadAdminMetrics()">
+                        <i class="bi bi-arrow-clockwise"></i> Refresh Live Data
+                    </button>
                 </div>
-                <div class="footer-col">
-                    <h4>follow us</h4>
-                    <div class="social-links">
-                        <a href="https://www.facebook.com/"><i class="fab fa-facebook-f"></i></a>
-                        <a href="https://twitter.com/?lang=en"><i class="fa-brands fa-x-twitter"></i></a>
-                        <a href="https://www.instagram.com/"><i class="fab fa-instagram"></i></a>
-                        <a href="https://www.linkedin.com/?original_referer="><i class="fab fa-linkedin-in"></i></a>
+            </div>
+
+            <!-- Overview Section -->
+            <div id="adminSectionOverview">
+                <div class="row g-3 mb-4">
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="metric-box">
+                            <div class="text-muted small fw-semibold mb-1">Registered Users</div>
+                            <div class="metric-box-val text-light" id="statUsers">--</div>
+                            <small class="text-emerald"><i class="bi bi-arrow-up me-1"></i>Active Accounts</small>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="metric-box">
+                            <div class="text-muted small fw-semibold mb-1">Verified Reports</div>
+                            <div class="metric-box-val text-emerald" id="statVerified">--</div>
+                            <small class="text-muted">Live on catalog</small>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="metric-box">
+                            <div class="text-muted small fw-semibold mb-1">Pending Moderation</div>
+                            <div class="metric-box-val text-amber" id="statPending">--</div>
+                            <small class="text-amber">Awaiting review</small>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="metric-box">
+                            <div class="text-muted small fw-semibold mb-1">Missing Persons</div>
+                            <div class="metric-box-val text-rose" id="statMissing">--</div>
+                            <small class="text-rose">Active police alerts</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-panel p-4 mb-4">
+                    <h3 class="text-light fw-bold mb-3" style="font-size: 1.2rem;">Quick Moderation Actions</h3>
+                    <div class="d-flex flex-wrap gap-2">
+                        <button class="btn btn-secondary btn-sm" onclick="switchAdminSection('reports', document.querySelector('[href=\"#reports\"]'))">
+                            <i class="bi bi-eye me-1"></i> Review All Items
+                        </button>
+                        <button class="btn btn-secondary btn-sm" onclick="switchAdminSection('claims', document.querySelector('[href=\"#claims\"]'))">
+                            <i class="bi bi-shield-check me-1"></i> Review Pending Claims
+                        </button>
+                        <button class="btn btn-secondary btn-sm" onclick="switchAdminSection('users', document.querySelector('[href=\"#users\"]'))">
+                            <i class="bi bi-person-gear me-1"></i> Manage User Status
+                        </button>
                     </div>
                 </div>
             </div>
-        </div>
-    
-        <div class="copyright">
-            <div class="bottom_text">
-                <span class="copyright_text">© 2023 Lost & Found. All Rights Reserved. Developed by Group-06. All rights Reserved</span>
-                <span class="policy_terms">
-                <a href="#">Privacy policy</a>
-                <a href="#">Terms & Conditions</a>
-            </span>
-            </div>
-    
-            </div>
-    </footer>
 
-    
-    
-    
+            <!-- Reports Section -->
+            <div id="adminSectionReports" style="display: none;">
+                <div class="glass-panel p-4 mb-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h3 class="text-light fw-bold mb-0" style="font-size: 1.2rem;">Item Listings Directory</h3>
+                        <span class="badge bg-emerald-subtle text-emerald" id="reportsCountBadge">Loading...</span>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="admin-table" id="adminReportsTable">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Type</th>
+                                    <th>Title</th>
+                                    <th>Category</th>
+                                    <th>Location</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminReportsTbody">
+                                <tr><td colspan="8" class="text-center py-4">Loading reports...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Claims Section -->
+            <div id="adminSectionClaims" style="display: none;">
+                <div class="glass-panel p-4 mb-4">
+                    <h3 class="text-light fw-bold mb-3" style="font-size: 1.2rem;">Ownership Claims Queue</h3>
+                    <div class="table-responsive">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Claim ID</th>
+                                    <th>Item Target</th>
+                                    <th>Claimant</th>
+                                    <th>Contact</th>
+                                    <th>Proof Description</th>
+                                    <th>Status</th>
+                                    <th>Decision</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminClaimsTbody">
+                                <tr><td colspan="7" class="text-center py-4">Loading claims...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Smart Match & QR Radar Telemetry Section -->
+            <div id="adminSectionTelemetry" style="display: none;">
+                <div class="row g-4 mb-4">
+                    <div class="col-12 col-xl-6">
+                        <div class="glass-panel p-4 h-100">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <div>
+                                    <h3 class="text-light fw-bold mb-1" style="font-size: 1.2rem;">Algorithmic Match Radar</h3>
+                                    <p class="text-secondary small mb-0">High-confidence cross-referenced Lost vs Found reports</p>
+                                </div>
+                                <span class="badge bg-indigo-subtle text-indigo" id="telemetryMatchCount">Scanning...</span>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="admin-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Lost Item</th>
+                                            <th>Found Item</th>
+                                            <th>Confidence</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="telemetryMatchesTbody">
+                                        <tr><td colspan="4" class="text-center py-4">Scanning system pairs...</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-xl-6">
+                        <div class="glass-panel p-4 h-100">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <div>
+                                    <h3 class="text-light fw-bold mb-1" style="font-size: 1.2rem;">Asset Protection QR Registry</h3>
+                                    <p class="text-secondary small mb-0">Decentralized anonymous physical asset shields</p>
+                                </div>
+                                <span class="badge bg-emerald-subtle text-emerald" id="telemetryQrCount">Active Tags</span>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="admin-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Tag Code</th>
+                                            <th>Item Name</th>
+                                            <th>Owner</th>
+                                            <th>Pings</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="telemetryQrTbody">
+                                        <tr><td colspan="5" class="text-center py-4">Loading QR registry...</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Users Section -->
+            <div id="adminSectionUsers" style="display: none;">
+                <div class="glass-panel p-4 mb-4">
+                    <h3 class="text-light fw-bold mb-3" style="font-size: 1.2rem;">User Accounts Registry</h3>
+                    <div class="table-responsive">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>User ID</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>Role</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminUsersTbody">
+                                <tr><td colspan="7" class="text-center py-4">Loading user accounts...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+      function toggleAdminDrawer() {
+        const sidebar = document.querySelector('.admin-sidebar');
+        const overlay = document.getElementById('adminDrawerOverlay');
+        sidebar.classList.toggle('open');
+        overlay.classList.toggle('active');
+      }
+
+      function switchAdminSection(section, link) {
+        if (window.innerWidth <= 992) {
+          const sidebar = document.querySelector('.admin-sidebar');
+          const overlay = document.getElementById('adminDrawerOverlay');
+          if (sidebar) sidebar.classList.remove('open');
+          if (overlay) overlay.classList.remove('active');
+        }
+
+        document.querySelectorAll('.sidebar-nav-item').forEach(l => l.classList.remove('active'));
+        if (link) link.classList.add('active');
+
+        document.getElementById('adminSectionOverview').style.display = section === 'overview' ? 'block' : 'none';
+        document.getElementById('adminSectionReports').style.display = section === 'reports' ? 'block' : 'none';
+        document.getElementById('adminSectionClaims').style.display = section === 'claims' ? 'block' : 'none';
+        document.getElementById('adminSectionTelemetry').style.display = section === 'telemetry' ? 'block' : 'none';
+        document.getElementById('adminSectionUsers').style.display = section === 'users' ? 'block' : 'none';
+
+        const titles = {
+          overview: 'Moderation Desk Overview',
+          reports: 'Items Moderation Desk',
+          claims: 'Ownership Claims Verification',
+          telemetry: 'Smart Match Intelligence & Asset Shield Radar',
+          users: 'User Account Security & Governance'
+        };
+        document.getElementById('sectionTitle').textContent = titles[section] || 'Admin Console';
+
+        if (section === 'reports') loadReportsData();
+        if (section === 'claims') loadClaimsData();
+        if (section === 'telemetry') loadTelemetryData();
+        if (section === 'users') loadUsersData();
+      }
+
+      function loadAdminMetrics() {
+        fetch('../api/admin.php?action=dashboard')
+          .then(r => {
+            if (r.status === 403) {
+              window.location.href = '../login.php';
+              return null;
+            }
+            return r.json();
+          })
+          .then(data => {
+            if (data && data.success && data.metrics) {
+              const m = data.metrics;
+              document.getElementById('statUsers').textContent = m.total_users;
+              document.getElementById('statVerified').textContent = m.verified_items;
+              document.getElementById('statPending').textContent = m.pending_items;
+              document.getElementById('statMissing').textContent = m.active_missing;
+            }
+          })
+          .catch(() => {});
+      }
+
+      function loadReportsData() {
+        fetch('../api/items.php?action=list&limit=100&status=All')
+          .then(r => r.json())
+          .then(data => {
+            const tbody = document.getElementById('adminReportsTbody');
+            if (data.success && data.data.items) {
+              const items = data.data.items;
+              document.getElementById('reportsCountBadge').textContent = items.length + ' Reports';
+              let html = '';
+              items.forEach(item => {
+                html += `
+                  <tr>
+                    <td>#${item.id}</td>
+                    <td><span class="badge ${item.item_type === 'lost' ? 'badge-lost' : 'badge-found'}">${item.item_type}</span></td>
+                    <td class="fw-semibold text-light">${item.title}</td>
+                    <td>${item.category}</td>
+                    <td>${item.district}, ${item.division}</td>
+                    <td>${item.date_lost_or_found}</td>
+                    <td><span class="badge badge-verified">${item.status}</span></td>
+                    <td>
+                      <button class="btn btn-danger btn-sm p-1 px-2" onclick="deleteReport(${item.id})"><i class="bi bi-trash"></i></button>
+                    </td>
+                  </tr>
+                `;
+              });
+              tbody.innerHTML = html;
+            }
+          });
+      }
+
+      function deleteReport(id) {
+        if (!confirm('Permanently delete this report?')) return;
+        fetch('../api/admin.php', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ action: 'delete_item', id: id })
+        })
+        .then(r => r.json())
+        .then(data => {
+          if (data.success) {
+            alert('Item deleted.');
+            loadReportsData();
+          } else {
+            alert(data.error || 'Failed to delete item.');
+          }
+        });
+      }
+
+      function loadClaimsData() {
+        fetch('../api/admin.php?action=list_claims')
+          .then(r => r.json())
+          .then(data => {
+            const tbody = document.getElementById('adminClaimsTbody');
+            if (data.success && data.claims) {
+              if (data.claims.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="text-center py-4 text-muted">No submitted claims pending verification.</td></tr>';
+                return;
+              }
+              let html = '';
+              data.claims.forEach(c => {
+                html += `
+                  <tr>
+                    <td>#${c.id}</td>
+                    <td class="fw-semibold text-light">${c.item_title}</td>
+                    <td>${c.claimant_name}</td>
+                    <td>${c.contact_phone}</td>
+                    <td>${c.proof_description}</td>
+                    <td><span class="badge bg-amber-subtle text-amber">${c.status}</span></td>
+                    <td>
+                      <div class="d-flex gap-1">
+                        <button class="btn btn-primary btn-sm p-1 px-2" onclick="resolveClaim(${c.id}, 'approved')"><i class="bi bi-check-lg"></i></button>
+                        <button class="btn btn-danger btn-sm p-1 px-2" onclick="resolveClaim(${c.id}, 'rejected')"><i class="bi bi-x-lg"></i></button>
+                      </div>
+                    </td>
+                  </tr>
+                `;
+              });
+              tbody.innerHTML = html;
+            }
+          });
+      }
+
+      function resolveClaim(id, status) {
+        const notes = prompt(`Moderation notes for ${status}:`, 'Verified legitimate claimant proof.');
+        if (notes === null) return;
+        fetch('../api/admin.php', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ action: 'resolve_claim', claim_id: id, status: status, admin_notes: notes })
+        })
+        .then(r => r.json())
+        .then(data => {
+          if (data.success) {
+            alert('Claim decision recorded.');
+            loadClaimsData();
+          } else {
+            alert(data.error || 'Failed.');
+          }
+        });
+      }
+
+      function loadUsersData() {
+        fetch('../api/admin.php?action=list_users')
+          .then(r => r.json())
+          .then(data => {
+            const tbody = document.getElementById('adminUsersTbody');
+            if (data.success && data.users) {
+              let html = '';
+              data.users.forEach(u => {
+                html += `
+                  <tr>
+                    <td>#${u.id}</td>
+                    <td class="fw-semibold text-light">${u.first_name} ${u.last_name}</td>
+                    <td>${u.email}</td>
+                    <td>${u.phone}</td>
+                    <td><span class="badge bg-indigo-subtle text-indigo">${u.role}</span></td>
+                    <td><span class="badge ${u.status === 'active' ? 'bg-emerald-subtle text-emerald' : 'bg-rose-subtle text-rose'}">${u.status}</span></td>
+                    <td>
+                      ${u.status === 'active' 
+                        ? `<button class="btn btn-danger btn-sm py-1 px-2" onclick="toggleUser(${u.id}, 'suspended')">Suspend</button>`
+                        : `<button class="btn btn-primary btn-sm py-1 px-2" onclick="toggleUser(${u.id}, 'active')">Activate</button>`
+                      }
+                    </td>
+                  </tr>
+                `;
+              });
+              tbody.innerHTML = html;
+            }
+          });
+      }
+
+      function toggleUser(id, status) {
+        fetch('../api/admin.php', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ action: 'update_user_status', user_id: id, status: status })
+        })
+        .then(r => r.json())
+        .then(data => {
+          if (data.success) {
+            loadUsersData();
+          }
+        });
+      }
+
+      function loadTelemetryData() {
+        fetch('../api/match.php?action=system_pairs')
+          .then(r => r.json())
+          .then(data => {
+            const tbody = document.getElementById('telemetryMatchesTbody');
+            const countBadge = document.getElementById('telemetryMatchCount');
+            if (data.success && data.data && data.data.pairs) {
+              const pairs = data.data.pairs;
+              countBadge.textContent = `${pairs.length} Detected Pairs`;
+              if (pairs.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" class="text-center py-4 text-muted">No high-confidence match pairs detected yet.</td></tr>';
+              } else {
+                tbody.innerHTML = pairs.slice(0, 10).map(p => `
+                  <tr>
+                    <td>
+                      <div class="fw-semibold text-light">${p.lost_item.title}</div>
+                      <small class="text-secondary">${p.lost_item.division || 'Unknown'}</small>
+                    </td>
+                    <td>
+                      <div class="fw-semibold text-light">${p.found_item.title}</div>
+                      <small class="text-secondary">${p.found_item.division || 'Unknown'}</small>
+                    </td>
+                    <td>
+                      <span class="badge ${p.confidence_score >= 80 ? 'bg-emerald-subtle text-emerald' : 'bg-indigo-subtle text-indigo'} fw-bold">
+                        ${p.confidence_score}%
+                      </span>
+                    </td>
+                    <td>
+                      <a href="../recentposts.html?q=${encodeURIComponent(p.lost_item.title)}" target="_blank" class="btn btn-secondary btn-sm p-1 px-2" title="Inspect Match">
+                        <i class="bi bi-box-arrow-up-right"></i>
+                      </a>
+                    </td>
+                  </tr>
+                `).join('');
+              }
+            } else {
+              tbody.innerHTML = '<tr><td colspan="4" class="text-center py-3 text-muted">Smart Match service initialized.</td></tr>';
+            }
+          })
+          .catch(() => {
+            document.getElementById('telemetryMatchesTbody').innerHTML = '<tr><td colspan="4" class="text-center py-3 text-danger">Failed to scan match radar.</td></tr>';
+          });
+
+        fetch('../api/qr_tag.php?action=list')
+          .then(r => r.json())
+          .then(data => {
+            const tbody = document.getElementById('telemetryQrTbody');
+            const countBadge = document.getElementById('telemetryQrCount');
+            if (data.success && data.data && data.data.tags) {
+              const tags = data.data.tags;
+              countBadge.textContent = `${tags.length} Active Tags`;
+              if (tags.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="text-center py-4 text-muted">No asset tags registered yet.</td></tr>';
+              } else {
+                tbody.innerHTML = tags.slice(0, 10).map(t => `
+                  <tr>
+                    <td><code class="text-emerald fw-bold">${t.tag_code}</code></td>
+                    <td class="text-light fw-medium">${t.item_name}</td>
+                    <td class="text-secondary small">User #${t.user_id}</td>
+                    <td><span class="badge bg-secondary-subtle text-light">${t.ping_count || 0}</span></td>
+                    <td>
+                      <span class="badge ${t.is_active ? 'bg-emerald-subtle text-emerald' : 'bg-rose-subtle text-rose'}">
+                        ${t.is_active ? 'ACTIVE' : 'FLAGGED'}
+                      </span>
+                    </td>
+                  </tr>
+                `).join('');
+              }
+            } else {
+              tbody.innerHTML = '<tr><td colspan="5" class="text-center py-3 text-muted">QR Registry operational.</td></tr>';
+            }
+          })
+          .catch(() => {
+            document.getElementById('telemetryQrTbody').innerHTML = '<tr><td colspan="5" class="text-center py-3 text-danger">Failed to load QR registry.</td></tr>';
+          });
+      }
+
+      // Initial Load
+      loadAdminMetrics();
+    </script>
+    <script src="../components/command-palette.js"></script>
 </body>
 </html>
-

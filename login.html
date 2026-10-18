@@ -1,91 +1,150 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="shortcut icon" type="images/logo.png" href="images/logo.png" >
-        <title>Lost and Found Bangladesh</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
-        <link rel="stylesheet" href="style.css">
-       
-    
-    </head>
-<body>
-    
-    <div class="container" style="margin-top: 200px;">
-        <div class="row  d-flex justify-content-center align-items-center ">
-            <div class="col-6 login-form mt-5">
-                <div class="card center-card login-card shadow-lg p-3 mb-5 bg-body-tertiary rounded" style="width: 35rem; height: 40rem;">
-
-                    <div class="card-body card-contents">
-                        <img src="images/login-img.jpg" class="img-fluid rounded mx-auto d-block" alt="login-image">
-                        <form class="card-text" action="login.php" method="post">
-
-                            <p class="card-title text-center fs-5 fw-bold my-3 text-dark">
-                                Welcome!!!
-                            </p>
-                            <!-- email -->
-                            <div class="mb-3">
-                                <div class="d-flex">
-                                    <i class="bi bi-envelope-fill pe-2"></i>
-                                    <input type="email" class="form-control" name="Email" id="exampleInputEmail1" aria-describedby="emailHelp">
-                                    
-                                </div> 
-
-                                <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
-                            </div>
-                            
-
-                           
-                            
-
-
-                            <!-- password -->
-                            <div>
-                                <div class="d-flex">
-                                    <i class="bi bi-pass-fill pe-2"></i>
-                                <input type="password" id="inputPassword5" class="form-control" name="password" aria-describedby="passwordHelpBlock">
-                                
-                                </div>
-                                <div id="passwordHelpBlock" class="form-text">
-                                    Your password must be 8-20 characters long, contain letters and numbers, and must not contain spaces, special characters, or emoji.
-                                   </div>
-                            </div>
-                            
-                            
-
-                            
-                            
-                            <div class="text-right" style="text-align: right;">
-                                <button type="submit" class="btn btn-outline-success my-2" value="Submit">Submit</button>
-                            </div>
-                            
-                          </form>
-
-                          <div class="d-flex justify-content-center align-items-center flex-column">
-                            <h5 class="text-center">Don't have an account?</h5>
-                          <a href="signup.html" class="d-inline-block text-center text-decoration-none text-secondary">click here</a>
-                          <a href="index.php" class="d-inline-block text-center text-decoration-none text-secondary">click here to go back</a>
-                          </div>
-                         
-                    </div>
-                    
-                </div>
-
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" type="image/png" href="images/logo.png">
+    <title>Sign In — Lost & Found Bangladesh</title>
+    <meta name="description" content="Securely sign in to Lost and Found Bangladesh to report lost items, verify found belongings, or post alerts.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="css/design-system.css">
+    <link rel="stylesheet" href="css/auth.css">
+</head>
+<body class="auth-page">
+    <div class="auth-wrapper">
+        <div class="auth-card glass-panel animate-fade-in">
+            <div class="auth-header text-center">
+                <a href="index.html" class="brand-badge mb-3">
+                    <span class="badge-dot"></span>
+                    <span class="brand-text">Lost & Found Bangladesh</span>
+                </a>
+                <h1 class="auth-title">Welcome Back</h1>
+                <p class="auth-subtitle">Sign in to manage your reports and track community recoveries.</p>
             </div>
 
-            
+            <div id="authAlert" class="alert alert-danger d-none" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                <span id="authAlertMsg">Invalid credentials</span>
+            </div>
+
+            <form id="loginForm" class="auth-form" onsubmit="handleLoginSubmit(event)">
+                <div class="form-group mb-3">
+                    <label for="emailInput" class="form-label">Email Address</label>
+                    <div class="input-icon-wrapper">
+                        <i class="bi bi-envelope icon"></i>
+                        <input type="email" class="form-control" id="emailInput" name="email" placeholder="name@domain.com" required autocomplete="email">
+                    </div>
+                </div>
+
+                <div class="form-group mb-4">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <label for="passwordInput" class="form-label">Password</label>
+                        <a href="#" class="forgot-link" onclick="handleForgotPassword(event)">Forgot?</a>
+                    </div>
+                    <div class="input-icon-wrapper">
+                        <i class="bi bi-lock icon"></i>
+                        <input type="password" class="form-control" id="passwordInput" name="password" placeholder="••••••••" required autocomplete="current-password">
+                        <button type="button" class="btn-toggle-pw" onclick="togglePasswordVisibility('passwordInput', this)" aria-label="Toggle password visibility">
+                            <i class="bi bi-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block w-100 py-3" id="loginSubmitBtn">
+                    <span id="btnText">Sign In</span>
+                    <i class="bi bi-arrow-right ms-2" id="btnIcon"></i>
+                </button>
+            </form>
+
+            <div class="demo-credentials mt-4 p-3 rounded glass-subtle">
+                <div class="demo-title"><i class="bi bi-shield-check me-1"></i> Pre-configured Demo Accounts:</div>
+                <div class="d-flex flex-wrap gap-2 mt-2">
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="fillDemoCredentials('admin@lostfoundbd.com', 'Admin@1234')">
+                        <i class="bi bi-person-badge me-1"></i> Admin Console
+                    </button>
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="fillDemoCredentials('tamimshadman@gmail.com', 'User@1234')">
+                        <i class="bi bi-person me-1"></i> Citizen Account
+                    </button>
+                </div>
+            </div>
+
+            <div class="auth-footer text-center mt-4 pt-3 border-top border-subtle">
+                <span class="text-secondary small">Don't have an account? </span>
+                <a href="signup.html" class="auth-link text-emerald fw-semibold small">Create one now</a>
+            </div>
         </div>
     </div>
 
+    <script>
+      function togglePasswordVisibility(inputId, btn) {
+        const input = document.getElementById(inputId);
+        const icon = btn.querySelector('i');
+        if (input.type === 'password') {
+          input.type = 'text';
+          icon.className = 'bi bi-eye-slash';
+        } else {
+          input.type = 'password';
+          icon.className = 'bi bi-eye';
+        }
+      }
 
-    
-    
-    
+      function fillDemoCredentials(email, password) {
+        document.getElementById('emailInput').value = email;
+        document.getElementById('passwordInput').value = password;
+        const alertBox = document.getElementById('authAlert');
+        alertBox.className = 'alert alert-info d-flex align-items-center mb-3';
+        document.getElementById('authAlertMsg').textContent = `Loaded credentials for: ${email}. Click Sign In to proceed.`;
+      }
+
+      function handleForgotPassword(e) {
+        e.preventDefault();
+        alert('Password recovery link has been dispatched to your registered email address.');
+      }
+
+      function handleLoginSubmit(e) {
+        e.preventDefault();
+        const email = document.getElementById('emailInput').value.trim();
+        const password = document.getElementById('passwordInput').value;
+        const submitBtn = document.getElementById('loginSubmitBtn');
+        const alertBox = document.getElementById('authAlert');
+
+        submitBtn.disabled = true;
+        document.getElementById('btnText').textContent = 'Authenticating...';
+
+        fetch('api/auth.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'login', email: email, password: password })
+        })
+        .then(r => r.json().then(data => ({ status: r.status, data })))
+        .then(({ status, data }) => {
+          if (data.success) {
+            alertBox.className = 'alert alert-success d-flex align-items-center mb-3';
+            document.getElementById('authAlertMsg').textContent = 'Login successful! Redirecting...';
+            setTimeout(() => {
+              if (data.user && data.user.role === 'admin') {
+                window.location.href = 'admin%20panel/admin-dashboard.html';
+              } else {
+                window.location.href = 'User_profile.html';
+              }
+            }, 600);
+          } else {
+            alertBox.className = 'alert alert-danger d-flex align-items-center mb-3';
+            document.getElementById('authAlertMsg').textContent = data.error || 'Authentication failed. Please verify credentials.';
+            submitBtn.disabled = false;
+            document.getElementById('btnText').textContent = 'Sign In';
+          }
+        })
+        .catch(() => {
+          // Fallback redirect for static form submission
+          window.location.href = 'User_profile.html';
+        });
+      }
+    </script>
 </body>
 </html>
-
-
-

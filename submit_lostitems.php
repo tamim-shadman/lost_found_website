@@ -1,215 +1,265 @@
+<?php
+declare(strict_types=1);
+
+require_once __DIR__ . '/src/autoload.php';
+
+use App\Services\AuthService;
+use App\Utils\Security;
+
+Security::initSession();
+$auth = new AuthService();
+$currentUser = $auth->getCurrentUser();
+
+$defaultType = isset($_GET['type']) && in_array($_GET['type'], ['lost', 'found']) ? $_GET['type'] : 'lost';
+?>
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" type="images/logo.png" href="images/logo.png" >
-    <title>Lost and Found Bangladesh</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
-    
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="User_profile.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-  
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
-  
-    <script src="https://kit.fontawesome.com/d39d7cbf13.js" crossorigin="anonymous"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
-    
-     
-  
-  </head>
+    <link rel="shortcut icon" type="image/png" href="images/logo.png">
+    <title>Report Lost or Found Belongings — Lost & Found BD</title>
+    <meta name="description" content="Report a lost item or submit details about a found belonging in Bangladesh. Fast, secure, and coordinated.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="css/design-system.css">
+    <style>
+      .report-page-header {
+        padding-top: 130px;
+        padding-bottom: 30px;
+      }
+      .type-selector-tab {
+        flex: 1;
+        padding: 1rem;
+        text-align: center;
+        background: var(--bg-surface);
+        border: 2px solid var(--border-subtle);
+        border-radius: var(--radius-lg);
+        cursor: pointer;
+        transition: all var(--transition-smooth);
+        font-weight: 700;
+        color: var(--text-secondary);
+      }
+      .type-selector-tab.active-lost {
+        background: rgba(244, 63, 94, 0.12);
+        border-color: var(--color-rose-500);
+        color: var(--color-rose-400);
+        box-shadow: 0 4px 18px var(--color-rose-glow);
+      }
+      .type-selector-tab.active-found {
+        background: rgba(16, 185, 129, 0.12);
+        border-color: var(--color-emerald-500);
+        color: var(--color-emerald-400);
+        box-shadow: 0 4px 18px var(--color-emerald-glow);
+      }
+      .upload-dropzone {
+        border: 2px dashed var(--border-medium);
+        border-radius: var(--radius-lg);
+        padding: 2rem 1.5rem;
+        text-align: center;
+        background: rgba(255, 255, 255, 0.02);
+        cursor: pointer;
+        transition: all var(--transition-fast);
+      }
+      .upload-dropzone:hover {
+        border-color: var(--color-emerald-500);
+        background: rgba(16, 185, 129, 0.04);
+      }
+      .preview-image-box {
+        width: 100%;
+        max-height: 220px;
+        border-radius: var(--radius-md);
+        object-fit: cover;
+        display: none;
+      }
+    </style>
+</head>
 <body>
-    <?php
-    session_start();
+    <?php include __DIR__ . '/components/navbar.php'; ?>
 
-    // Check if the user is logged in.
-    if (!isset($_SESSION['user_email'])) {
-        // Redirect to the login page.
-        header('Location: login.php');
-        exit();
-    }
-
-    // Allow access to the page.
-    ?>
-
-
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-black fixed-top">
-      <div class="container">
-        <a class="navbar-brand  text-light pe-lg-4" href="index.php">
-          <h3 class="fw-light logo" >Lost and found Bangladesh</h3>
-          <h6 class="fw-lighter ps-md-5 sublogo">Lost Moments, Found Stories</h6>
-
-      
-          </a>
-
-        <!-- Toggle button -->
-        <button class="navbar-toggler shadow-none border-0 " type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon" ></span>
-      </button>
-      <!-- sidebar -->
-
-        <div class="sidebar offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
-
-
-          <!-- sidebar header -->
-          <div class="offcanvas-header text-dark border-bottom">
-            <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Lost and Found Bangladesh</h5>
-            <button type="button" class="btn-close btn-close-dark" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-          </div>
-
-          <!-- sidebar body -->
-          <div class="offcanvas-body bg-black">
-            <ul class="navbar-nav justify-content-end flex-grow-1 pe-lg-1 mt-1">
-              <li class="nav-item pb-5">
-                  <div class="dropdown d-flex align-items-center justify-content-center pt-1 pe-3">
-                      <a href="#" class="dropdown-toggle text-decoration-none text-light" id="registrationDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                          Your Items
-                      </a>
-                      <ul class="dropdown-menu bg-secondary-subtle" aria-labelledby="registrationDropdown">
-                        <li class="pb-2"><a class="dropdown-item fw-bold" href="submit_lostitems.php">Missing items</a></li>
-                        <li><a class="dropdown-item fw-bold" href="missing_person.php">Missing person</a></li>
-                      </ul>
-                  </div>
-                  
-              </li>
-              <li class="nav-item mx-2">
-                  <div class="dropdown d-flex align-items-center justify-content-center ">
-                      <button class="btn btn-outline-secondary btn-md dropdown-toggle text-light" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Registration
-                      </button>
-                      <ul class="dropdown-menu bg-secondary-subtle text-white">
-                        <li><a class="dropdown-item fw-bold" href="login.html">Login</a></li>
-                        <li><a class="dropdown-item fw-bold" href="signup.html">Sign Up</a></li>                          
-                       
-                      </ul>
-                    </div>
-              </li>
-              <li class="nav-item mx-2 mx-lg-1 pb-5">
-                  <a class="nav-link text-light recent-post " href="recentposts.php">View recent Posts</a>
-              </li>
-
-              <li class="nav-item mx-2 mx-lg-1 pb-5">
-                <a class="nav-link text-light recent-post " href="User_profile.html">Profile</a>
-            </li>
-              
-            </ul>
-            <!-- registration -->
-           
-
-
-
-
-            <div class="d-lg-flex flex-column pt-1">
-              <form class="d-flex justify-content-center align-items-center mt-1" role="search">
-              <input class="form-control form-control-sm me-2" type="search" placeholder="Search" aria-label="Search" style="width: 150px; height: 30px;">
-              <button class="btn btn-outline-success btn-sm" type="submit" style="height: 30px;">Search</button>
-              </form>
-          </div>
-          
-          </div>
+    <main class="container mx-auto px-3" style="max-width: 860px;">
+        <div class="report-page-header text-center">
+            <span class="brand-badge mb-2">Publish An Official Alert</span>
+            <h1 class="text-light fw-bold mb-2" style="font-size: 2.2rem;">Lost & Found Report Wizard</h1>
+            <p class="text-secondary" style="font-size: 1rem;">Complete the form below with precise details to trigger instant community search matching.</p>
         </div>
-      </div>
-    </nav>
-      <main class="pt-5">
-        <div class="container">
-            <div class="row  d-flex justify-content-center align-items-center ">
-                <div class="col-6 login-form mt-5">
-                    <div class="card center-card shadow-lg p-3 mb-5 mt-5 bg-body-tertiary rounded" style="width: 35rem; height: auto;">
-        
-                        <div class="card-body card-contents">
 
-                              <!-- submit lost item -->
-                            <form class="card-text" action="lost_item.php" method="post" enctype="multipart/form-data">
-                                <div class="col-md-12">
-                                    <p class="card-title text-center fs-5 fw-bold my-3 text-dark">
-                                        Reclaim Your Lost
-                                </div>
-        
-                                <div class="col-md-12">
-                                    <label for="itemName" class="form-label">Lost Item</label>
-                                    <input type="text" class="form-control" id="itemName" name="item_name" placeholder="Enter item name">
-                                  </div>
-                                  
-                                
-                                <div class="col-12 mt-3">
-                                    <label for="inputState" class="form-label">Specific Address</label>
-                                    <select id="inputState" name="address" class="form-select">
-                                      <option selected>Airport</option>
-                                      <option>Bus-stand</option>
-                                      <option>Residential Area</option>
-                                      <option>Hotel</option>
-                                      <option>Restaurant</option>
-                                    </select>
-                                </div>
-                                <div class="col-12 mt-3">
-                                  <label for="inputAddress2" class="form-label"> Explain more about the surroundings</label>
-                                  <input type="text" class="form-control" id="inputAddress2" name="address2" placeholder="Apartment, holding number, studio, or floor">
-                                </div>
-                                <div class="row my-1">
-                                    <div class="col-md-4">
-                                        <label for="inputCity" class="form-label">City</label>
-                                        <input type="text" class="form-control" id="inputCity" name="city">
-                                      </div>
-                                      <div class="col-md-4">
-                                        <label for="inputState" class="form-label">State</label>
-                                        <select id="inputState" name="state" class="form-select">
-                                          <option selected>Dhaka</option>
-                                          <option>Sylhet</option>
-                                          <option>Chattogram</option>
-                                          <option>Cumilla</option>
-                                          <option>Cox's bazar</option>
-                                        </select>
-                                      </div>
-                                     
-
-                                </div>
-                                <h6 class="text-muted mt-3">Add picture(s)..</h6>
-                                <div class="input-group my-3">
-                                    <input type="file" class="form-control" id="inputGroupFile02" name="image">
-                                  
-                                  </div>
-                                
-                                <div class="col-12">
-                                  <button type="submit" class="btn btn-outline-success" name="submit">Submit</button>
-                                </div>
-                                <!--  will add google map here -->
-                              </form>
-        
-                              
-                             
-                        </div>
-                        
-                    </div>
-        
+        <div class="glass-panel p-4 p-md-5 mb-5 animate-slide-up">
+            <!-- Mode Switch Tabs -->
+            <div class="d-flex gap-3 mb-4">
+                <div class="type-selector-tab <?= $defaultType === 'lost' ? 'active-lost' : '' ?>" id="tabLost" onclick="switchType('lost')">
+                    <i class="bi bi-search fs-4 d-block mb-1"></i>
+                    <span>I Lost Something</span>
+                    <small class="d-block fw-normal text-muted" style="font-size: 0.75rem;">Seek help finding your property</small>
                 </div>
-        
-                
+                <div class="type-selector-tab <?= $defaultType === 'found' ? 'active-found' : '' ?>" id="tabFound" onclick="switchType('found')">
+                    <i class="bi bi-box-seam fs-4 d-block mb-1"></i>
+                    <span>I Found Something</span>
+                    <small class="d-block fw-normal text-muted" style="font-size: 0.75rem;">Help return items to owner</small>
+                </div>
             </div>
+
+            <!-- Report Submission Form -->
+            <form action="lost_item.php" method="POST" enctype="multipart/form-data" id="itemReportForm">
+                <input type="hidden" name="item_type" id="formItemType" value="<?= htmlspecialchars($defaultType, ENT_QUOTES, 'UTF-8') ?>">
+
+                <!-- Item Title & Category -->
+                <div class="row g-3 mb-3">
+                    <div class="col-md-8">
+                        <label for="itemTitleInput" class="form-label">Item Name / Title <span class="text-rose">*</span></label>
+                        <input type="text" class="form-control" id="itemTitleInput" name="item_name" placeholder="e.g. Dell XPS 15, Leather Wallet, Passport" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="itemCategorySelect" class="form-label">Category <span class="text-rose">*</span></label>
+                        <select class="form-select" id="itemCategorySelect" name="category" required>
+                            <option value="Electronics" selected>Electronics & Gadgets</option>
+                            <option value="Wallet/Cards">Wallet, Cards & Money</option>
+                            <option value="Documents">ID, Passport & Documents</option>
+                            <option value="Bags">Bags, Backpacks & Luggage</option>
+                            <option value="Jewelry">Jewelry & Watches</option>
+                            <option value="Pets">Pets & Animals</option>
+                            <option value="Keys">Keys & Access Cards</option>
+                            <option value="Vehicles">Bicycle, Motorbike or Car</option>
+                            <option value="Other">Other Miscellaneous</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Division, District & Date -->
+                <div class="row g-3 mb-3">
+                    <div class="col-md-4">
+                        <label for="divisionSelect" class="form-label">Division (Bangladesh) <span class="text-rose">*</span></label>
+                        <select class="form-select" id="divisionSelect" name="state" required onchange="updateDistrictOptions(this.value)">
+                            <option value="Dhaka" selected>Dhaka</option>
+                            <option value="Chattogram">Chattogram</option>
+                            <option value="Sylhet">Sylhet</option>
+                            <option value="Rajshahi">Rajshahi</option>
+                            <option value="Khulna">Khulna</option>
+                            <option value="Barishal">Barishal</option>
+                            <option value="Rangpur">Rangpur</option>
+                            <option value="Mymensingh">Mymensingh</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="districtSelect" class="form-label">District / City <span class="text-rose">*</span></label>
+                        <input type="text" class="form-control" id="districtSelect" name="city" placeholder="e.g. Mirpur, Gulshan, Agrabad" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="incidentDateInput" class="form-label">Date Lost or Found <span class="text-rose">*</span></label>
+                        <input type="date" class="form-control" id="incidentDateInput" name="date" value="<?= date('Y-m-d') ?>" required>
+                    </div>
+                </div>
+
+                <!-- Specific Location & Surroundings -->
+                <div class="mb-3">
+                    <label for="specificAddressInput" class="form-label">Specific Location / Landmark <span class="text-rose">*</span></label>
+                    <input type="text" class="form-control" id="specificAddressInput" name="address" placeholder="e.g. Hazrat Shahjalal International Airport, Terminal 2 Waiting Lounge" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="surroundingsInput" class="form-label">Detailed Description & Distinctive Markers</label>
+                    <textarea class="form-control" id="surroundingsInput" name="address2" rows="3" placeholder="Provide scratches, stickers, serial prefixes, case color, or surrounding circumstances..."></textarea>
+                </div>
+
+                <!-- Optional Reward (for lost items) -->
+                <div class="mb-3" id="rewardSection">
+                    <label for="rewardInput" class="form-label">Community Reward Offer (Optional BDT)</label>
+                    <div class="input-icon-wrapper">
+                        <i class="bi bi-gift icon text-amber"></i>
+                        <input type="number" class="form-control" id="rewardInput" name="reward" placeholder="e.g. 2000" min="0" step="100">
+                    </div>
+                    <small class="form-text text-muted">Offering a reward motivates citizen responders and courier returns.</small>
+                </div>
+
+                <!-- Picture Upload with Drag & Drop and Instant Live Preview -->
+                <div class="mb-4">
+                    <label class="form-label">Attach Item Photo (Recommended)</label>
+                    <div class="upload-dropzone" onclick="document.getElementById('itemPhotoInput').click()">
+                        <i class="bi bi-cloud-arrow-up text-emerald fs-1 mb-2 d-block"></i>
+                        <div class="fw-semibold text-light mb-1">Click to select or drag photo here</div>
+                        <small class="text-muted d-block mb-3">Supports JPG, PNG, WEBP up to 8MB</small>
+                        <img id="imagePreviewElement" class="preview-image-box mx-auto" alt="Item Preview">
+                    </div>
+                    <input type="file" id="itemPhotoInput" name="image" accept="image/*" style="display: none;" onchange="previewSelectedImage(this)">
+                </div>
+
+                <!-- Contact Details -->
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <label for="contactPhoneInput" class="form-label">Contact Phone Number <span class="text-rose">*</span></label>
+                        <div class="input-icon-wrapper">
+                            <i class="bi bi-telephone icon"></i>
+                            <input type="tel" class="form-control" id="contactPhoneInput" name="phone" value="<?= htmlspecialchars($currentUser['phone'] ?? '', ENT_QUOTES, 'UTF-8') ?>" placeholder="017XXXXXXXX" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="contactEmailInput" class="form-label">Contact Email Address <span class="text-rose">*</span></label>
+                        <div class="input-icon-wrapper">
+                            <i class="bi bi-envelope icon"></i>
+                            <input type="email" class="form-control" id="contactEmailInput" name="email" value="<?= htmlspecialchars($currentUser['email'] ?? '', ENT_QUOTES, 'UTF-8') ?>" placeholder="user@domain.com" required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-primary btn-block w-100 py-3" id="submitReportBtn">
+                    <i class="bi bi-send-fill me-2"></i>
+                    <span id="submitBtnText">Publish Report Alert</span>
+                </button>
+            </form>
         </div>
-    
-      </main>
-      
+    </main>
 
+    <?php include __DIR__ . '/components/footer.php'; ?>
 
-    
+    <script>
+        function switchType(type) {
+            const tabLost = document.getElementById('tabLost');
+            const tabFound = document.getElementById('tabFound');
+            const hiddenType = document.getElementById('formItemType');
+            const form = document.getElementById('itemReportForm');
+            const rewardSection = document.getElementById('rewardSection');
+            const submitBtn = document.getElementById('submitReportBtn');
+            const submitBtnText = document.getElementById('submitBtnText');
 
+            hiddenType.value = type;
 
+            if (type === 'lost') {
+                tabLost.className = 'type-selector-tab active-lost';
+                tabFound.className = 'type-selector-tab';
+                form.action = 'lost_item.php';
+                rewardSection.style.display = 'block';
+                submitBtn.className = 'btn btn-danger btn-block w-100 py-3';
+                submitBtnText.textContent = 'Publish Lost Item Alert';
+            } else {
+                tabFound.className = 'type-selector-tab active-found';
+                tabLost.className = 'type-selector-tab';
+                form.action = 'found_item.php';
+                rewardSection.style.display = 'none';
+                submitBtn.className = 'btn btn-primary btn-block w-100 py-3';
+                submitBtnText.textContent = 'Submit Found Item Notice';
+            }
+        }
 
+        // Initialize mode based on defaultType
+        <?php if ($defaultType === 'found'): ?>
+            switchType('found');
+        <?php endif; ?>
 
-
-
-
-
-
-
-
-
+        function previewSelectedImage(input) {
+            const preview = document.getElementById('imagePreviewElement');
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
 </body>
 </html>

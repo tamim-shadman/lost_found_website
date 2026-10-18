@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" type="image/png" href="images/logo.png">
+    <title>Lost & Found Bangladesh — Nationwide Community Recovery Platform</title>
+    <meta name="description" content="Bangladesh's premier national community network for lost belongings, found valuables, and missing persons. Fast, free, and secure.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="css/design-system.css">
+    <style>
+      .hero-section {
+        padding-top: 130px;
+        padding-bottom: 70px;
+        position: relative;
+      }
+      .stat-counter-card {
+        padding: 1.5rem;
+        text-align: center;
+        border-radius: var(--radius-lg);
+        background: var(--bg-surface-glass);
+        border: 1px solid var(--border-subtle);
+      }
+      .stat-counter-value {
+        font-size: 2.25rem;
+        font-weight: 800;
+        letter-spacing: -0.03em;
+        line-height: 1;
+        margin-bottom: 0.35rem;
+      }
+      .filter-pill-btn {
+        background: var(--bg-surface);
+        border: 1px solid var(--border-subtle);
+        color: var(--text-secondary);
+        padding: 0.45rem 1.15rem;
+        border-radius: var(--radius-pill);
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all var(--transition-fast);
+      }
+      .filter-pill-btn:hover, .filter-pill-btn.active {
+        background: var(--color-emerald-500);
+        color: #ffffff;
+        border-color: var(--color-emerald-400);
+        box-shadow: 0 4px 12px var(--color-emerald-glow);
+      }
+      .missing-alert-card {
+        background: linear-gradient(145deg, rgba(239, 68, 68, 0.08), rgba(14, 18, 26, 0.85));
+        border: 1px solid rgba(239, 68, 68, 0.25);
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+        transition: transform var(--transition-smooth);
+      }
+      .missing-alert-card:hover {
+        transform: translateY(-4px);
+        border-color: rgba(239, 68, 68, 0.45);
+      }
+    </style>
+</head>
+<body>
+    <!-- Ambient Floating Orbs & Atmospheric Mesh -->
+    <div class="ambient-mesh-canvas" aria-hidden="true">
+      <div class="ambient-orb ambient-orb-emerald"></div>
+      <div class="ambient-orb ambient-orb-indigo"></div>
+      <div class="ambient-orb ambient-orb-rose"></div>
+    </div>
+
+    <!-- Emergency Amber Broadcast Ticker -->
+    <div class="py-1 px-3 bg-danger bg-opacity-25 border-bottom border-danger text-center small text-light d-flex align-items-center justify-content-center gap-2">
+      <span class="badge badge-missing" style="font-size: 0.7rem;"><i class="bi bi-broadcast me-1"></i> AMBER ALERT</span>
+      <span><strong>Urgent Missing Report:</strong> Mohammad Abdul Rahim (68) last seen Mirpur-10, Dhaka.</span>
+      <a href="missing_person.html" class="text-rose text-decoration-none fw-bold ms-2" style="color: var(--color-rose-400);">View Alert / Sighting <i class="bi bi-arrow-right"></i></a>
+    </div>
+
+    <!-- Top Navigation Bar -->
+    <header class="glass-navbar">
+      <div class="container d-flex justify-content-between align-items-center py-2 px-3 mx-auto" style="max-width: 1320px;">
+        <!-- Logo & Brand -->
+        <a href="index.html" class="navbar-brand d-flex align-items-center gap-2 text-decoration-none">
+          <img src="images/logo.png" alt="Lost and Found Bangladesh Logo" width="38" height="38" class="rounded-circle border border-subtle">
+          <div>
+            <div class="brand-title fw-bold text-light lh-1" style="font-size: 1.15rem; letter-spacing: -0.02em;">Lost & Found <span style="color: var(--color-emerald-400);">BD</span></div>
+            <small class="text-muted d-none d-sm-block" style="font-size: 0.725rem;">National Recovery & Safety Network</small>
+          </div>
+        </a>
+
+        <!-- Desktop Navigation Links -->
+        <nav class="d-none d-lg-flex align-items-center gap-4">
+          <a href="recentposts.html" class="nav-link text-secondary fw-medium hover-light">Browse Alerts</a>
+          <a href="submit_lostitems.html" class="nav-link text-secondary fw-medium hover-light">Report Item</a>
+          <a href="missing_person.html" class="nav-link text-secondary fw-medium hover-light">Missing Persons</a>
+          <a href="chatbot.html" class="nav-link text-secondary fw-medium hover-light">
+            <i class="bi bi-chat-dots me-1 text-emerald" style="color: var(--color-emerald-400);"></i>AI Assistant
+          </a>
+          <a href="payment.html" class="nav-link text-secondary fw-medium hover-light">Support Platform</a>
+        </nav>
+
+        <!-- Quick Search Trigger, Theme Toggle & User Controls -->
+        <div class="d-flex align-items-center gap-2">
+          <button type="button" class="btn btn-ghost btn-sm d-flex align-items-center gap-2 text-muted px-3 py-1 rounded-pill border border-subtle glass-subtle" onclick="openCmdPalette()" title="Press Ctrl+K to search">
+            <i class="bi bi-search"></i>
+            <span class="d-none d-md-inline" style="font-size: 0.85rem;">Omnibar...</span>
+            <kbd class="d-none d-md-inline-block px-1 py-0 rounded text-muted bg-dark border border-subtle" style="font-size: 0.7rem;">Ctrl K</kbd>
+          </button>
+
+          <button type="button" class="btn btn-ghost btn-sm text-light p-2" onclick="toggleTheme()" aria-label="Toggle Theme" title="Toggle Dark/Light Mode">
+            <i class="bi bi-circle-half" id="themeToggleIcon"></i>
+          </button>
+
+          <a href="login.html" class="btn btn-ghost btn-sm">Sign In</a>
+          <a href="signup.html" class="btn btn-primary btn-sm btn-pill">Get Started</a>
+
+          <!-- Mobile Hamburger Toggle -->
+          <button class="btn btn-ghost btn-sm d-lg-none text-light" type="button" onclick="toggleMobileMenu()" aria-label="Toggle Navigation">
+            <i class="bi bi-list fs-4"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Mobile Dropdown Navigation -->
+      <div class="mobile-nav-panel glass-panel border-top border-subtle p-3 d-lg-none" id="mobileNavMenu" style="display: none;">
+        <div class="d-flex flex-column gap-2">
+          <a href="recentposts.html" class="btn btn-ghost justify-content-start text-light"><i class="bi bi-compass me-2"></i> Browse Alerts</a>
+          <a href="submit_lostitems.html" class="btn btn-ghost justify-content-start text-light"><i class="bi bi-plus-circle me-2"></i> Report Lost/Found</a>
+          <a href="missing_person.html" class="btn btn-ghost justify-content-start text-light"><i class="bi bi-people me-2"></i> Missing Persons</a>
+          <a href="chatbot.html" class="btn btn-ghost justify-content-start text-light"><i class="bi bi-chat-dots me-2 text-emerald"></i> AI Assistant</a>
+          <a href="payment.html" class="btn btn-ghost justify-content-start text-light"><i class="bi bi-credit-card me-2"></i> Support Us</a>
+          <a href="User_profile.html" class="btn btn-ghost justify-content-start text-light"><i class="bi bi-shield-check me-2 text-emerald"></i> QR Asset Shield</a>
+          <div class="d-flex gap-2 mt-2">
+            <a href="login.html" class="btn btn-secondary flex-grow-1">Sign In</a>
+            <a href="signup.html" class="btn btn-primary flex-grow-1">Sign Up</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Container -->
+    <main>
+      <!-- Hero Section with National Recovery Radar -->
+      <section class="hero-section text-center pt-5 pb-5">
+        <div class="container mx-auto px-3" style="max-width: 1140px;">
+          <!-- Status Announcement Pill -->
+          <div class="brand-badge mb-3 animate-fade-in d-inline-flex align-items-center gap-2">
+            <div class="radar-beacon"></div>
+            <span>National Incident Radar Active • 1,240+ Belongings Safely Reunited</span>
+          </div>
+
+          <!-- Headline -->
+          <h1 class="display-4 fw-extrabold text-light mb-3 animate-slide-up" style="font-size: clamp(2.2rem, 5vw, 3.8rem); line-height: 1.15; letter-spacing: -0.03em;">
+            Lost Moments, <span class="text-gradient">Found Stories.</span>
+          </h1>
+          <p class="lead text-secondary mx-auto mb-4 animate-slide-up" style="max-width: 760px; font-size: 1.15rem;">
+            Bangladesh's intelligent lost and found community network. Algorithmic cross-referencing, QR asset recovery shields, and police-coordinated missing persons tracking.
+          </p>
+
+          <!-- Action Buttons -->
+          <div class="d-flex flex-wrap justify-content-center gap-3 mb-5 animate-slide-up">
+            <a href="submit_lostitems.html?type=lost" class="btn btn-danger btn-pill px-4 py-3" style="font-size: 1rem;">
+              <i class="bi bi-search me-1"></i> Report Lost Item
+            </a>
+            <a href="submit_lostitems.html?type=found" class="btn btn-primary btn-pill px-4 py-3" style="font-size: 1rem;">
+              <i class="bi bi-box-seam me-1"></i> Report Found Item
+            </a>
+            <a href="missing_person.html" class="btn btn-secondary btn-pill px-4 py-3" style="font-size: 1rem;">
+              <i class="bi bi-person-fill-exclamation me-1 text-rose" style="color: var(--color-rose-400);"></i> Missing Persons Directory
+            </a>
+            <a href="User_profile.html" class="btn btn-ghost btn-pill px-4 py-3 border border-subtle" style="font-size: 1rem;">
+              <i class="bi bi-qr-code me-1" style="color: var(--color-emerald-400);"></i> Generate QR Asset Shield
+            </a>
+          </div>
+
+          <!-- National Incident Radar by Division -->
+          <div class="glass-panel p-4 mb-5 text-start animate-slide-up">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 mb-3">
+              <div>
+                <h4 class="fw-bold text-light mb-1 d-flex align-items-center gap-2">
+                  <span class="radar-beacon"></span> National Incident Radar — 8 Administrative Divisions
+                </h4>
+                <small class="text-muted">Live community search operations and verified recovery status across Bangladesh</small>
+              </div>
+              <a href="recentposts.html" class="text-emerald small text-decoration-none fw-bold">Explore All Active Incidents <i class="bi bi-arrow-right"></i></a>
+            </div>
+
+            <div class="d-flex flex-wrap gap-2">
+              <a href="recentposts.html?division=Dhaka" class="division-chip text-decoration-none active">
+                <strong>Dhaka</strong> • <span class="text-emerald">64 Active</span> (89.2% RTO)
+              </a>
+              <a href="recentposts.html?division=Chattogram" class="division-chip text-decoration-none">
+                <strong>Chattogram</strong> • <span class="text-emerald">28 Active</span> (91.4% RTO)
+              </a>
+              <a href="recentposts.html?division=Sylhet" class="division-chip text-decoration-none">
+                <strong>Sylhet</strong> • <span class="text-emerald">14 Active</span> (85.7% RTO)
+              </a>
+              <a href="recentposts.html?division=Rajshahi" class="division-chip text-decoration-none">
+                <strong>Rajshahi</strong> • <span class="text-emerald">12 Active</span> (88.0% RTO)
+              </a>
+              <a href="recentposts.html?division=Khulna" class="division-chip text-decoration-none">
+                <strong>Khulna</strong> • <span class="text-emerald">9 Active</span> (82.1% RTO)
+              </a>
+              <a href="recentposts.html?division=Barishal" class="division-chip text-decoration-none">
+                <strong>Barishal</strong> • <span class="text-emerald">6 Active</span> (90.0% RTO)
+              </a>
+              <a href="recentposts.html?division=Rangpur" class="division-chip text-decoration-none">
+                <strong>Rangpur</strong> • <span class="text-emerald">5 Active</span> (87.5% RTO)
+              </a>
+              <a href="recentposts.html?division=Mymensingh" class="division-chip text-decoration-none">
+                <strong>Mymensingh</strong> • <span class="text-emerald">4 Active</span> (85.0% RTO)
+              </a>
+            </div>
+          </div>
+
+          <!-- Platform Live Stats Grid -->
+          <div class="row g-3 justify-content-center text-start">
+            <div class="col-6 col-md-3">
+              <div class="stat-counter-card glass-panel">
+                <div class="stat-counter-value text-emerald" style="color: var(--color-emerald-400);" id="statTotalItems">128+</div>
+                <div class="text-muted" style="font-size: 0.85rem; font-weight: 600;">Active Reports</div>
+              </div>
+            </div>
+            <div class="col-6 col-md-3">
+              <div class="stat-counter-card glass-panel">
+                <div class="stat-counter-value text-light" id="statRecovered">1,240+</div>
+                <div class="text-muted" style="font-size: 0.85rem; font-weight: 600;">Items Recovered</div>
+              </div>
+            </div>
+            <div class="col-6 col-md-3">
+              <div class="stat-counter-card glass-panel">
+                <div class="stat-counter-value" style="color: var(--color-indigo-400);" id="statMissing">42</div>
+                <div class="text-muted" style="font-size: 0.85rem; font-weight: 600;">Missing Persons Tracked</div>
+              </div>
+            </div>
+            <div class="col-6 col-md-3">
+              <div class="stat-counter-card glass-panel">
+                <div class="stat-counter-value" style="color: var(--color-amber-400);" id="statSuccessRate">89.4%</div>
+                <div class="text-muted" style="font-size: 0.85rem; font-weight: 600;">Community Success Rate</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Urgent Missing Persons Section -->
+      <section class="py-5 border-top border-subtle" style="background: rgba(239, 68, 68, 0.02);">
+        <div class="container mx-auto px-3" style="max-width: 1320px;">
+          <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 mb-4">
+            <div>
+              <div class="d-flex align-items-center gap-2">
+                <span class="badge badge-missing">Emergency Alert</span>
+                <span class="text-muted" style="font-size: 0.85rem;">Bangladesh Police Coordinated</span>
+              </div>
+              <h2 class="text-light fw-bold mt-1" style="font-size: 1.75rem;">Urgent: Missing Persons</h2>
+            </div>
+            <a href="missing_person.html" class="btn btn-secondary btn-sm btn-pill">
+              <span>View All Missing Persons</span>
+              <i class="bi bi-arrow-right"></i>
+            </a>
+          </div>
+
+          <div class="row g-4" id="homeMissingContainer">
+            <!-- Loaded dynamically from API -->
+            <div class="col-12 col-sm-6 col-lg-3">
+              <div class="missing-alert-card h-100 d-flex flex-column">
+                <div style="height: 200px; overflow: hidden; position: relative;">
+                  <img src="images/default_person.jpg" alt="Mohammad Abdul Rahim" style="width: 100%; height: 100%; object-fit: cover;">
+                  <span class="badge badge-missing position-absolute top-0 start-0 m-2">Age: 68 yrs</span>
+                  <span class="badge bg-dark text-muted position-absolute bottom-0 start-0 m-2" style="font-size: 0.65rem; border: 1px solid var(--border-subtle);">GD-8492/Mirpur</span>
+                </div>
+                <div class="p-3 d-flex flex-column flex-grow-1">
+                  <h3 class="fw-bold text-light mb-1" style="font-size: 1.1rem;">Mohammad Abdul Rahim</h3>
+                  <div class="text-rose mb-2" style="font-size: 0.8rem; color: var(--color-rose-400);">
+                    <i class="bi bi-geo-alt-fill me-1"></i>Last seen: Mirpur, Dhaka
+                  </div>
+                  <p class="text-secondary small mb-3 flex-grow-1" style="line-height: 1.4;">
+                    White Panjabi, white Pajama, brown sandals. Mild memory loss symptoms...
+                  </p>
+                  <a href="tel:01711223344" class="btn btn-danger btn-sm w-100 py-2">
+                    <i class="bi bi-telephone-fill me-1"></i> Call Family: 01711223344
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-lg-3">
+              <div class="missing-alert-card h-100 d-flex flex-column">
+                <div style="height: 200px; overflow: hidden; position: relative;">
+                  <img src="images/login-img.jpg" alt="Sadia Akter Mim" style="width: 100%; height: 100%; object-fit: cover;">
+                  <span class="badge badge-missing position-absolute top-0 start-0 m-2">Age: 24 yrs</span>
+                  <span class="badge bg-dark text-muted position-absolute bottom-0 start-0 m-2" style="font-size: 0.65rem; border: 1px solid var(--border-subtle);">GD-1042/Agrabad</span>
+                </div>
+                <div class="p-3 d-flex flex-column flex-grow-1">
+                  <h3 class="fw-bold text-light mb-1" style="font-size: 1.1rem;">Sadia Akter Mim</h3>
+                  <div class="text-rose mb-2" style="font-size: 0.8rem; color: var(--color-rose-400);">
+                    <i class="bi bi-geo-alt-fill me-1"></i>Last seen: Agrabad, Chattogram
+                  </div>
+                  <p class="text-secondary small mb-3 flex-grow-1" style="line-height: 1.4;">
+                    Navy blue Kurti, white scarf, carrying brown canvas backpack. Wears glasses...
+                  </p>
+                  <a href="tel:01999881122" class="btn btn-danger btn-sm w-100 py-2">
+                    <i class="bi bi-telephone-fill me-1"></i> Call Family: 01999881122
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Recent Lost & Found Feed Section -->
+      <section class="py-5 border-top border-subtle">
+        <div class="container mx-auto px-3" style="max-width: 1320px;">
+          <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+            <div>
+              <span class="brand-badge mb-2">Live Community Feed</span>
+              <h2 class="text-light fw-bold" style="font-size: 1.75rem;">Recent Lost & Found Reports</h2>
+            </div>
+
+            <!-- Division & Type Filter Pills -->
+            <div class="d-flex flex-wrap gap-2">
+              <button class="filter-pill-btn active" onclick="filterItems('all', this)">All Reports</button>
+              <button class="filter-pill-btn" onclick="filterItems('lost', this)">Lost Only</button>
+              <button class="filter-pill-btn" onclick="filterItems('found', this)">Found Only</button>
+              <a href="recentposts.html" class="btn btn-ghost btn-sm text-emerald ms-md-2" style="color: var(--color-emerald-400);">
+                <span>Explore Full Catalog</span>
+                <i class="bi bi-arrow-right"></i>
+              </a>
+            </div>
+          </div>
+
+          <!-- Cards Grid -->
+          <div class="items-grid" id="itemsFeedGrid">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+      </section>
+
+      <!-- Next-Gen Bento Architecture Showcase -->
+      <section class="py-5 border-top border-subtle" style="background: rgba(14, 18, 26, 0.4);">
+        <div class="container mx-auto px-3" style="max-width: 1280px;">
+          <div class="text-center mb-5">
+            <span class="brand-badge mb-2"><i class="bi bi-cpu-fill me-1"></i> Flagship Intelligence & Safety Architecture</span>
+            <h2 class="display-6 fw-bold text-light mb-2">Designed for High-Speed Reunification</h2>
+            <p class="text-secondary mx-auto" style="max-width: 680px;">Built on state-of-the-art interaction patterns, proactive asset protection shields, and law-enforcement verified workflows.</p>
+          </div>
+
+          <div class="row g-4 text-start">
+            <!-- Bento 1: Smart Match Engine (Wide) -->
+            <div class="col-lg-7">
+              <div class="bento-card h-100 d-flex flex-column justify-content-between position-relative">
+                <div class="bento-glow-corner"></div>
+                <div>
+                  <div class="d-flex align-items-center gap-2 mb-3">
+                    <span class="badge bg-emerald-subtle text-emerald"><i class="bi bi-magic me-1"></i> Multi-Factor Algorithm</span>
+                    <span class="text-muted small">Sub-second Cross-Referencing</span>
+                  </div>
+                  <h3 class="fw-bold text-light mb-2" style="font-size: 1.5rem;">Algorithmic Smart Match Engine</h3>
+                  <p class="text-secondary small mb-4" style="line-height: 1.6;">
+                    Eliminates manual catalog searching. Our algorithm computes lexical Dice coefficients across titles & descriptions, matches category taxonomies, and evaluates geographic radius and date proximity to surface high-confidence pairs automatically.
+                  </p>
+
+                  <!-- Live Comparison Mockup -->
+                  <div class="p-3 rounded glass-subtle mb-3 border border-subtle">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                      <span class="text-muted small font-mono">MATCH TELEMETRY: <strong>88% CONFIDENCE</strong></span>
+                      <span class="badge bg-success-subtle text-success">HIGH PROBABILITY</span>
+                    </div>
+                    <div class="progress mb-3" style="height: 6px; background: rgba(255, 255, 255, 0.08); border-radius: var(--radius-pill);">
+                      <div class="progress-bar bg-emerald" style="width: 88%; background: var(--color-emerald-400); border-radius: var(--radius-pill);"></div>
+                    </div>
+                    <div class="row g-2 small">
+                      <div class="col-6">
+                        <div class="text-muted" style="font-size: 0.75rem;">LOST REPORT</div>
+                        <div class="text-light fw-bold text-truncate">Blue iPhone 13 Pro (Dhanmondi)</div>
+                      </div>
+                      <div class="col-6">
+                        <div class="text-muted" style="font-size: 0.75rem;">FOUND VALUABLE</div>
+                        <div class="text-light fw-bold text-truncate">Apple phone, blue silicone case</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="pt-2">
+                  <a href="recentposts.html?tab=matches" class="btn btn-secondary btn-sm">
+                    <span>Explore Smart Match Pairs</span>
+                    <i class="bi bi-arrow-right"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Bento 2: QR Asset Recovery Shield (Tall) -->
+            <div class="col-lg-5">
+              <div class="bento-card bento-card-indigo h-100 d-flex flex-column justify-content-between position-relative">
+                <div class="bento-glow-corner bento-glow-corner-indigo"></div>
+                <div>
+                  <div class="d-flex align-items-center gap-2 mb-3">
+                    <span class="badge bg-indigo-subtle text-indigo" style="background: rgba(99, 102, 241, 0.15); color: var(--color-indigo-400);"><i class="bi bi-qr-code-scan me-1"></i> Proactive Defense</span>
+                    <span class="text-muted small">Anonymous Proxy</span>
+                  </div>
+                  <h3 class="fw-bold text-light mb-2" style="font-size: 1.5rem;">QR Asset Protection Shield</h3>
+                  <p class="text-secondary small mb-4" style="line-height: 1.6;">
+                    Don't wait until something is lost. Generate high-contrast, durable QR asset tags for laptops, keys, wallets, and bags. Finders scan to report returns without ever seeing your private phone number.
+                  </p>
+
+                  <div class="text-center p-3 rounded glass-subtle border border-subtle mb-3">
+                    <div class="p-2 bg-white rounded d-inline-block shadow-sm mb-2">
+                      <i class="bi bi-qr-code text-dark" style="font-size: 3.5rem; line-height: 1; display: block;"></i>
+                    </div>
+                    <div class="font-mono text-indigo fw-bold small">ID: LF-BD-941E28</div>
+                    <div class="text-muted small" style="font-size: 0.75rem;">Scan to report safe return anonymously</div>
+                  </div>
+                </div>
+
+                <div class="pt-2">
+                  <a href="User_profile.html" class="btn btn-primary btn-sm">
+                    <span>Generate Free QR Shield</span>
+                    <i class="bi bi-plus-lg"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Bento 3: Police GD Integration -->
+            <div class="col-lg-4">
+              <div class="bento-card bento-card-rose h-100 d-flex flex-column justify-content-between position-relative">
+                <div class="bento-glow-corner bento-glow-corner-rose"></div>
+                <div>
+                  <div class="badge bg-danger-subtle text-danger mb-3"><i class="bi bi-shield-fill-exclamation me-1"></i> 999 Coordinated</div>
+                  <h4 class="fw-bold text-light mb-2">Official Police GD Postings</h4>
+                  <p class="text-secondary small mb-3">
+                    Every critical missing report syncs General Diary reference records and generates one-click printable A4 police posters for bus stations and local distribution.
+                  </p>
+                </div>
+                <a href="missing_person.html" class="text-rose text-decoration-none small fw-bold">
+                  View Missing Directory &rarr;
+                </a>
+              </div>
+            </div>
+
+            <!-- Bento 4: AI Safety Concierge -->
+            <div class="col-lg-4">
+              <div class="bento-card h-100 d-flex flex-column justify-content-between position-relative">
+                <div>
+                  <div class="badge bg-emerald-subtle text-emerald mb-3"><i class="bi bi-chat-dots-fill me-1"></i> 24/7 Citizen AI</div>
+                  <h4 class="fw-bold text-light mb-2">AI Safety Concierge</h4>
+                  <p class="text-secondary small mb-3">
+                    Bilingual guidance in English & Bengali. Get instant step-by-step procedures for Thana GD filing, document fraud prevention, and rapid reward verification.
+                  </p>
+                </div>
+                <a href="chatbot.html" class="text-emerald text-decoration-none small fw-bold">
+                  Consult AI Assistant &rarr;
+                </a>
+              </div>
+            </div>
+
+            <!-- Bento 5: Verified Review Desk -->
+            <div class="col-lg-4">
+              <div class="bento-card h-100 d-flex flex-column justify-content-between position-relative">
+                <div>
+                  <div class="badge bg-amber-subtle text-amber mb-3"><i class="bi bi-patch-check-fill me-1"></i> Fraud Protected</div>
+                  <h4 class="fw-bold text-light mb-2">Verified Handover Desk</h4>
+                  <p class="text-secondary small mb-3">
+                    Claimants must verify unreleased identifiers, purchase invoices, or serial numbers with moderation officers before sensitive contacts are exchanged.
+                  </p>
+                </div>
+                <a href="payment.html" class="text-amber text-decoration-none small fw-bold">
+                  Support Our Mission &rarr;
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Global Command Palette Modal -->
+    <div class="cmd-palette-backdrop" id="globalCmdPalette" onclick="closeCommandPalette(event)">
+      <div class="cmd-palette-modal glass-panel" onclick="event.stopPropagation()">
+        <div class="d-flex align-items-center px-3 border-bottom border-subtle">
+          <i class="bi bi-search text-muted fs-5 me-2"></i>
+          <input type="text" class="cmd-search-input" id="cmdSearchInput" placeholder="Search lost items, found valuables, missing persons..." autocomplete="off" oninput="handleCmdSearch(this.value)">
+          <button type="button" class="btn btn-ghost btn-sm text-muted" onclick="closeCommandPalette(null)">ESC</button>
+        </div>
+        <div class="cmd-results-list" id="cmdResultsContainer">
+          <div class="text-muted p-3 text-center" style="font-size: 0.9rem;">
+            Type keywords (e.g. <em>laptop</em>, <em>wallet</em>, <em>Dhaka</em>, <em>passport</em>)
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Item Details Modal -->
+    <div class="cmd-palette-backdrop" id="itemDetailModal" onclick="closeItemModal(event)">
+      <div class="cmd-palette-modal glass-panel p-4" onclick="event.stopPropagation()" style="max-width: 600px;">
+        <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom border-subtle">
+          <h4 class="fw-bold text-light mb-0" id="modalItemTitle">Item Details</h4>
+          <button type="button" class="btn btn-ghost btn-sm text-muted" onclick="closeItemModal(null)">✕</button>
+        </div>
+        <div id="modalItemBody" class="py-2 text-start">
+          <div class="text-center py-4"><span class="badge-dot"></span> Loading report...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Claim Submission Modal -->
+    <div class="cmd-palette-backdrop" id="claimModal" onclick="closeClaimModal(event)">
+      <div class="cmd-palette-modal glass-panel p-4" onclick="event.stopPropagation()" style="max-width: 520px;">
+        <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom border-subtle">
+          <h4 class="fw-bold text-light mb-0">Submit Ownership Claim</h4>
+          <button type="button" class="btn btn-ghost btn-sm text-muted" onclick="closeClaimModal(null)">✕</button>
+        </div>
+        <form id="claimSubmitForm" onsubmit="handleClaimSubmit(event)">
+          <input type="hidden" id="claimItemId" name="item_id">
+          <div class="mb-3">
+            <label class="form-label">Claiming Item:</label>
+            <input type="text" class="form-control" id="claimItemNameDisplay" readonly>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Describe Ownership Proof:</label>
+            <textarea class="form-control" name="proof_description" id="claimProofDesc" rows="3" placeholder="Provide serial numbers, receipts, matching stickers..." required></textarea>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Contact Phone Number:</label>
+            <input type="tel" class="form-control" name="contact_phone" id="claimPhone" placeholder="017XXXXXXXX" required>
+          </div>
+          <button type="submit" class="btn btn-primary w-100 py-2" id="claimSubmitBtn">
+            <span>Submit for Moderator Verification</span>
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Modern Flagship Site Footer -->
+    <footer class="site-footer mt-5 pt-5 pb-4">
+      <div class="container mx-auto px-3" style="max-width: 1320px;">
+        <div class="row g-4 mb-4">
+          <!-- Column 1: Brand & National Trust Signature -->
+          <div class="col-12 col-md-6 col-lg-4">
+            <div class="d-flex align-items-center gap-2 mb-3">
+              <img src="images/logo.png" alt="Lost and Found Bangladesh Logo" width="36" height="36" class="rounded-circle border border-emerald">
+              <div>
+                <span class="footer-brand-title">Lost &amp; Found <span style="color: var(--color-emerald-400);">Bangladesh</span></span>
+                <div class="text-muted small" style="font-size: 0.75rem;">National Recovery &amp; Public Safety Network</div>
+              </div>
+            </div>
+            <p class="text-secondary mb-3" style="font-size: 0.9rem; line-height: 1.6;">
+              Bangladesh's nationwide community recovery network. Dedicated to reuniting lost belongings, securing citizen identity credentials, and locating missing persons in partnership with citizens and Bangladesh Police.
+            </p>
+            <div class="d-flex flex-wrap align-items-center gap-2">
+              <span class="badge-trust-tag"><span class="badge-dot"></span> 24/7 Moderation Desk</span>
+              <span class="badge-trust-tag"><i class="bi bi-shield-check text-emerald"></i> GD Verified</span>
+              <span class="badge-trust-tag"><i class="bi bi-broadcast text-rose"></i> 8 Divisions Radar</span>
+            </div>
+          </div>
+
+          <!-- Column 2: Platform Navigation & Tools -->
+          <div class="col-6 col-md-3 col-lg-2">
+            <h6 class="footer-section-title"><i class="bi bi-compass text-emerald me-1"></i> Navigation</h6>
+            <ul class="footer-nav-list">
+              <li><a href="recentposts.html?type=lost" class="footer-nav-link"><i class="bi bi-chevron-right text-emerald" style="font-size: 0.7rem;"></i> Lost Belongings</a></li>
+              <li><a href="recentposts.html?type=found" class="footer-nav-link"><i class="bi bi-chevron-right text-emerald" style="font-size: 0.7rem;"></i> Found Valuables</a></li>
+              <li><a href="missing_person.html" class="footer-nav-link"><i class="bi bi-chevron-right text-emerald" style="font-size: 0.7rem;"></i> Missing Persons</a></li>
+              <li><a href="submit_lostitems.html" class="footer-nav-link"><i class="bi bi-chevron-right text-emerald" style="font-size: 0.7rem;"></i> File New Report</a></li>
+              <li><a href="User_profile.html" class="footer-nav-link"><i class="bi bi-chevron-right text-emerald" style="font-size: 0.7rem;"></i> QR Asset Shield</a></li>
+              <li><a href="chatbot.html" class="footer-nav-link"><i class="bi bi-chevron-right text-emerald" style="font-size: 0.7rem;"></i> AI Assistant</a></li>
+            </ul>
+          </div>
+
+          <!-- Column 3: Emergency Dispatch & Hotlines -->
+          <div class="col-6 col-md-3 col-lg-3">
+            <h6 class="footer-section-title"><i class="bi bi-telephone-outbound text-rose me-1"></i> Hotlines</h6>
+            <div class="d-flex flex-column gap-2">
+              <a href="tel:999" class="footer-hotline-chip">
+                <span><i class="bi bi-shield-fill-exclamation text-rose me-1"></i> National Police</span>
+                <span class="badge bg-rose-subtle text-rose fw-bold">999</span>
+              </a>
+              <a href="tel:100" class="footer-hotline-chip">
+                <span><i class="bi bi-telephone-inbound-fill text-emerald me-1"></i> Police Help Desk</span>
+                <span class="badge bg-emerald-subtle text-emerald fw-bold">100</span>
+              </a>
+              <a href="tel:1098" class="footer-hotline-chip">
+                <span><i class="bi bi-people-fill text-indigo me-1"></i> Child Protection</span>
+                <span class="badge bg-indigo-subtle text-indigo fw-bold">1098</span>
+              </a>
+              <a href="tel:16263" class="footer-hotline-chip">
+                <span><i class="bi bi-hospital-fill text-amber me-1"></i> Health Service</span>
+                <span class="badge bg-amber-subtle text-amber fw-bold">16263</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Column 4: Trust & Infrastructure Support -->
+          <div class="col-12 col-md-6 col-lg-3">
+            <h6 class="footer-section-title"><i class="bi bi-heart-pulse text-emerald me-1"></i> Public Trust</h6>
+            <p class="text-secondary small mb-3">
+              100% free non-profit civic infrastructure powered by community goodwill. Your reports are encrypted and strictly verified.
+            </p>
+            <a href="payment.html" class="btn btn-glow-emerald w-100 py-2 d-flex align-items-center justify-content-center gap-2 mb-3">
+              <i class="bi bi-heart-fill text-rose"></i> Support Platform
+            </a>
+            <div class="d-flex flex-wrap gap-2 text-muted" style="font-size: 0.75rem;">
+              <span><i class="bi bi-shield-lock-fill text-emerald me-1"></i> 256-Bit SSL</span>
+              <span>•</span>
+              <span><i class="bi bi-patch-check-fill text-emerald me-1"></i> Community Backed</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sub-footer bar -->
+        <div class="sub-footer-bar">
+          <div class="text-secondary small">
+            &copy; 2026 <strong>Lost &amp; Found Bangladesh</strong>. Nationwide Public Safety &amp; Community Recovery Platform.
+          </div>
+          <div class="d-flex flex-wrap align-items-center gap-3 text-secondary small">
+            <a href="#" class="footer-nav-link" onclick="alert('Privacy Policy: All personal contact info is safeguarded. NIDs & serial numbers are never exposed to unauthenticated scrapers.'); return false;">Privacy Policy</a>
+            <span>•</span>
+            <a href="#" class="footer-nav-link" onclick="alert('Terms of Service: Fraudulent or deceptive reports will be permanently banned and reported to law enforcement.'); return false;">Terms of Service</a>
+            <span>•</span>
+            <a href="chatbot.html" class="footer-nav-link">Support FAQ</a>
+            <span>•</span>
+            <a href="admin panel/admin-dashboard.html" class="footer-nav-link text-emerald"><i class="bi bi-lock me-1"></i> Staff Portal</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Interactive Logic -->
+    <script>
+      function toggleMobileMenu() {
+        const menu = document.getElementById('mobileNavMenu');
+        menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+      }
+
+      function openCommandPalette() {
+        const palette = document.getElementById('globalCmdPalette');
+        palette.classList.add('active');
+        const input = document.getElementById('cmdSearchInput');
+        setTimeout(() => input.focus(), 50);
+      }
+
+      function closeCommandPalette(e) {
+        if (e && e.target !== document.getElementById('globalCmdPalette')) return;
+        document.getElementById('globalCmdPalette').classList.remove('active');
+      }
+
+      document.addEventListener('keydown', function(e) {
+        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+          e.preventDefault();
+          openCommandPalette();
+        }
+        if (e.key === 'Escape') {
+          document.getElementById('globalCmdPalette').classList.remove('active');
+        }
+      });
+
+      let searchTimeout = null;
+      function handleCmdSearch(query) {
+        clearTimeout(searchTimeout);
+        const container = document.getElementById('cmdResultsContainer');
+        if (!query || query.trim().length === 0) {
+          container.innerHTML = '<div class="text-muted p-3 text-center" style="font-size: 0.9rem;">Type keywords to search...</div>';
+          return;
+        }
+
+        searchTimeout = setTimeout(() => {
+          fetch('api/items.php?action=list&limit=6&query=' + encodeURIComponent(query))
+            .then(r => r.json())
+            .then(data => {
+              if (data.success && data.data.items && data.data.items.length > 0) {
+                let html = '';
+                data.data.items.forEach(item => {
+                  const badgeClass = item.item_type === 'lost' ? 'badge-lost' : 'badge-found';
+                  html += `
+                    <div class="cmd-item" onclick="window.location.href='recentposts.html?search=${encodeURIComponent(item.title)}'">
+                      <div class="d-flex align-items-center gap-3">
+                        <span class="badge ${badgeClass}">${item.item_type}</span>
+                        <div>
+                          <div class="fw-semibold text-light">${item.title}</div>
+                          <small class="text-muted"><i class="bi bi-geo-alt me-1"></i>${item.district}, ${item.division}</small>
+                        </div>
+                      </div>
+                      <i class="bi bi-arrow-right-short text-muted fs-4"></i>
+                    </div>
+                  `;
+                });
+                container.innerHTML = html;
+              } else {
+                container.innerHTML = '<div class="text-muted p-3 text-center">No reports matching your search.</div>';
+              }
+            });
+        }, 150);
+      }
+
+      // Load Items Grid
+      function loadRecentFeed(type = 'all') {
+        const grid = document.getElementById('itemsFeedGrid');
+        grid.innerHTML = '<div class="text-center py-5 col-12"><span class="badge-dot"></span> Loading active alerts...</div>';
+
+        fetch(`api/items.php?action=list&limit=8${type !== 'all' ? '&type=' + type : ''}`)
+          .then(r => r.json())
+          .then(data => {
+            if (data.success && data.data.items) {
+              let html = '';
+              data.data.items.forEach(item => {
+                const badgeClass = item.item_type === 'lost' ? 'badge-lost' : 'badge-found';
+                html += `
+                  <div class="item-card feed-card" data-type="${item.item_type}">
+                    <div class="item-card-media">
+                      <img src="${item.picture || 'images/default_item.jpg'}" alt="${item.title}" loading="lazy">
+                      <span class="badge ${badgeClass} item-card-badge">${item.item_type}</span>
+                      ${item.reward_amount > 0 ? `<span class="item-card-reward"><i class="bi bi-gift-fill me-1"></i>৳${Number(item.reward_amount).toLocaleString()}</span>` : ''}
+                    </div>
+                    <div class="item-card-body">
+                      <div class="text-muted small text-uppercase mb-1" style="font-size: 0.725rem; font-weight: 700;">${item.category}</div>
+                      <h3 class="item-card-title">${item.title}</h3>
+                      <p class="item-card-desc">${item.description}</p>
+                      
+                      <div class="item-card-meta">
+                        <span><i class="bi bi-geo-alt me-1 text-emerald"></i>${item.district}, ${item.division}</span>
+                        <span><i class="bi bi-calendar3 me-1"></i>${item.date_lost_or_found}</span>
+                      </div>
+
+                      <div class="mt-3 pt-2 border-top border-subtle d-flex gap-2">
+                        <button type="button" class="btn btn-secondary btn-sm flex-grow-1" onclick="openItemModal(${item.id})">
+                          <i class="bi bi-eye"></i> Details
+                        </button>
+                        ${item.item_type === 'found' ? `
+                          <button type="button" class="btn btn-primary btn-sm flex-grow-1" onclick="claimItem(${item.id}, '${item.title.replace(/'/g, "\\'")}')">
+                            <i class="bi bi-hand-index-thumb"></i> Claim
+                          </button>
+                        ` : `
+                          <a href="tel:${item.contact_phone}" class="btn btn-ghost btn-sm border border-subtle flex-grow-1">
+                            <i class="bi bi-telephone text-emerald"></i> Call
+                          </a>
+                        `}
+                      </div>
+                    </div>
+                  </div>
+                `;
+              });
+              grid.innerHTML = html;
+            }
+          });
+      }
+
+      function filterItems(type, btn) {
+        document.querySelectorAll('.filter-pill-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        loadRecentFeed(type);
+      }
+
+      function openItemModal(id) {
+        const modal = document.getElementById('itemDetailModal');
+        modal.classList.add('active');
+        const body = document.getElementById('modalItemBody');
+        const title = document.getElementById('modalItemTitle');
+        body.innerHTML = '<div class="text-center py-4"><span class="badge-dot"></span> Loading details...</div>';
+
+        fetch('api/items.php?action=get&id=' + id)
+          .then(r => r.json())
+          .then(data => {
+            if (data.success && data.item) {
+              const item = data.item;
+              title.textContent = item.title;
+              body.innerHTML = `
+                <div class="mb-3" style="max-height: 240px; overflow: hidden; border-radius: var(--radius-md);">
+                  <img src="${item.picture || 'images/default_item.jpg'}" alt="${item.title}" style="width: 100%; height: 220px; object-fit: cover;">
+                </div>
+                <div class="d-flex gap-2 mb-3">
+                  <span class="badge ${item.item_type === 'lost' ? 'badge-lost' : 'badge-found'}">${item.item_type}</span>
+                  <span class="badge badge-verified">${item.category}</span>
+                  ${item.reward_amount > 0 ? `<span class="badge bg-amber-subtle text-amber">৳${item.reward_amount} Reward</span>` : ''}
+                </div>
+                <p class="text-light mb-3">${item.description}</p>
+                <div class="p-3 rounded glass-subtle mb-3 small">
+                  <div><strong>Location:</strong> ${item.specific_location}, ${item.district}, ${item.division}</div>
+                  ${item.surrounding_details ? `<div><strong>Surroundings:</strong> ${item.surrounding_details}</div>` : ''}
+                  <div><strong>Date:</strong> ${item.date_lost_or_found}</div>
+                </div>
+                <div class="d-flex gap-2">
+                  <a href="tel:${item.contact_phone}" class="btn btn-secondary flex-grow-1"><i class="bi bi-telephone"></i> Call: ${item.contact_phone}</a>
+                  ${item.item_type === 'found' ? `<button type="button" class="btn btn-primary flex-grow-1" onclick="closeItemModal(null); claimItem(${item.id}, '${item.title.replace(/'/g, "\\'")}');"><i class="bi bi-hand-index"></i> Claim Valuables</button>` : ''}
+                </div>
+              `;
+            }
+          });
+      }
+
+      function closeItemModal(e) {
+        if (e && e.target !== document.getElementById('itemDetailModal')) return;
+        document.getElementById('itemDetailModal').classList.remove('active');
+      }
+
+      function claimItem(id, title) {
+        document.getElementById('claimItemId').value = id;
+        document.getElementById('claimItemNameDisplay').value = title;
+        document.getElementById('claimModal').classList.add('active');
+      }
+
+      function closeClaimModal(e) {
+        if (e && e.target !== document.getElementById('claimModal')) return;
+        document.getElementById('claimModal').classList.remove('active');
+      }
+
+      function handleClaimSubmit(e) {
+        e.preventDefault();
+        const itemId = document.getElementById('claimItemId').value;
+        const proof = document.getElementById('claimProofDesc').value;
+        const phone = document.getElementById('claimPhone').value;
+        const btn = document.getElementById('claimSubmitBtn');
+
+        btn.disabled = true;
+        btn.innerHTML = 'Submitting claim...';
+
+        fetch('api/items.php', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            action: 'claim',
+            item_id: itemId,
+            proof_description: proof,
+            contact_phone: phone
+          })
+        })
+        .then(r => r.json())
+        .then(data => {
+          btn.disabled = false;
+          btn.innerHTML = 'Submit for Moderator Verification';
+          if (data.success) {
+            alert('Claim submitted! Our moderation desk will review your details.');
+            closeClaimModal(null);
+          } else {
+            alert(data.error || 'Claim submission failed.');
+          }
+        });
+      }
+
+      // Initial Hydration
+      loadRecentFeed('all');
+    </script>
+    <script src="components/command-palette.js"></script>
+</body>
+</html>

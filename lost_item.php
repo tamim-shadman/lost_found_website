@@ -1,58 +1,52 @@
 <?php
-$conn = new mysqli("localhost","root","", "l&fbd");
-if($conn->connect_error)
-{
-    die("Connection failed: ".$conn->connect_error);
-}
+declare(strict_types=1);
 
-if(isset($_POST["submit"])){
-$name = isset($_POST['item_name']) ? filter_var($_POST['item_name'], FILTER_SANITIZE_STRING) : '';
-$address = isset($_POST['address']) ? filter_var($_POST['address'], FILTER_SANITIZE_STRING) : '';
-$address2 = isset($_POST['address2']) ? filter_var($_POST['address2'], FILTER_SANITIZE_STRING) : '';
-$city = isset($_POST['city']) ? filter_var($_POST['city'], FILTER_SANITIZE_STRING) : '';
-$state = isset($_POST['state']) ? filter_var($_POST['state'], FILTER_SANITIZE_STRING) : '';
-// $calendar = isset($_POST['date']) ? filter_var($_POST['date'], FILTER_SANITIZE_STRING) : '';
+require_once __DIR__ . '/src/autoload.php';
 
-if($_FILES["image"]["error"]==4)
-{
-    echo "
-    <script> alert('Image does not Exist'); </script>" ;
-}
+use App\Services\AuthService;
+use App\Services\ItemService;
+use App\Utils\Security;
 
-else{
-    $fileName=$_FILES["image"]["name"];
-    $fileSize=$_FILES["image"]["size"];
-    $tmpName=$_FILES["image"]["tmp_name"];
-    $validImageExtension= ["jpg","jpeg", "png"];
-    $imageExtension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
-    if(!in_array($imageExtension,$validImageExtension)){
-        echo "
-    <script> alert('Invalid Image'); </script>" ;
+Security::initSession();
+$auth = new AuthService();
+$currentUser = $auth->getCurrentUser();
+$itemService = new ItemService();
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $data = [
+        'item_type'         => 'lost',
+        'title'             => $_POST['item_name'] ?? $_POST['title'] ?? '',
+        'category'          => $_POST['category'] ?? 'Other',
+        'specific_location' => $_POST['address'] ?? '',
+        'surrounding_details'=> $_POST['address2'] ?? '',
+        'district'          => $_POST['city'] ?? 'Dhaka',
+        'division'          => $_POST['state'] ?? 'Dhaka',
+        'date_lost_or_found'=> $_POST['date'] ?? date('Y-m-d'),
+        'contact_phone'     => $_POST['phone'] ?? ($currentUser['phone'] ?? ''),
+        'contact_email'     => $_POST['email'] ?? ($currentUser['email'] ?? ''),
+        'reward_amount'     => (float)($_POST['reward'] ?? 0.0),
+    ];
+
+    $file = $_FILES['image'] ?? $_FILES['picture'] ?? null;
+    $userId = $currentUser ? (int)$currentUser['id'] : null;
+
+    $res = $itemService->createItem($data, $file, $userId);
+
+    if ($res['success']) {
+        echo "<script>
+            alert('Lost item report has been published successfully!');
+            window.location.href = 'recentposts.php';
+        </script>";
+        exit();
+    } else {
+        $errMsg = addslashes($res['error']);
+        echo "<script>
+            alert('Error: {$errMsg}');
+            window.history.back();
+        </script>";
+        exit();
     }
-
-
-else if($fileSize>10000000){
-    echo 
-    
-    "<script> alert('Image too large'); </script>" 
-    ;
+} else {
+    header("Location: submit_lostitems.php");
+    exit();
 }
-
-else{
-    $newImageName=uniqid();
-    $newImageName = "." . $imageExtension;
-
-    move_uploaded_file("E:\New folder\htdocs\lost_found_website\images", $newImageName);
-    $query="INSERT INTO founditem VALUES(' ','$name', '$address', '$address2', '$city', '$state', CURRENT_TIMESTAMP, '$newImageName')";
-    mysqli_query($conn,$query);
-
-    echo
-    "<script>
-alert('Successfully added your information');
-
-    </script>"
-    ;
-}
-}
-}
-?>

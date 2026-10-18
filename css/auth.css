@@ -1,0 +1,96 @@
+/* Auth & Modal Specialized Styling */
+.auth-page {
+  display: flex;
+  min-height: 100vh;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+}
+
+.auth-wrapper {
+  width: 100%;
+  max-width: 460px;
+  margin: 0 auto;
+}
+
+.auth-card {
+  padding: 2.5rem 2rem;
+}
+
+.wide-card {
+  max-width: 580px;
+}
+
+.auth-title {
+  font-size: 1.85rem;
+  font-weight: 800;
+  margin-bottom: 0.35rem;
+}
+
+.auth-subtitle {
+  font-size: 0.95rem;
+  margin-bottom: 1.75rem;
+}
+
+.btn-toggle-pw {
+  position: absolute;
+  right: 0.85rem;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0.25rem;
+  font-size: 1.1rem;
+}
+
+.btn-toggle-pw:hover {
+  color: var(--text-primary);
+}
+
+.forgot-link {
+  font-size: 0.8rem;
+  color: var(--color-emerald-400);
+}
+
+.link-highlight {
+  color: var(--color-emerald-400);
+  font-weight: 600;
+}
+
+.back-link {
+  display: inline-block;
+  margin-top: 0.75rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.back-link:hover {
+  color: var(--text-primary);
+}
+
+.demo-credentials {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.demo-title {
+  font-weight: 700;
+  color: var(--color-emerald-400);
+  margin-bottom: 0.25rem;
+}
+
+.border-subtle {
+  border-color: var(--border-subtle) !important;
+}
+
+.alert-danger {
+  background: rgba(244, 63, 94, 0.12);
+  border: 1px solid rgba(244, 63, 94, 0.3);
+  color: var(--color-rose-400);
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-md);
+  margin-bottom: 1.25rem;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+}
