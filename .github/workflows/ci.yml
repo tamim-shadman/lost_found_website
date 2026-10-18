@@ -1,0 +1,51 @@
+name: CI Verification Suite
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    name: End-to-End & Integrity Suite
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP 8.2
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: pdo, pdo_sqlite, pdo_mysql, mbstring, fileinfo, json
+          coverage: none
+
+      - name: Validate PHP Syntax (Lint)
+        run: |
+          echo "Scanning all PHP files for syntax errors..."
+          find . -type f -name "*.php" ! -path "./vendor/*" ! -path "./stripe-php/*" -exec php -l {} +
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Node Dependencies
+        run: npm install --no-audit
+
+      - name: Start Dev Server Daemon
+        run: |
+          node dev-server.mjs &
+          echo "Waiting for server to become healthy on port 8000..."
+          for i in {1..30}; do
+            if curl -s http://localhost:8000/api/health.php | grep -q '"success":true'; then
+              echo "Server is healthy!"
+              break
+            fi
+            sleep 1
+          done
+
+      - name: Run 50/50 Comprehensive Verification Suite
+        run: npm test
